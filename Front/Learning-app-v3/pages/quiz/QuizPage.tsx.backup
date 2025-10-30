@@ -1,0 +1,641 @@
+import React, { useEffect } from 'react';
+import {
+    Container,
+    Paper,
+    Title,
+    Text,
+    Button,
+    Group,
+    Stack,
+    Card,
+    Badge,
+    ActionIcon,
+    Menu,
+    TextInput,
+    Pagination,
+    Modal,
+    Textarea,
+    LoadingOverlay,
+    Box,
+    Grid,
+    Avatar,
+    Transition,
+    Flex,
+    Center,
+    Select,
+    NumberInput
+} from '@mantine/core';
+import {
+    IconPlus,
+    IconSearch,
+    IconEdit,
+    IconTrash,
+    IconEye,
+    IconDots,
+    IconQuestionMark,
+    IconClipboardList,
+    IconCalendar,
+    IconChartBar,
+    IconRefresh,
+    IconBook,
+    IconBookmark,
+    IconPercentage
+} from '@tabler/icons-react';
+import { useQuizPageStates } from '../../hooks/quiz/quizPageStates';
+import { useQuizPageActions } from '../../hooks/quiz/quizPageActions';
+
+export default function QuizPage() {
+    // États
+    const {
+        setBreadCrumb,
+        quizzes,
+        setQuizzes,
+        loading,
+        setLoading,
+        page,
+        setPage,
+        totalPages,
+        setTotalPages,
+        search,
+        setSearch,
+        selectedQuiz,
+        setSelectedQuiz,
+        isUpdating,
+        setIsUpdating,
+        courses,
+        setCourses,
+        chapters,
+        setChapters,
+        selectedCourseId,
+        setSelectedCourseId
+    } = useQuizPageStates();
+
+    // Actions
+    const {
+        form,
+        fetchQuizzes,
+        fetchCourses,
+        fetchChapters,
+        handleCourseChange,
+        handleSubmit,
+        handleCreate,
+        handleEdit,
+        handleDeleteConfirm,
+        handleDelete,
+        handleCancel,
+        handleCloseModal,
+        handleDeleteClick
+    } = useQuizPageActions({
+        state: {
+            quizzes,
+            setQuizzes,
+            loading,
+            setLoading,
+            totalPages,
+            setTotalPages,
+            currentPage,
+            setCurrentPage,
+            search,
+            setSearch,
+            opened,
+            open,
+            close,
+            isUpdating,
+            setIsUpdating,
+            courses,
+            setCourses,
+            chapters,
+            setChapters,
+            selectedCourseId,
+            setSelectedCourseId,
+            deleteModalOpened,
+            openDeleteModal,
+            closeDeleteModal,
+            quizToDelete,
+            setQuizToDelete
+        }
+    });
+
+    // Recherche
+    const handleSearch = (values: { query: string }) => {
+        setSearch(values.query);
+        setPage(1);
+    };
+
+    // Effects
+    useEffect(() => {
+        setBreadCrumb(breadcrumbs as any);
+        fetchQuizzes();
+        fetchCourses();
+    }, [page, search]);
+
+    return (
+        <Box
+            style={{
+                background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+                minHeight: '100vh',
+                padding: '2rem 0'
+            }}
+        >
+            <Container size="xl">
+                {/* En-tête avec design moderne */}
+                <Paper
+                    radius="xl"
+                    p="xl"
+                    shadow="xl"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        marginBottom: '2rem'
+                    }}
+                >
+                    <Group justify="space-between" align="center">
+                        <Box>
+                            <Group align="center" gap="md">
+                                <Avatar
+                                    size="lg"
+                                    radius="xl"
+                                    style={{
+                                        background: 'linear-gradient(45deg, #495057, #6c757d)',
+                                        color: 'white'
+                                    }}
+                                >
+                                    <IconClipboardList size={28} />
+                                </Avatar>
+                                <Box>
+                                    <Title
+                                        order={1}
+                                        size="2.5rem"
+                                        style={{
+                                            color: '#495057',
+                                            fontWeight: 700
+                                        }}
+                                    >
+                                        Gestion des Quiz
+                                    </Title>
+                                    <Text c="dimmed" size="lg">
+                                        Créez et gérez vos quiz interactifs
+                                    </Text>
+                                </Box>
+                            </Group>
+                        </Box>
+                        
+                        <Group gap="md">
+                            <Button
+                                leftSection={<IconRefresh size={18} />}
+                                variant="light"
+                                color="gray"
+                                onClick={fetchQuizzes}
+                                loading={loading}
+                            >
+                                Actualiser
+                            </Button>
+                            <Button
+                                leftSection={<IconPlus size={18} />}
+                                size="md"
+                                radius="xl"
+                                color="dark"
+                                onClick={open}
+                            >
+                                Nouveau Quiz
+                            </Button>
+                        </Group>
+                    </Group>
+                </Paper>
+
+                {/* Barre de recherche */}
+                <Paper
+                    radius="xl"
+                    p="md"
+                    shadow="md"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(10px)',
+                        marginBottom: '2rem'
+                    }}
+                >
+                    <form onSubmit={searchForm.onSubmit(handleSearch)}>
+                        <Group gap="md">
+                            <TextInput
+                                placeholder="Rechercher un quiz..."
+                                size="md"
+                                radius="xl"
+                                flex={1}
+                                leftSection={<IconSearch size={18} />}
+                                {...searchForm.getInputProps('query')}
+                                style={{ flex: 1 }}
+                            />
+                            <Button
+                                type="submit"
+                                size="md"
+                                radius="xl"
+                                variant="light"
+                            >
+                                Rechercher
+                            </Button>
+                        </Group>
+                    </form>
+                </Paper>
+
+                {/* Statistiques rapides */}
+                <Grid mb="xl">
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                        <Card
+                            radius="xl"
+                            shadow="md"
+                            style={{
+                                background: 'linear-gradient(45deg, #6c757d, #495057)',
+                                color: 'white',
+                                border: 'none'
+                            }}
+                        >
+                            <Group>
+                                <IconClipboardList size={32} />
+                                <Box>
+                                    <Text size="xl" fw={700}>{quizzes.length}</Text>
+                                    <Text size="sm" opacity={0.8}>Quiz créés</Text>
+                                </Box>
+                            </Group>
+                        </Card>
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                        <Card
+                            radius="xl"
+                            shadow="md"
+                            style={{
+                                background: 'linear-gradient(45deg, #343a40, #212529)',
+                                color: 'white',
+                                border: 'none'
+                            }}
+                        >
+                            <Group>
+                                <IconQuestionMark size={32} />
+                                <Box>
+                                    <Text size="xl" fw={700}>
+                                        {quizzes.reduce((sum, quiz) => sum + (quiz.questionsCount || 0), 0)}
+                                    </Text>
+                                    <Text size="sm" opacity={0.8}>Questions totales</Text>
+                                </Box>
+                            </Group>
+                        </Card>
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                        <Card
+                            radius="xl"
+                            shadow="md"
+                            style={{
+                                background: 'linear-gradient(45deg, #adb5bd, #868e96)',
+                                color: 'white',
+                                border: 'none'
+                            }}
+                        >
+                            <Group>
+                                <IconChartBar size={32} />
+                                <Box>
+                                    <Text size="xl" fw={700}>
+                                        {Math.round(quizzes.reduce((sum, quiz) => sum + (quiz.questionsCount || 0), 0) / (quizzes.length || 1))}
+                                    </Text>
+                                    <Text size="sm" opacity={0.8}>Moyenne/Quiz</Text>
+                                </Box>
+                            </Group>
+                        </Card>
+                    </Grid.Col>
+                </Grid>
+
+                {/* Liste des quiz */}
+                <Stack gap="md">
+                    {loading ? (
+                        <Center h={200}>
+                            <LoadingOverlay visible />
+                        </Center>
+                    ) : quizzes.length === 0 ? (
+                        <Card
+                            radius="xl"
+                            shadow="sm"
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                backdropFilter: 'blur(10px)',
+                                textAlign: 'center',
+                                padding: '3rem'
+                            }}
+                        >
+                            <IconClipboardList size={64} color="#ccc" />
+                            <Title order={3} c="dimmed" mt="md">
+                                Aucun quiz trouvé
+                            </Title>
+                            <Text c="dimmed" mt="xs">
+                                Commencez par créer votre premier quiz
+                            </Text>
+                            <Button
+                                mt="md"
+                                leftSection={<IconPlus size={16} />}
+                                onClick={open}
+                            >
+                                Créer un quiz
+                            </Button>
+                        </Card>
+                    ) : (
+                        quizzes.map((quiz) => (
+                            <Transition
+                                key={quiz.quizId}
+                                mounted={true}
+                                transition="slide-up"
+                                duration={300}
+                            >
+                                {(styles) => (
+                                    <Card
+                                        style={{
+                                            ...styles,
+                                            background: 'rgba(255, 255, 255, 0.95)',
+                                            backdropFilter: 'blur(10px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                        radius="xl"
+                                        shadow="md"
+                                        p="xl"
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.12)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '';
+                                        }}
+                                    >
+                                        <Flex justify="space-between" align="flex-start">
+                                            <Box flex={1}>
+                                                <Group mb="sm">
+                                                    <Avatar
+                                                        size="md"
+                                                        radius="xl"
+                                                        style={{
+                                                            background: 'linear-gradient(45deg, #495057, #6c757d)'
+                                                        }}
+                                                    >
+                                                        <IconClipboardList size={20} />
+                                                    </Avatar>
+                                                    <Box>
+                                                        <Title order={3} size="1.5rem" mb={4}>
+                                                            {quiz.title}
+                                                        </Title>
+                                                        <Group gap="xs">
+                                                            <Badge
+                                                                size="sm"
+                                                                variant="light"
+                                                                color="blue"
+                                                                leftSection={<IconQuestionMark size={12} />}
+                                                            >
+                                                                {quiz.questionsCount || 0} questions
+                                                            </Badge>
+                                                            {quiz.successPercentage && (
+                                                                <Badge
+                                                                    size="sm"
+                                                                    variant="light"
+                                                                    color="green"
+                                                                    leftSection={<IconPercentage size={12} />}
+                                                                >
+                                                                    {quiz.successPercentage}% requis
+                                                                </Badge>
+                                                            )}
+                                                            {quiz.courseName && (
+                                                                <Badge
+                                                                    size="sm"
+                                                                    variant="light"
+                                                                    color="indigo"
+                                                                    leftSection={<IconBook size={12} />}
+                                                                >
+                                                                    {quiz.courseName}
+                                                                </Badge>
+                                                            )}
+                                                            {quiz.chapterName && (
+                                                                <Badge
+                                                                    size="sm"
+                                                                    variant="light"
+                                                                    color="violet"
+                                                                    leftSection={<IconBookmark size={12} />}
+                                                                >
+                                                                    {quiz.chapterName}
+                                                                </Badge>
+                                                            )}
+                                                            {quiz.createdAt && (
+                                                                <Badge
+                                                                    size="sm"
+                                                                    variant="light"
+                                                                    color="gray"
+                                                                    leftSection={<IconCalendar size={12} />}
+                                                                >
+                                                                    {new Date(quiz.createdAt).toLocaleDateString()}
+                                                                </Badge>
+                                                            )}
+                                                        </Group>
+                                                    </Box>
+                                                </Group>
+                                                
+                                                {quiz.description && (
+                                                    <Text c="dimmed" size="sm" lineClamp={2} mb="md">
+                                                        {quiz.description}
+                                                    </Text>
+                                                )}
+                                            </Box>
+
+                                            <Menu shadow="md" width={200}>
+                                                <Menu.Target>
+                                                    <ActionIcon
+                                                        variant="light"
+                                                        size="lg"
+                                                        radius="xl"
+                                                    >
+                                                        <IconDots size={18} />
+                                                    </ActionIcon>
+                                                </Menu.Target>
+                                                <Menu.Dropdown>
+                                                    <Menu.Item
+                                                        leftSection={<IconEye size={16} />}
+                                                        onClick={() => window.location.href = `/quiz/${quiz.quizId}/questions`}
+                                                    >
+                                                        Voir les questions
+                                                    </Menu.Item>
+                                                    <Menu.Item
+                                                        leftSection={<IconEdit size={16} />}
+                                                        onClick={() => handleEdit(quiz)}
+                                                    >
+                                                        Modifier
+                                                    </Menu.Item>
+                                                    <Menu.Divider />
+                                                    <Menu.Item
+                                                        leftSection={<IconTrash size={16} />}
+                                                        color="red"
+                                                        onClick={() => handleDeleteClick(quiz)}
+                                                    >
+                                                        Supprimer
+                                                    </Menu.Item>
+                                                </Menu.Dropdown>
+                                            </Menu>
+                                        </Flex>
+                                    </Card>
+                                )}
+                            </Transition>
+                        ))
+                    )}
+                </Stack>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <Center mt="xl">
+                        <Pagination
+                            value={page}
+                            onChange={setPage}
+                            total={totalPages}
+                            size="lg"
+                            radius="xl"
+                        />
+                    </Center>
+                )}
+            </Container>
+
+            {/* Modal de création/modification */}
+            <Modal
+                opened={opened}
+                onClose={handleCloseModal}
+                title={
+                    <Group>
+                        <IconClipboardList size={24} />
+                        <Text size="lg" fw={600}>
+                            {isUpdating ? 'Modifier le quiz' : 'Nouveau quiz'}
+                        </Text>
+                    </Group>
+                }
+                size="lg"
+                radius="md"
+            >
+                <form onSubmit={form.onSubmit(handleSubmit)}>
+                    <Stack gap="md">
+                        <TextInput
+                            label="Titre du quiz"
+                            placeholder="Entrez le titre du quiz"
+                            size="md"
+                            required
+                            {...form.getInputProps('title')}
+                        />
+                        
+                        <Textarea
+                            label="Description"
+                            placeholder="Décrivez votre quiz (optionnel)"
+                            size="md"
+                            rows={4}
+                            {...form.getInputProps('description')}
+                        />
+
+                        <Select
+                            label="Cours"
+                            placeholder="Sélectionnez un cours"
+                            size="md"
+                            required
+                            data={courses.map(course => ({
+                                value: course.courseId.toString(),
+                                label: course.title
+                            }))}
+                            value={selectedCourseId}
+                            onChange={handleCourseChange}
+                            leftSection={<IconBook size={16} />}
+                            searchable
+                            clearable
+                        />
+
+                        <Select
+                            label="Chapitre"
+                            placeholder="Sélectionnez un chapitre (optionnel)"
+                            size="md"
+                            data={chapters.map(chapter => ({
+                                value: chapter.chapterId.toString(),
+                                label: chapter.title
+                            }))}
+                            {...form.getInputProps('chapterId', {
+                                transform: {
+                                    in: (value) => value?.toString(),
+                                    out: (value) => value ? parseInt(value) : undefined
+                                }
+                            })}
+                            leftSection={<IconBookmark size={16} />}
+                            disabled={!selectedCourseId}
+                            searchable
+                            clearable
+                        />
+
+                        <NumberInput
+                            label="Pourcentage de réussite requis"
+                            placeholder="Entrez le pourcentage (1-100)"
+                            size="md"
+                            required
+                            min={1}
+                            max={100}
+                            suffix="%"
+                            leftSection={<IconPercentage size={16} />}
+                            {...form.getInputProps('successPercentage')}
+                        />
+
+                        <Group justify="flex-end" mt="md">
+                            <Button
+                                variant="light"
+                                onClick={handleCloseModal}
+                            >
+                                Annuler
+                            </Button>
+                            <Button
+                                type="submit"
+                                loading={loading}
+                                leftSection={<IconPlus size={16} />}
+                                color="dark"
+                            >
+                                {isUpdating ? 'Modifier' : 'Créer'}
+                            </Button>
+                        </Group>
+                    </Stack>
+                </form>
+            </Modal>
+
+            {/* Modal de suppression */}
+            <Modal
+                opened={deleteOpened}
+                onClose={closeDelete}
+                title={
+                    <Group>
+                        <IconTrash size={24} color="red" />
+                        <Text size="lg" fw={600} c="red">
+                            Confirmer la suppression
+                        </Text>
+                    </Group>
+                }
+                size="md"
+                radius="md"
+            >
+                <Stack gap="md">
+                    <Text>
+                        Êtes-vous sûr de vouloir supprimer le quiz{' '}
+                        <Text component="span" fw={600}>
+                            "{selectedQuiz?.title}"
+                        </Text>
+                        ? Cette action est irréversible.
+                    </Text>
+
+                    <Group justify="flex-end">
+                        <Button variant="light" onClick={closeDelete}>
+                            Annuler
+                        </Button>
+                        <Button
+                            color="red"
+                            onClick={handleDelete}
+                            loading={loading}
+                            leftSection={<IconTrash size={16} />}
+                        >
+                            Supprimer
+                        </Button>
+                    </Group>
+                </Stack>
+            </Modal>
+        </Box>
+    );
+}

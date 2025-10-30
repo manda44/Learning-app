@@ -1,0 +1,583 @@
+@startuml LearningApp_Class_Diagram
+
+!define ENTITY_COLOR #E1F5FE
+!define SERVICE_COLOR #F3E5F5
+!define CONTROLLER_COLOR #E8F5E9
+!define REPOSITORY_COLOR #FFF3E0
+!define DTO_COLOR #FFEBEE
+
+package "Domain" {
+    class Users {
+        +int UserId
+        +string Username
+        +string Email
+        +string Password
+        +DateTime CreatedAt
+        +DateTime? UpdatedAt
+        +ICollection<UserRole> UserRoles
+        +ICollection<QuizResponse> QuizResponses
+    }
+
+    class Role {
+        +int RoleId
+        +string RoleName
+        +ICollection<UserRole> UserRoles
+    }
+
+    class UserRole {
+        +int UserRoleId
+        +int UserId
+        +int RoleId
+        +Users User
+        +Role Role
+    }
+
+    class Course {
+        +int CourseId
+        +string Title
+        +string Description
+        +DateTime CreatedAt
+        +ICollection<Chapter> Chapters
+        +ICollection<MiniProject> MiniProjects
+    }
+
+    class Chapter {
+        +int ChapterId
+        +string Title
+        +int Order
+        +string Color
+        +int CourseId
+        +string? Description
+        +DateTime CreatedAt
+        +Course Course
+        +ICollection<Content> Contents
+        +ICollection<Quiz> Quizzes
+    }
+
+    class Content {
+        +int ContentId
+        +int ChapterId
+        +string Title
+        +string Body
+        +int Order
+        +DateTime CreatedAt
+        +Chapter Chapter
+    }
+
+    class Quiz {
+        +int QuizId
+        +int ChapterId
+        +string Title
+        +int SuccessPercentage
+        +DateTime CreatedAt
+        +string? Description
+        +Chapter Chapter
+        +ICollection<Question> Questions
+        +ICollection<QuizResponse> QuizResponses
+    }
+
+    class Question {
+        +int QuestionId
+        +int QuizId
+        +string Type
+        +string Content
+        +int Rank
+        +string? Explanation
+        +Quiz Quiz
+        +ICollection<QuestionItem> QuestionItems
+        +ICollection<QuestionResponse> QuestionResponses
+    }
+
+    class QuestionItem {
+        +int QuestionItemId
+        +int QuestionId
+        +string? Content
+        +bool? IsRight
+        +string? RightResponse
+        +Question Question
+        +ICollection<QuestionResponse> QuestionResponses
+    }
+
+    class QuizResponse {
+        +int QuizResponseId
+        +int UserId
+        +int QuizId
+        +int AttemptNumber
+        +DateTime ResponseDate
+        +int? Score
+        +Users User
+        +Quiz Quiz
+        +ICollection<QuestionResponse> QuestionResponses
+    }
+
+    class QuestionResponse {
+        +int QuestionResponseId
+        +int QuizResponseId
+        +int QuestionId
+        +int? QuestionItemId
+        +string? ResponseContent
+        +QuizResponse QuizResponse
+        +Question Question
+        +QuestionItem? QuestionItem
+    }
+
+    class ConnexionHistory {
+        +int Id
+        +int UserId
+        +DateTime ConnexionDate
+    }
+
+    class MiniProject {
+        +int Id
+        +int CourseId
+        +string Title
+        +string Description
+        +DateTime CreatedAt
+        +bool IsActive
+        +Course Course
+        +ICollection<Ticket> Tickets
+    }
+
+    class Ticket {
+        +int Id
+        +int MiniProjectId
+        +string Title
+        +string Description
+        +string Status
+        +int Order
+        +int? AssigneeUserId
+        +DateTime CreatedAt
+        +DateTime? StartedAt
+        +DateTime? CompletedAt
+        +DateTime? ValidatedAt
+        +int? ValidatedByUserId
+        +MiniProject MiniProject
+        +Users? Assignee
+        +Users? Validator
+    }
+
+    class ChatSession {
+        +int Id
+        +int UserId
+        +int? CourseId
+        +int? ChapterId
+        +int? MiniProjectId
+        +int? TicketId
+        +DateTime StartedAt
+        +DateTime? EndedAt
+        +Users User
+        +ICollection<ChatMessage> Messages
+    }
+
+    class ChatMessage {
+        +int Id
+        +int ChatSessionId
+        +string Role
+        +string Content
+        +DateTime CreatedAt
+        +ChatSession ChatSession
+    }
+}
+
+package "Application.DTOs" <<DTO_COLOR>> {
+    class UserDto {
+        +int UserId
+        +string Username
+        +string Email
+        +DateTime CreatedAt
+        +DateTime? UpdatedAt
+    }
+
+    class UserCreateDto {
+        +string Username
+        +string Email
+        +string Password
+    }
+
+    class UserLoginDto {
+        +string Email
+        +string Password
+    }
+
+    class UserUpdateDto {
+        +int UserId
+        +string Username
+        +string Email
+        +string? Password
+    }
+
+    class RoleDto {
+        +int RoleId
+        +string RoleName
+    }
+
+    class UserRoleDto {
+        +int UserRoleId
+        +int UserId
+        +int RoleId
+    }
+
+    class ChapterDto {
+        +int ChapterId
+        +string Title
+        +int Order
+        +string Color
+        +int CourseId
+        +string? Description
+        +DateTime CreatedAt
+    }
+
+    class ContentDto {
+        +int ContentId
+        +int ChapterId
+        +string Title
+        +string Body
+        +int Order
+        +DateTime CreatedAt
+    }
+
+    class QuizDto {
+        +int QuizId
+        +int ChapterId
+        +string Title
+        +int SuccessPercentage
+        +DateTime CreatedAt
+        +string? Description
+    }
+
+    class QuestionDto {
+        +int QuestionId
+        +int QuizId
+        +string Type
+        +string Content
+        +int Rank
+        +string? Explanation
+    }
+
+    class QuestionItemDto {
+        +int QuestionItemId
+        +int QuestionId
+        +string? Content
+        +bool? IsRight
+        +string? RightResponse
+    }
+
+    class QuizResponseDto {
+        +int QuizResponseId
+        +int UserId
+        +int QuizId
+        +int AttemptNumber
+        +DateTime ResponseDate
+        +int? Score
+    }
+
+    class QuestionResponseDto {
+        +int QuestionResponseId
+        +int QuizResponseId
+        +int QuestionId
+        +int? QuestionItemId
+        +string? ResponseContent
+    }
+}
+
+package "Application.Interfaces" <<REPOSITORY_COLOR>> {
+    interface "IRepository<T>" as IRepository {
+        +Task<IEnumerable<T>> GetAllAsync()
+        +Task<T?> GetByIdAsync(int id)
+        +Task AddAsync(T entity)
+        +void Update(T entity)
+        +void Delete(T entity)
+        +Task SaveChangesAsync()
+    }
+
+    interface IUserRepository {
+        +Task<UserDto?> GetUserById(int userId)
+        +Task<UserDto?> UpdateUser(UserUpdateDto userUpdateDto)
+        +Task<bool> DeleteUser(int userId)
+        +Task<UserDto?> GetUserByEmail(string email)
+    }
+
+    interface IRoleRepository
+    interface IUserRoleRepository
+
+    interface IChapterRepository {
+        +Task<ChapterDto?> GetChapterById(int chapterId)
+        +Task<ChapterDto?> UpdateChapter(ChapterUpdateDto chapterUpdateDto)
+        +Task<bool> DeleteChapter(int chapterId)
+    }
+
+    interface IChapterContentRepository
+
+    interface IQuizRepository {
+        +Task<QuizDto?> GetQuizById(int quizId)
+        +Task<QuizDto?> UpdateQuiz(QuizUpdateDto quizUpdateDto)
+        +Task<bool> DeleteQuiz(int quizId)
+    }
+
+    interface IQuestionRepository {
+        +Task<QuestionDto?> GetQuestionById(int questionId)
+        +Task<QuestionDto?> UpdateQuestion(QuestionUpdateDto questionUpdateDto)
+        +Task<bool> DeleteQuestion(int questionId)
+    }
+
+    interface IQuestionItemRepository {
+        +Task<QuestionItemDto?> GetQuestionItemById(int questionItemId)
+        +Task<QuestionItemDto?> UpdateQuestionItem(QuestionItemUpdateDto questionItemUpdateDto)
+        +Task<bool> DeleteQuestionItem(int questionItemId)
+    }
+
+    interface IQuizResponseRepository {
+        +Task<QuizResponseDto?> GetQuizResponseById(int quizResponseId)
+        +Task<QuizResponseDto?> UpdateQuizResponse(QuizResponseUpdateDto quizResponseUpdateDto)
+        +Task<bool> DeleteQuizResponse(int quizResponseId)
+    }
+
+    interface IQuestionResponseRepository {
+        +Task<QuestionResponseDto?> GetQuestionResponseById(int questionResponseId)
+        +Task<QuestionResponseDto?> UpdateQuestionResponse(QuestionResponseUpdateDto questionResponseUpdateDto)
+        +Task<bool> DeleteQuestionResponse(int questionResponseId)
+    }
+}
+
+package "Infrastructure.Repositories" <<REPOSITORY_COLOR>> {
+    class "Repository<T>" as Repository {
+        #ApplicationDbContext _context
+        #DbSet<T> _dbSet
+        +Task<IEnumerable<T>> GetAllAsync()
+        +Task<T?> GetByIdAsync(int id)
+        +Task AddAsync(T entity)
+        +void Update(T entity)
+        +void Delete(T entity)
+        +Task SaveChangesAsync()
+    }
+
+    class UserRepository {
+        +Task<UserDto?> GetUserById(int userId)
+        +Task<UserDto?> UpdateUser(UserUpdateDto userUpdateDto)
+        +Task<bool> DeleteUser(int userId)
+        +Task<UserDto?> GetUserByEmail(string email)
+    }
+
+    class RoleRepository
+    class UserRoleRepository
+    class ChapterRepository
+    class ContentRepository
+    class QuizRepository
+    class QuestionRepository
+    class QuestionItemRepository
+    class QuizResponseRepository
+    class QuestionResponseRepository
+}
+
+package "Application.Services" <<SERVICE_COLOR>> {
+    class UserService {
+        -IUserRepository _userRepository
+        +Task<UserDto> CreateUser(UserCreateDto userCreateDto)
+        +Task<UserDto?> GetUserById(int userId)
+        +Task<UserDto?> UpdateUser(UserUpdateDto userUpdateDto)
+        +Task<bool> DeleteUser(int userId)
+        +Task<UserDto?> Login(UserLoginDto userLoginDto)
+    }
+
+    class RoleService {
+        -IRoleRepository _roleRepository
+    }
+
+    class UserRoleService {
+        -IUserRoleRepository _userRoleRepository
+    }
+
+    class ChapterService {
+        -IChapterRepository _chapterRepository
+    }
+
+    class ChapterContentService {
+        -IChapterContentRepository _chapterContentRepository
+    }
+
+    class QuizService {
+        -IQuizRepository _quizRepository
+        -IQuestionRepository _questionRepository
+        -IQuestionItemRepository _questionItemRepository
+        +Task<QuizDto> AddQuiz(QuizCreateDto quizCreateDto)
+        +Task<QuizDto?> UpdateQuiz(QuizUpdateDto quizUpdateDto)
+        +Task<QuizDto?> GetQuizById(int quizId)
+        +Task<bool> DeleteQuiz(int quizId)
+        +Task DeleteAllQuestions(int QuizId)
+        +Task<QuestionDto> AddQuestion(QuestionCreateDto questionCreateDto)
+        +Task<QuestionItemDto> AddQuestionItem(QuestionItemCreateDto questionItemCreateDto)
+    }
+
+    class MiniProjectService {
+        -IRepository<MiniProject> _miniProjectRepo
+        -IRepository<Ticket> _ticketRepo
+    }
+
+    class TicketService {
+        -IRepository<Ticket> _ticketRepo
+        +Task ChangeStatus(int ticketId, string status)
+        +Task Validate(int ticketId, int validatorUserId)
+    }
+
+    class AiChatService {
+        -IRepository<ChatSession> _sessionRepo
+        -IRepository<ChatMessage> _messageRepo
+        +Task<int> StartSession(int userId, int? courseId, int? chapterId, int? miniProjectId, int? ticketId)
+        +Task AddMessage(int sessionId, string role, string content)
+    }
+}
+
+package "Controllers" <<CONTROLLER_COLOR>> {
+    class UsersController {
+        -UserService _userService
+        +Task<ActionResult<UserDto>> CreateUser(UserCreateDto userCreateDto)
+        +Task<ActionResult<UserDto>> GetUser(int id)
+        +Task<ActionResult<UserDto>> UpdateUser(int id, UserUpdateDto userUpdateDto)
+        +Task<ActionResult> DeleteUser(int id)
+        +Task<ActionResult<UserDto>> Login(UserLoginDto userLoginDto)
+    }
+
+    class RolesController {
+        -RoleService _roleService
+    }
+
+    class ChaptersController {
+        -ChapterService _chapterService
+    }
+
+    class ContentsController {
+        -ChapterContentService _chapterContentService
+    }
+
+    class CoursesController
+
+    class QuizController {
+        -QuizService _quizService
+        +Task<ActionResult<List<QuizDto>>> GetQuizList(int page, int limit, string search)
+        +Task<ActionResult<QuizDto>> PostQuiz(QuizCreateDto dto)
+        +Task<ActionResult<QuizDto>> PutQuiz(int id, QuizUpdateDto dto)
+        +Task<ActionResult> DeleteQuiz(int id)
+        +Task<ActionResult<List<QuestionDto>>> PostQuestion(List<QuestionCreateDto> dtos)
+        +Task<ActionResult<List<QuestionDto>>> GetQuestions(int quizId)
+        +Task<ActionResult<QuestionItemDto>> PostQuestionItem(QuestionItemCreateDto dto)
+        +Task<ActionResult<QuizDto>> GetQuiz(int id)
+        +Task<ActionResult<QuestionDto>> GetQuestion(int id)
+        +Task<ActionResult<QuestionItemDto>> GetQuestionItem(int id)
+    }
+
+    class WeatherForecastController
+
+    class MiniProjectsController {
+        -MiniProjectService _miniProjectService
+    }
+
+    class TicketsController {
+        -TicketService _ticketService
+    }
+
+    class AiChatController {
+        -AiChatService _aiChatService
+    }
+}
+
+package "Infrastructure.Data" {
+    class ApplicationDbContext {
+        +DbSet<Users> Users
+        +DbSet<Role> Roles
+        +DbSet<UserRole> UserRoles
+        +DbSet<Course> Courses
+        +DbSet<Chapter> Chapters
+        +DbSet<Content> Contents
+        +DbSet<Quiz> Quizzes
+        +DbSet<Question> Questions
+        +DbSet<QuestionItem> QuestionItems
+        +DbSet<QuizResponse> QuizResponses
+        +DbSet<QuestionResponse> QuestionResponses
+        +DbSet<ConnexionHistory> ConnexionHistories
+        +DbSet<Ticket> Tickets
+        +DbSet<MiniProject> MiniProjects
+        +DbSet<ChatSession> ChatSessions
+        +DbSet<ChatMessage> ChatMessages
+    }
+}
+
+' Domain Relationships
+Users ||--o{ UserRole
+Role ||--o{ UserRole
+Course ||--o{ Chapter
+Chapter ||--o{ Content
+Chapter ||--o{ Quiz
+Quiz ||--o{ Question
+Question ||--o{ QuestionItem
+Users ||--o{ QuizResponse
+Quiz ||--o{ QuizResponse
+QuizResponse ||--o{ QuestionResponse
+Question ||--o{ QuestionResponse
+QuestionItem ||--o{ QuestionResponse
+
+' Mini-projet & Tickets
+Course ||--o{ MiniProject
+MiniProject ||--o{ Ticket
+Users ||..o{ Ticket : assigns >
+Users ||..o{ Ticket : validates >
+Users ||--o{ ChatSession
+ChatSession ||--o{ ChatMessage
+
+' Repository Inheritance
+Repository <|-- UserRepository
+Repository <|-- RoleRepository
+Repository <|-- UserRoleRepository
+Repository <|-- ChapterRepository
+Repository <|-- ContentRepository
+Repository <|-- QuizRepository
+Repository <|-- QuestionRepository
+Repository <|-- QuestionItemRepository
+Repository <|-- QuizResponseRepository
+Repository <|-- QuestionResponseRepository
+
+' Interface Implementation
+IRepository <|.. Repository
+IUserRepository <|.. UserRepository
+IRoleRepository <|.. RoleRepository
+IUserRoleRepository <|.. UserRoleRepository
+IChapterRepository <|.. ChapterRepository
+IChapterContentRepository <|.. ContentRepository
+IQuizRepository <|.. QuizRepository
+IQuestionRepository <|.. QuestionRepository
+IQuestionItemRepository <|.. QuestionItemRepository
+IQuizResponseRepository <|.. QuizResponseRepository
+IQuestionResponseRepository <|.. QuestionResponseRepository
+
+' Service Dependencies
+UserService --> IUserRepository
+RoleService --> IRoleRepository
+UserRoleService --> IUserRoleRepository
+ChapterService --> IChapterRepository
+ChapterContentService --> IChapterContentRepository
+QuizService --> IQuizRepository
+QuizService --> IQuestionRepository
+QuizService --> IQuestionItemRepository
+
+' Controller Dependencies
+UsersController --> UserService
+RolesController --> RoleService
+ChaptersController --> ChapterService
+ContentsController --> ChapterContentService
+QuizController --> QuizService
+MiniProjectsController --> MiniProjectService
+TicketsController --> TicketService
+AiChatController --> AiChatService
+
+' Repository Dependencies
+UserRepository --> ApplicationDbContext
+RoleRepository --> ApplicationDbContext
+UserRoleRepository --> ApplicationDbContext
+ChapterRepository --> ApplicationDbContext
+ContentRepository --> ApplicationDbContext
+QuizRepository --> ApplicationDbContext
+QuestionRepository --> ApplicationDbContext
+QuestionItemRepository --> ApplicationDbContext
+QuizResponseRepository --> ApplicationDbContext
+QuestionResponseRepository --> ApplicationDbContext
+
+@enduml
