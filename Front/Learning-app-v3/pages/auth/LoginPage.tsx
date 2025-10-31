@@ -1,5 +1,4 @@
-import { Container, Paper, TextInput, PasswordInput, Button, Group, Stack, Center, Title, Text, Divider, ThemeIcon } from '@mantine/core';
-import { IconSchool } from '@tabler/icons-react';
+import { Container, Paper, TextInput, PasswordInput, Button, Group, Stack, Center, Title, Text, Divider } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/authService';
@@ -30,7 +29,7 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+      background: 'linear-gradient(135deg, #0D47A1 0%, #1565C0 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -41,33 +40,30 @@ export default function LoginPage() {
           {/* Logo et titre */}
           <Center mb={30}>
             <Stack align="center" gap={15}>
-              <ThemeIcon
-                size={60}
-                radius="md"
-                variant="gradient"
-                gradient={{ from: '#6366f1', to: '#a855f7' }}
-              >
-                <IconSchool size={36} />
-              </ThemeIcon>
+              <img
+                src="/logos/dtc-logo.jpg"
+                alt="Learning App Logo"
+                style={{ width: '100px', height: '100px', borderRadius: '12px' }}
+              />
               <div>
-                <Title order={2} size="h3" weight={700} align="center">
-                  Mantinee
+                <Title order={2} size="h3" weight={700} align="center" style={{ color: '#0D47A1' }}>
+                  Learning App
                 </Title>
                 <Text size="sm" color="dimmed" align="center">
-                  Plateforme de modules en compliance
+                  Plateforme d'apprentissage en ligne
                 </Text>
               </div>
             </Stack>
           </Center>
 
-          <Divider my="lg" />
+          <Divider my="lg" style={{ borderColor: '#4A9FD8' }} />
 
           {/* Bouton GitHub */}
           <Button
             fullWidth
             size="md"
             variant="filled"
-            color="dark"
+            color="orange"
             leftSection={<span>🔗</span>}
             mb="lg"
           >
@@ -78,6 +74,7 @@ export default function LoginPage() {
             label="ou"
             labelPosition="center"
             my="lg"
+            style={{ borderColor: '#E8F4FD' }}
           />
 
           {/* Formulaire de connexion */}

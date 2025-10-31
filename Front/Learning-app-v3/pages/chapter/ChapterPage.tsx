@@ -23,8 +23,11 @@ import {
 
 
 const ChapterPage = () =>{
-    const [selectedValue, setSelectedValue] = useState<string | null>(null);
-    
+    const [selectedValue, setSelectedValue] = useState<string | null>(() => {
+        const saved = localStorage.getItem('selectedCourseId');
+        return saved || null;
+    });
+
     const {
         courseList,setCourseList, setBreadCrumb,showStatusModal,
         chapterList,setChapterList,opened,open,close,form,isUpdating,setIsUpdating
@@ -43,6 +46,14 @@ const ChapterPage = () =>{
         }
     });
 
+    // Save selected course to localStorage when it changes
+    useEffect(()=>{
+        if (selectedValue) {
+            localStorage.setItem('selectedCourseId', selectedValue);
+            // Automatically fetch chapters when course is selected
+            fetchChapters(Number(selectedValue));
+        }
+    }, [selectedValue])
 
     useEffect(()=>{
         const fetch = async () => await fetchCourses();

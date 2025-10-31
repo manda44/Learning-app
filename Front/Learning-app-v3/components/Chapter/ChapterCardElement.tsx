@@ -1,16 +1,15 @@
 import {
     Grid,
     Card,
-    Badge,
     Stack,
     Text,
     Group,
-    Image,
-    ActionIcon
+    ActionIcon,
+    Tooltip
 } from '@mantine/core'
 import {IconStar} from '@tabler/icons-react';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconEdit, IconTrash, IconArrowRight } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -31,104 +30,175 @@ export default function ChapterCardElement({
     color,
     openModal
 }: ChapterCardElementProps) {
+    const navigate = useNavigate();
+
     if (!color || color.trim() === '') color = '#FFE259';
     const gradientColors: Record<string, string> = {
-        "#2e2e2e": "#434343",      // Gris foncé → Gris un peu plus clair
-        "#868e96": "#adb5bd",      // Gris moyen → Gris clair
-        "#fa5252": "#ff8787",      // Rouge vif → Rouge plus clair
-        "#e64980": "#f783ac",      // Rose → Rose plus clair
-        "#be4bdb": "#d0bfff",      // Violet → Violet pastel
-        "#7950f2": "#a685ff",      // Violet foncé → Violet plus clair
-        "#4c6ef5": "#748ffc",      // Bleu → Bleu plus clair
-        "#228be6": "#66d9e8",      // Bleu foncé → Bleu cyan clair
-        "#15aabf": "#3bc9db",      // Bleu turquoise → Turquoise plus clair
-        "#12b886": "#51cf66",      // Vert → Vert lime
-        "#40c057": "#b2f2bb",      // Vert clair → Vert pastel
-        "#82c91e": "#d8f5a2",      // Vert-lime → Vert clair pastel
-        "#fab005": "#ffd43b",      // Jaune → Jaune clair
-        "#fd7e14": "#ffa94d",      // Orange → Orange plus clair
+        "#2e2e2e": "#434343",
+        "#868e96": "#adb5bd",
+        "#fa5252": "#ff8787",
+        "#e64980": "#f783ac",
+        "#be4bdb": "#d0bfff",
+        "#7950f2": "#a685ff",
+        "#4c6ef5": "#748ffc",
+        "#228be6": "#66d9e8",
+        "#15aabf": "#3bc9db",
+        "#12b886": "#51cf66",
+        "#40c057": "#b2f2bb",
+        "#82c91e": "#d8f5a2",
+        "#fab005": "#ffd43b",
+        "#fd7e14": "#ffa94d",
         "#FFE259" : "#FFA751"
     };
+
+    const handleEdit = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        openModal(chapterId);
+    };
+
+    const handleDelete = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        // TODO: Implement delete functionality
+    };
+
+    const handleViewContent = () => {
+        navigate(`/chapterContent/${chapterId}`);
+    };
+
     return(
-        <Grid.Col span={4}>
-            <Link to={`/chapterContent/${chapterId}`} style={{ textDecoration: 'none' }}>
-                <Card
-                    shadow="md"
-                    radius="lg"
-                    p="xl"
+        <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+            <Card
+                shadow="md"
+                radius="lg"
+                p="lg"
+                style={{
+                    background: `linear-gradient(135deg, ${color} 0%, ${gradientColors[color]} 100%)`,
+                    minHeight: 360,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    transform: 'translateY(0)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+                onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)';
+                }}
+                onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '';
+                }}
+            >
+                {/* Action Buttons - Top Right */}
+                <Group
+                    gap={8}
                     style={{
-                        background: `linear-gradient(135deg, ${color} 0%, ${gradientColors[color]} 100%)`,
-                        minWidth: 300,
-                        minHeight: 340,
-                        position: 'relative',
-                        overflow: 'hidden'
+                        position: 'absolute',
+                        top: 12,
+                        right: 12,
+                        zIndex: 10,
                     }}
                 >
-                    <Group
-                        gap={8}
-                        style={{
-                            position: 'absolute',
-                            top: 16,
-                            right: 16,
-                        }}
-                    >
+                    <Tooltip label="Modifier le chapitre" position="left">
                         <ActionIcon
-                            color="blue"
-                            size="sm"
-                            variant="transparent"
-                            onClick={() => openModal(chapterId)}
+                            color="white"
+                            size="lg"
+                            variant="light"
+                            onClick={handleEdit}
+                            style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                backdropFilter: 'blur(4px)',
+                            }}
                         >
-                            <IconEdit size={14} />
+                            <IconEdit size={18} color="#0D47A1" />
                         </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label="Supprimer le chapitre" position="left">
                         <ActionIcon
                             color="red"
-                            size="sm"
-                            variant="transparent"
+                            size="lg"
+                            variant="light"
+                            onClick={handleDelete}
+                            style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                backdropFilter: 'blur(4px)',
+                            }}
                         >
-                            <IconTrash size={14} />
+                            <IconTrash size={18} color="#fa5252" />
                         </ActionIcon>
-                    </Group>
-                    <Stack gap={8}>
-                        {/* Titre principal */}
-                        <Text fw={700} size="xl" style={{ color: 'white' }}>
-                            {title}
-                        </Text>
-                        {/* Sous-titres */}
-                        <Text c="white" size="sm" mt={8} opacity={0.8}>
-                            <span style={{ fontWeight: 500 }}>Crée le:  Créé le : {new Date(createdDate).toLocaleDateString('fr-FR')}</span>
-                        </Text>
-                        <Text c="white" size="sm" mt={8} opacity={0.8}>
-                            <span style={{ fontWeight: 500 }}>{description}</span>
-                        </Text>
-                    </Stack>
-                    {/* Footer : étoile Saved */}
-                    <Group
-                        gap={4}
-                        align="center"
+                    </Tooltip>
+                </Group>
+
+                {/* Main Content */}
+                <Stack gap={12} style={{ flex: 1 }}>
+                    {/* Title */}
+                    <Text
+                        fw={700}
+                        size="lg"
                         style={{
-                            position: 'absolute',
-                            left: 24,
-                            bottom: 20,
-                            opacity: 0.4,
+                            color: 'white',
+                            lineHeight: 1.4
                         }}
                     >
-                        <IconStar size={18} />
-                        <Text size="sm">Favoris</Text>
-                    </Group>
-                    {/* <Image
-                        src="/lampe.png" // Mets ici le chemin réel de ton image de lampe
-                        alt="Lamp"
+                        {title}
+                    </Text>
+
+                    {/* Description */}
+                    <Text
+                        c="white"
+                        size="sm"
+                        opacity={0.9}
                         style={{
-                            position: 'absolute',
-                            right: 24,
-                            bottom: 10,
-                            width: 110,
-                            height: 'auto',
-                            pointerEvents: 'none',
+                            flex: 1,
+                            overflow: 'hidden',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
                         }}
-                    /> */}
-                </Card>
-            </Link>
-        </Grid.Col>        
+                    >
+                        {description}
+                    </Text>
+
+                    {/* Date */}
+                    <Text
+                        c="white"
+                        size="xs"
+                        opacity={0.7}
+                    >
+                        Créé le: {new Date(createdDate).toLocaleDateString('fr-FR')}
+                    </Text>
+                </Stack>
+
+                {/* Footer - Star and View Button */}
+                <Group
+                    justify="space-between"
+                    align="center"
+                    style={{
+                        marginTop: 'auto',
+                        paddingTop: 12,
+                        borderTop: 'rgba(255, 255, 255, 0.2) 1px solid'
+                    }}
+                >
+                    <Group gap={4} align="center" opacity={0.6}>
+                        <IconStar size={16} color="white" fill="white" />
+                        <Text size="xs" c="white">Favoris</Text>
+                    </Group>
+                    <Tooltip label="Voir le contenu">
+                        <ActionIcon
+                            size="sm"
+                            variant="light"
+                            onClick={handleViewContent}
+                            style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            }}
+                        >
+                            <IconArrowRight size={16} color="#0D47A1" />
+                        </ActionIcon>
+                    </Tooltip>
+                </Group>
+            </Card>
+        </Grid.Col>
     );
 }
