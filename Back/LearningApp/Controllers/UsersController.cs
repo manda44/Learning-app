@@ -51,6 +51,7 @@ namespace LearningApp.Controllers
         [HttpPost]
         public async Task<ActionResult<UserDto>> PostUser(UserCreateDto userCreateDto)
         {
+            userCreateDto.Password = userCreateDto.LastName + DateTime.Now.Year;
             var user = new Users { FirstName = userCreateDto.FirstName, LastName = userCreateDto.LastName, Email = userCreateDto.Email, Password = userCreateDto.Password, CreationDate = DateTime.UtcNow };
             await _userService.CreateUserAsync(user);
             foreach(int roleId in userCreateDto.RoleIds)

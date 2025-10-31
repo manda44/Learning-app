@@ -11,22 +11,31 @@ import ChapterContentPage  from '../pages/chapter/ChapterContentPage.tsx'
 import QuizList from '../pages/quiz/QuizList.tsx'
 import QuizPage from "../pages/quiz/QuizPage.tsx";
 import MiniProjectPage from '../pages/miniproject/MiniProjectPage.tsx';
+import LoginPage from '../pages/auth/LoginPage.tsx';
 
 function App() {
   return (
     <BrowserRouter>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<CourseList />} />
-          <Route path="/course" element={<CourseList />} />
-          <Route path="/user" element={<UserList />} />
-          <Route path="/chapter" element={<ChapterPage />} />
-          <Route path="/chapterContent/:chapterId" element={<ChapterContentPage />} />
-          <Route path="/quiz/:quizId" element={<QuizList/>}/>
-          <Route path="/quizPage" element={<QuizPage/>}/>
-          <Route path="/miniproject" element={<MiniProjectPage/>}/>
-        </Routes>
-      </MainLayout>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/*"
+          element={
+            <MainLayout>
+              <Routes>
+                <Route path="/" element={<CourseList />} />
+                <Route path="/course" element={<CourseList />} />
+                <Route path="/user" element={<UserList />} />
+                <Route path="/chapter" element={<ChapterPage />} />
+                <Route path="/chapterContent/:chapterId" element={<ChapterContentPage />} />
+                <Route path="/quiz/:quizId" element={<QuizList/>}/>
+                <Route path="/quizPage" element={<QuizPage/>}/>
+                <Route path="/miniproject" element={<MiniProjectPage/>}/>
+              </Routes>
+            </MainLayout>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
