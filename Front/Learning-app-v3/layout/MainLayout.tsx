@@ -1,13 +1,12 @@
 import { AppShell, Burger, Group, NavLink, Input } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
-import {IconSearch, IconBrightnessDown, IconBell, IconMessageFilled, IconUserCircle } from '@tabler/icons-react';
+import {IconSearch, IconBrightnessDown, IconBell, IconMessageFilled, IconUserCircle, IconLogout } from '@tabler/icons-react';
 import {
       IconSettings,
-      IconPhoto,
+      IconUser as IconUserProfile,
       IconMessageCircle,
-      IconTrash,
-      IconArrowsLeftRight,
+      IconLock,
       IconChevronDown,
       IconLayoutDashboard,
       IconVocabulary,
@@ -19,12 +18,31 @@ import {
 import { Menu,Text, Container, Anchor, Breadcrumbs } from '@mantine/core';
 import ModalMessage from '../components/ModalMessages.tsx';
 import ConfirmMessage from '../components/ConfirmMessage.tsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {useGeneralStore} from '../store/generalStore';
+import { getUserInfo, logoutUser } from '../services/authService';
+import { useState, useEffect } from 'react';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure(true);
-      const breadcrumbs = useGeneralStore(state => state.breadCrumb).map((item, index) => (
+  const [userName, setUserName] = useState<string>('Utilisateur');
+  const navigate = useNavigate();
+
+  // Récupérer les informations de l'utilisateur au chargement
+  useEffect(() => {
+    const userInfo = getUserInfo();
+    if (userInfo) {
+      setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
+    }
+  }, []);
+
+  // Fonction de déconnexion
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate('/login');
+  };
+
+  const breadcrumbs = useGeneralStore(state => state.breadCrumb).map((item, index) => (
             <Anchor component={Link} to={item.href} key={index}>
                   {item.title}
             </Anchor>
@@ -41,54 +59,53 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                         <Group>
                               <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
                               <IconSearch size={24} stroke={1.5} />
-                                <Input placeholder="Search...." />
+                                <Input placeholder="Rechercher..." />
                         </Group>
                           <Group gap='md'>
-                                <IconBrightnessDown size={28} stroke={1.5} />
-                                <IconBell size={28} stroke={1.5} />
-                                <IconMessageFilled size={28} stroke={1.5} />
-                              <h5>Thomas Edison</h5>
-                              <IconUserCircle size={28} stroke={1.5} />
-                                <Menu shadow="md" width={200}>
+                                <IconBrightnessDown size={28} stroke={1.5} style={{ cursor: 'pointer' }} />
+                                <IconBell size={28} stroke={1.5} style={{ cursor: 'pointer' }} />
+                                <IconMessageFilled size={28} stroke={1.5} style={{ cursor: 'pointer' }} />
+                              <Group gap='xs'>
+                                <IconUserCircle size={28} stroke={1.5} />
+                                <div>
+                                  <Text size="sm" fw={500}>{userName}</Text>
+                                </div>
+                              </Group>
+                                <Menu shadow="md" width={250}>
                                       <Menu.Target>
-                                            <IconChevronDown size={28} stroke={1.5} />
+                                            <IconChevronDown size={28} stroke={1.5} style={{ cursor: 'pointer' }} />
                                       </Menu.Target>
 
                                       <Menu.Dropdown>
-                                            <Menu.Label>Application</Menu.Label>
+                                            <Menu.Label>Mon compte</Menu.Label>
+                                            <Menu.Item leftSection={<IconUserProfile size={14} />}>
+                                                  Mon profil
+                                            </Menu.Item>
                                             <Menu.Item leftSection={<IconSettings size={14} />}>
-                                                  Settings
+                                                  Paramètres
                                             </Menu.Item>
-                                            <Menu.Item leftSection={<IconMessageCircle size={14} />}>
-                                                  Messages
-                                            </Menu.Item>
-                                            <Menu.Item leftSection={<IconPhoto size={14} />}>
-                                                  Gallery
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                  leftSection={<IconSearch size={14} />}
-                                                  rightSection={
-                                                        <Text size="xs" c="dimmed">
-                                                              ⌘K
-                                                        </Text>
-                                                  }
-                                            >
-                                                  Search
+                                            <Menu.Item leftSection={<IconLock size={14} />}>
+                                                  Changer le mot de passe
                                             </Menu.Item>
 
                                             <Menu.Divider />
 
-                                            <Menu.Label>Danger zone</Menu.Label>
-                                            <Menu.Item
-                                                  leftSection={<IconArrowsLeftRight size={14} />}
-                                            >
-                                                  Transfer my data
+                                            <Menu.Label>Notifications</Menu.Label>
+                                            <Menu.Item leftSection={<IconBell size={14} />}>
+                                                  Mes notifications
                                             </Menu.Item>
+                                            <Menu.Item leftSection={<IconMessageCircle size={14} />}>
+                                                  Messages
+                                            </Menu.Item>
+
+                                            <Menu.Divider />
+
                                             <Menu.Item
                                                   color="red"
-                                                  leftSection={<IconTrash size={14} />}
+                                                  leftSection={<IconLogout size={14} />}
+                                                  onClick={handleLogout}
                                             >
-                                                  Delete my account
+                                                  Se déconnecter
                                             </Menu.Item>
                                       </Menu.Dropdown>
                                 </Menu>
