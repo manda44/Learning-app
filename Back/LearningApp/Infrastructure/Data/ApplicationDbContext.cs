@@ -38,8 +38,26 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Users> Users { get; set; }
 
-
     public virtual DbSet<UserRole> UserRoles { get; set; }
+
+    // Student enrollment and progress tables
+    public virtual DbSet<StudentCourseEnrollment> StudentCourseEnrollments { get; set; }
+
+    public virtual DbSet<StudentChapterProgress> StudentChapterProgresses { get; set; }
+
+    public virtual DbSet<StudentQuizAttempt> StudentQuizAttempts { get; set; }
+
+    public virtual DbSet<StudentQuestionResponse> StudentQuestionResponses { get; set; }
+
+    public virtual DbSet<StudentProjectEnrollment> StudentProjectEnrollments { get; set; }
+
+    public virtual DbSet<StudentTicketProgress> StudentTicketProgresses { get; set; }
+
+    public virtual DbSet<StudentAchievement> StudentAchievements { get; set; }
+
+    public virtual DbSet<StudentActivity> StudentActivities { get; set; }
+
+    public virtual DbSet<CourseMiniProject> CourseMiniProjects { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -325,6 +343,236 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Asso_1__UserId__4F7CD00D");
+        });
+
+        // StudentCourseEnrollment configuration
+        modelBuilder.Entity<StudentCourseEnrollment>(entity =>
+        {
+            entity.HasKey(e => e.EnrollmentId).HasName("PK__StudentCourseEnrollment__ID");
+
+            entity.ToTable("StudentCourseEnrollment");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentCourseEnrollment__StudentId");
+            entity.HasIndex(e => e.CourseId, "IX__StudentCourseEnrollment__CourseId");
+            entity.HasIndex(e => e.Status, "IX__StudentCourseEnrollment__Status");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("active");
+            entity.Property(e => e.ProgressPercentage).HasDefaultValue(0);
+            entity.Property(e => e.EnrollmentDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentCourseEnrollments)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Course).WithMany(p => p.StudentCourseEnrollments)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(new[] { "StudentId", "CourseId" }, "UQ__StudentCourseEnrollment__StudentId_CourseId").IsUnique();
+        });
+
+        // StudentChapterProgress configuration
+        modelBuilder.Entity<StudentChapterProgress>(entity =>
+        {
+            entity.HasKey(e => e.ChapterProgressId).HasName("PK__StudentChapterProgress__ID");
+
+            entity.ToTable("StudentChapterProgress");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentChapterProgress__StudentId");
+            entity.HasIndex(e => e.ChapterId, "IX__StudentChapterProgress__ChapterId");
+            entity.HasIndex(e => e.Status, "IX__StudentChapterProgress__Status");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("not_started");
+            entity.Property(e => e.ProgressPercentage).HasDefaultValue(0);
+            entity.Property(e => e.StartedDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentChapterProgresses)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Chapter).WithMany(p => p.StudentChapterProgresses)
+                .HasForeignKey(d => d.ChapterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(new[] { "StudentId", "ChapterId" }, "UQ__StudentChapterProgress__StudentId_ChapterId").IsUnique();
+        });
+
+        // StudentQuizAttempt configuration
+        modelBuilder.Entity<StudentQuizAttempt>(entity =>
+        {
+            entity.HasKey(e => e.QuizAttemptId).HasName("PK__StudentQuizAttempt__ID");
+
+            entity.ToTable("StudentQuizAttempt");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentQuizAttempt__StudentId");
+            entity.HasIndex(e => e.QuizId, "IX__StudentQuizAttempt__QuizId");
+            entity.HasIndex(e => e.Status, "IX__StudentQuizAttempt__Status");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("in_progress");
+            entity.Property(e => e.AttemptNumber).HasDefaultValue(1);
+            entity.Property(e => e.AttemptDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentQuizAttempts)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Quiz).WithMany(p => p.StudentQuizAttempts)
+                .HasForeignKey(d => d.QuizId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.ChapterProgress).WithMany(p => p.StudentQuizAttempts)
+                .HasForeignKey(d => d.ChapterProgressId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // StudentQuestionResponse configuration
+        modelBuilder.Entity<StudentQuestionResponse>(entity =>
+        {
+            entity.HasKey(e => e.QuestionResponseId).HasName("PK__StudentQuestionResponse__ID");
+
+            entity.ToTable("StudentQuestionResponse");
+
+            entity.Property(e => e.ResponseContent)
+                .HasMaxLength(1000);
+
+            entity.HasOne(d => d.QuizAttempt).WithMany(p => p.StudentQuestionResponses)
+                .HasForeignKey(d => d.QuizAttemptId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Question).WithMany()
+                .HasForeignKey(d => d.QuestionId);
+
+            entity.HasOne(d => d.QuestionItem).WithMany()
+                .HasForeignKey(d => d.QuestionItemId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // StudentProjectEnrollment configuration
+        modelBuilder.Entity<StudentProjectEnrollment>(entity =>
+        {
+            entity.HasKey(e => e.ProjectEnrollmentId).HasName("PK__StudentProjectEnrollment__ID");
+
+            entity.ToTable("StudentProjectEnrollment");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentProjectEnrollment__StudentId");
+            entity.HasIndex(e => e.MiniProjectId, "IX__StudentProjectEnrollment__MiniProjectId");
+            entity.HasIndex(e => e.Status, "IX__StudentProjectEnrollment__Status");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("active");
+            entity.Property(e => e.ProgressPercentage).HasDefaultValue(0);
+            entity.Property(e => e.EnrollmentDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentProjectEnrollments)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.MiniProject).WithMany(p => p.StudentProjectEnrollments)
+                .HasForeignKey(d => d.MiniProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(new[] { "StudentId", "MiniProjectId" }, "UQ__StudentProjectEnrollment__StudentId_ProjectId").IsUnique();
+        });
+
+        // StudentTicketProgress configuration
+        modelBuilder.Entity<StudentTicketProgress>(entity =>
+        {
+            entity.HasKey(e => e.TicketProgressId).HasName("PK__StudentTicketProgress__ID");
+
+            entity.ToTable("StudentTicketProgress");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentTicketProgress__StudentId");
+            entity.HasIndex(e => e.TicketId, "IX__StudentTicketProgress__TicketId");
+            entity.HasIndex(e => e.Status, "IX__StudentTicketProgress__Status");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("pending");
+            entity.Property(e => e.ProgressPercentage).HasDefaultValue(0);
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentTicketProgresses)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Ticket).WithMany(p => p.StudentTicketProgresses)
+                .HasForeignKey(d => d.TicketId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(new[] { "StudentId", "TicketId" }, "UQ__StudentTicketProgress__StudentId_TicketId").IsUnique();
+        });
+
+        // StudentAchievement configuration
+        modelBuilder.Entity<StudentAchievement>(entity =>
+        {
+            entity.HasKey(e => e.AchievementId).HasName("PK__StudentAchievement__ID");
+
+            entity.ToTable("StudentAchievement");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentAchievement__StudentId");
+            entity.HasIndex(e => e.AchievementType, "IX__StudentAchievement__AchievementType");
+
+            entity.Property(e => e.Title)
+                .HasMaxLength(255);
+            entity.Property(e => e.AchievementType)
+                .HasMaxLength(50);
+            entity.Property(e => e.Points).HasDefaultValue(0);
+            entity.Property(e => e.UnlockedDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentAchievements)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // StudentActivity configuration
+        modelBuilder.Entity<StudentActivity>(entity =>
+        {
+            entity.HasKey(e => e.ActivityId).HasName("PK__StudentActivity__ID");
+
+            entity.ToTable("StudentActivity");
+
+            entity.HasIndex(e => e.StudentId, "IX__StudentActivity__StudentId");
+            entity.HasIndex(e => e.ActivityType, "IX__StudentActivity__ActivityType");
+            entity.HasIndex(e => e.ActivityDate, "IX__StudentActivity__ActivityDate");
+
+            entity.Property(e => e.ActivityType)
+                .HasMaxLength(50);
+            entity.Property(e => e.RelatedEntityType)
+                .HasMaxLength(50);
+            entity.Property(e => e.ActivityDate).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentActivities)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // CourseMiniProject configuration
+        modelBuilder.Entity<CourseMiniProject>(entity =>
+        {
+            entity.HasKey(e => e.CourseMiniProjectId).HasName("PK__CourseMiniProject__52AD9073E0A7F8B9");
+
+            entity.ToTable("CourseMiniProject");
+
+            entity.HasIndex(e => e.CourseId, "IX__CourseMiniProject__CourseId");
+            entity.HasIndex(e => e.MiniProjectId, "IX__CourseMiniProject__MiniProjectId");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Course).WithMany(p => p.CourseMiniProjects)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.MiniProject).WithMany(p => p.CourseMiniProjects)
+                .HasForeignKey(d => d.MiniProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(new[] { "CourseId", "MiniProjectId" }, "UQ__CourseMiniProject__CourseId_MiniProjectId").IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

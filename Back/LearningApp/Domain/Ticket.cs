@@ -20,4 +20,6 @@ public partial class Ticket
     public DateTime? UpdatedAt { get; set; }
 
     public virtual MiniProject MiniProject { get; set; } = null!;
+
+    public virtual ICollection<StudentTicketProgress> StudentTicketProgresses { get; set; } = new List<StudentTicketProgress>();
 }

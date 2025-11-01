@@ -26,4 +26,19 @@ public partial class Users
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
     public virtual ICollection<QuizResponse> QuizResponses { get; set; } = new List<QuizResponse>();
+
+    // Student relationships
+    public virtual ICollection<StudentCourseEnrollment> StudentCourseEnrollments { get; set; } = new List<StudentCourseEnrollment>();
+
+    public virtual ICollection<StudentChapterProgress> StudentChapterProgresses { get; set; } = new List<StudentChapterProgress>();
+
+    public virtual ICollection<StudentQuizAttempt> StudentQuizAttempts { get; set; } = new List<StudentQuizAttempt>();
+
+    public virtual ICollection<StudentProjectEnrollment> StudentProjectEnrollments { get; set; } = new List<StudentProjectEnrollment>();
+
+    public virtual ICollection<StudentTicketProgress> StudentTicketProgresses { get; set; } = new List<StudentTicketProgress>();
+
+    public virtual ICollection<StudentAchievement> StudentAchievements { get; set; } = new List<StudentAchievement>();
+
+    public virtual ICollection<StudentActivity> StudentActivities { get; set; } = new List<StudentActivity>();
 }

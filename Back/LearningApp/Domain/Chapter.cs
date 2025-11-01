@@ -24,4 +24,6 @@ public partial class Chapter
     public virtual Course Course { get; set; } = null!;
 
     public virtual ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
+
+    public virtual ICollection<StudentChapterProgress> StudentChapterProgresses { get; set; } = new List<StudentChapterProgress>();
 }

@@ -18,4 +18,8 @@ public partial class MiniProject
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    public virtual ICollection<StudentProjectEnrollment> StudentProjectEnrollments { get; set; } = new List<StudentProjectEnrollment>();
+
+    public virtual ICollection<CourseMiniProject> CourseMiniProjects { get; set; } = new List<CourseMiniProject>();
 }

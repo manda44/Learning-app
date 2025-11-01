@@ -5,6 +5,7 @@ using LearningApp.Controllers;
 using LearningApp.Infrastructure.Data;
 using LearningApp.Infrastructure.Middlewares;
 using LearningApp.Infrastructure.Repositories;
+using LearningApp.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -75,6 +76,16 @@ builder.Services.AddScoped<IChapterContentRepository, ContentRepository>();
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IQuestionItemRepository, QuestionItemRepository>();
+
+// Student enrollment and progress repositories
+builder.Services.AddScoped<IStudentCourseEnrollmentRepository, StudentCourseEnrollmentRepository>();
+builder.Services.AddScoped<IStudentChapterProgressRepository, StudentChapterProgressRepository>();
+builder.Services.AddScoped<IStudentQuizAttemptRepository, StudentQuizAttemptRepository>();
+builder.Services.AddScoped<IStudentProjectEnrollmentRepository, StudentProjectEnrollmentRepository>();
+builder.Services.AddScoped<IStudentTicketProgressRepository, StudentTicketProgressRepository>();
+builder.Services.AddScoped<IStudentAchievementRepository, StudentAchievementRepository>();
+builder.Services.AddScoped<IStudentActivityRepository, StudentActivityRepository>();
+builder.Services.AddScoped<ICourseMiniProjectRepository, CourseMiniProjectRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleService>();
