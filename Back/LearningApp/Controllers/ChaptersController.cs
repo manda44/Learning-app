@@ -15,10 +15,12 @@ namespace LearningApp.Controllers
     public class ChaptersController : ControllerBase
     {
         private readonly ChapterService _chapterService;
+        private readonly QuizService _quizService;
 
-        public ChaptersController(ChapterService chapterService)
+        public ChaptersController(ChapterService chapterService, QuizService quizService)
         {
             _chapterService = chapterService;
+            _quizService = quizService;
         }
 
         // GET: api/Chapters
@@ -84,12 +86,159 @@ namespace LearningApp.Controllers
             return Ok(chapters);
         }
 
+        // GET: api/Chapters/debug/quizzes
+        // Debug endpoint to test quiz retrieval
+        [HttpGet("debug/quizzes")]
+        public async Task<ActionResult> DebugQuizzes()
+        {
+            try
+            {
+                var allQuizzes = await _quizService.GetallQuizzes();
+                return Ok(new {
+                    totalQuizzes = allQuizzes.Count,
+                    quizzes = allQuizzes.Select(q => new {
+                        q.QuizId,
+                        q.ChapterId,
+                        q.Title,
+                        q.CourseId
+                    })
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         // GET: api/Chapters/courseChapters/5
         [HttpGet("courseChapters/{chapterId}")]
         public async Task<ActionResult<IEnumerable<CourseDtos>>> GetChaptersWithSameCourse(int chapterId)
         {
             var chapters = await _chapterService.GetChaptersWithSameCourse(chapterId);
             return Ok(chapters);
+        }
+
+        // GET: api/Chapters/{chapterId}/detail/{studentId}
+        // Returns complete chapter details with all content blocks and student progress
+        [HttpGet("{chapterId}/detail/{studentId}")]
+        public async Task<ActionResult<ChapterDetailDto>> GetChapterDetail(int chapterId, int studentId)
+        {
+            try
+            {
+                // Get chapter basic info
+                var chapter = await _chapterService.GetChapterByIdAsync(chapterId);
+                if (chapter == null)
+                {
+                    return NotFound(new { message = "Chapter not found" });
+                }
+
+                // Get all content for this chapter
+                var contents = await _chapterService.GetChapterContentsAsync(chapterId);
+
+                // Build response DTO
+                var result = new ChapterDetailDto
+                {
+                    ChapterId = chapter.ChapterId,
+                    Title = chapter.Title,
+                    Description = chapter.Description,
+                    Order = chapter.Order,
+                    Color = chapter.Color,
+                    CreatedAt = chapter.CreatedAd,
+                    CourseId = chapter.CourseId,
+                    CourseTitle = null, // Will be populated if we have course reference
+                    ContentBlocks = contents.Select(c => new ContentBlockDto
+                    {
+                        ContentId = c.ContentId,
+                        Type = c.Type,
+                        Data = c.Data,
+                        Order = c.Order,
+                        CreatedAt = c.CreatedAt
+                    }).OrderBy(c => c.Order).ToList(),
+                    StudentProgress = null // Will be populated from student progress tracking
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Error retrieving chapter details", error = ex.Message });
+            }
+        }
+
+        // GET: api/Chapters/course/{courseId}/with-content
+        // Returns all chapters in a course with content count and student progress
+        [HttpGet("course/{courseId}/with-content/{studentId}")]
+        public async Task<ActionResult<List<object>>> GetChaptersWithContent(int courseId, int studentId)
+        {
+            try
+            {
+                // Get all chapters for the course
+                var chapters = await _chapterService.GetChaptersByCourseIdAsync(courseId);
+
+                // Get all quizzes for all chapters in this course
+                var allQuizzes = await _quizService.GetallQuizzes();
+
+                // Debug logging
+                System.Console.WriteLine($"[DEBUG] CourseId={courseId}, Total chapters: {chapters.Count()}, Total quizzes: {allQuizzes.Count}");
+                foreach (var q in allQuizzes)
+                {
+                    System.Console.WriteLine($"[DEBUG] Quiz {q.QuizId}: ChapterId={q.ChapterId}, Title={q.Title}");
+                }
+                foreach (var c in chapters)
+                {
+                    System.Console.WriteLine($"[DEBUG] Chapter {c.ChapterId}: CourseId={c.CourseId}, Title={c.Title}");
+                }
+
+                var courseQuizzes = allQuizzes.Where(q => chapters.Any(c => c.ChapterId == q.ChapterId)).ToList();
+                System.Console.WriteLine($"[DEBUG] Filtered course quizzes: {courseQuizzes.Count}");
+
+                var result = new List<object>();
+
+                foreach (var chapter in chapters.OrderBy(c => c.Order))
+                {
+                    // Get content count
+                    var contents = await _chapterService.GetChapterContentsAsync(chapter.ChapterId);
+
+                    // Find quiz for this chapter
+                    var chapterQuiz = courseQuizzes.FirstOrDefault(q => q.ChapterId == chapter.ChapterId);
+
+                    var listItem = new ChapterListItemDto
+                    {
+                        ChapterId = chapter.ChapterId,
+                        Title = chapter.Title,
+                        Description = chapter.Description,
+                        Order = chapter.Order,
+                        Color = chapter.Color,
+                        ContentCount = contents.Count(),
+                        HasQuiz = chapterQuiz != null,
+                        QuizId = chapterQuiz?.QuizId,
+                        StudentProgress = null // Would need to fetch from StudentChapterProgress table
+                    };
+
+                    result.Add(listItem);
+
+                    // Add quiz after chapter if it exists
+                    if (chapterQuiz != null)
+                    {
+                        var quizItem = new QuizItemDto
+                        {
+                            QuizId = chapterQuiz.QuizId,
+                            Title = chapterQuiz.Title,
+                            Description = chapterQuiz.Title, // Using title as description
+                            ChapterId = chapter.ChapterId,
+                            Order = chapter.Order, // Quiz appears right after chapter
+                            SuccessPercentage = 80 // Default success percentage
+                        };
+                        result.Add(quizItem);
+                    }
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Error retrieving chapters with content", error = ex.Message });
+            }
         }
     }
 }

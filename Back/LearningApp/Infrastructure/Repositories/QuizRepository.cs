@@ -14,24 +14,41 @@ public class QuizRepository : Repository<Quiz>,IQuizRepository
 
     public async Task<List<QuizDto>> GetAll()
     {
-        var quizList = await _context.Quizzes
-            .Include(q => q.Chapter)
-            .ThenInclude(c=>c.Course)
-            .Include(q=>q.Questions)
-            .Select(q => new QuizDto
+        try
+        {
+            var quizList = await _context.Quizzes
+                .AsNoTracking()
+                .Include(q => q.Chapter)
+                .ThenInclude(c => c.Course)
+                .Include(q => q.Questions)
+                .Select(q => new QuizDto
+                {
+                    ChapterId = q.ChapterId,
+                    QuizId = q.QuizId,
+                    SuccessPercentage = q.SuccessPercentage,
+                    Title = q.Title,
+                    Description = q.Description,
+                    CourseId = q.Chapter != null ? q.Chapter.CourseId : 0,
+                    CreatedAt = q.CreatedAt,
+                    QuestionCount = q.Questions.Count,
+                    CourseName = q.Chapter != null && q.Chapter.Course != null ? q.Chapter.Course.Title : "Unknown",
+                    ChapterName = q.Chapter != null ? q.Chapter.Title : "Unknown",
+                }).ToListAsync();
+
+            System.Console.WriteLine($"[DEBUG GetAll] Retrieved {quizList.Count} quizzes from database");
+            foreach (var quiz in quizList)
             {
-                ChapterId = q.ChapterId,
-                QuizId = q.QuizId,
-                SuccessPercentage = q.SuccessPercentage,
-                Title = q.Title,
-                Description = q.Description,
-                CourseId = q.Chapter.CourseId,
-                CreatedAt = q.CreatedAt,
-                QuestionCount = q.Questions.Count,
-                CourseName = q.Chapter.Course.Title,
-                ChapterName = q.Chapter.Title,
-            }).ToListAsync();
-        return quizList;
+                System.Console.WriteLine($"[DEBUG GetAll] Quiz: {quiz.QuizId}, Title: {quiz.Title}, ChapterId: {quiz.ChapterId}");
+            }
+
+            return quizList;
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"[ERROR GetAll] Exception: {ex.Message}");
+            System.Console.WriteLine($"[ERROR GetAll] StackTrace: {ex.StackTrace}");
+            return new List<QuizDto>();
+        }
     }
 
     public async Task<List<QuestionDto>> GetQuestions(int quizId)

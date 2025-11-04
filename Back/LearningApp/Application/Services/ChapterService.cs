@@ -1,16 +1,19 @@
 using LearningApp.Application.DTOs;
 using LearningApp.Application.Interfaces;
 using LearningApp.Domain;
+using LearningApp.Infrastructure.Data;
 
 namespace LearningApp.Application.Services
 {
     public class ChapterService
     {
         private readonly IChapterRepository _chapterRepository;
+        private readonly ApplicationDbContext? _context;
 
-        public ChapterService(IChapterRepository chapterRepository)
+        public ChapterService(IChapterRepository chapterRepository, ApplicationDbContext? context = null)
         {
             _chapterRepository = chapterRepository;
+            _context = context;
         }
 
         public async Task<IEnumerable<ChapterDto>> GetAllChaptersAsync()
@@ -102,10 +105,26 @@ namespace LearningApp.Application.Services
         {
             var chapter = await _chapterRepository.GetByIdAsync(chapterId);
             if (chapter == null) return false;
-            
+
             chapter.Title = dto.Title;
             await _chapterRepository.UpdateAsync(chapter);
             return true;
+        }
+
+        // Get all content blocks for a specific chapter (for student view)
+        public async Task<IEnumerable<Content>> GetChapterContentsAsync(int chapterId)
+        {
+            if (_context == null)
+            {
+                return Enumerable.Empty<Content>();
+            }
+
+            return await Task.FromResult(
+                _context.Contents
+                    .Where(c => c.ChapterId == chapterId)
+                    .OrderBy(c => c.Order)
+                    .ToList()
+            );
         }
 
     }

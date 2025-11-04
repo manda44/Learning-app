@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LearningApp.Domain;
 using LearningApp.Infrastructure.Data;
 using LearningApp.Application;
+using LearningApp.Application.DTOs;
 
 namespace LearningApp.Controllers
 {
@@ -127,6 +128,56 @@ namespace LearningApp.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // GET: api/Courses/with-enrollment/{studentId}
+        // Returns all courses with enrollment status for the specified student
+        [HttpGet("with-enrollment/{studentId}")]
+        public async Task<ActionResult<IEnumerable<CourseWithEnrollmentDto>>> GetCoursesWithEnrollment(int studentId)
+        {
+            try
+            {
+                // Get all courses
+                var courses = await _context.Courses.ToListAsync();
+
+                // Get all enrollments for the student
+                var enrollments = await _context.StudentCourseEnrollments
+                    .Where(e => e.StudentId == studentId)
+                    .ToListAsync();
+
+                // Build the result by combining courses with their enrollment data
+                var result = courses.Select(course =>
+                {
+                    var enrollment = enrollments.FirstOrDefault(e => e.CourseId == course.CourseId);
+
+                    return new CourseWithEnrollmentDto
+                    {
+                        // Course fields
+                        CourseId = course.CourseId,
+                        Title = course.Title,
+                        Description = course.Description,
+                        CreatedAt = course.CreatedAt,
+                        UpdatedAt = course.UpdatedAt,
+                        UserId = course.UserId,
+
+                        // Enrollment fields (null if not enrolled)
+                        EnrollmentId = enrollment?.EnrollmentId,
+                        EnrollmentDate = enrollment?.EnrollmentDate,
+                        Status = enrollment?.Status,
+                        ProgressPercentage = enrollment?.ProgressPercentage,
+                        CompletionDate = enrollment?.CompletionDate,
+
+                        // Flag indicating enrollment status
+                        IsEnrolled = enrollment != null
+                    };
+                }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Error retrieving courses with enrollment", error = ex.Message });
+            }
         }
 
         // GET: api/Courses/search

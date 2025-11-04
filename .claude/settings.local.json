@@ -10,7 +10,11 @@
       "Bash(dotnet clean:*)",
       "Bash(sqlcmd:*)",
       "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\stage\\ApplyMigration.ps1\")",
-      "Bash(dotnet ef migrations add:*)"
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(npm install:*)",
+      "Bash(nul)",
+      "Bash(npm run build:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
