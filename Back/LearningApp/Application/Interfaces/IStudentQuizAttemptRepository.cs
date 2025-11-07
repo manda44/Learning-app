@@ -15,4 +15,12 @@ public interface IStudentQuizAttemptRepository : IRepository<StudentQuizAttempt>
     Task<IEnumerable<StudentQuizAttempt>> GetAttemptsByStatusAsync(string status);
 
     Task<int> GetAttemptCountAsync(int studentId, int quizId);
+
+    Task<List<StudentQuizAttempt>> GetStudentQuizAttempts(int studentId, int quizId);
+
+    Task<StudentQuizAttempt?> GetQuizAttemptWithResponses(int attemptId);
+
+    Task AddQuestionResponseAsync(StudentQuestionResponse response);
+
+    Task UpdateAsync(StudentQuizAttempt attempt);
 }

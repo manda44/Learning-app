@@ -12,6 +12,7 @@ import MyCourses from './pages/MyCourses';
 import Achievements from './pages/Achievements';
 import CourseView from './pages/CourseView';
 import Quiz from './pages/Quiz';
+import QuizResults from './pages/QuizResults';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;
@@ -84,6 +85,17 @@ function App() {
               { title: 'Quiz', href: '/quiz/:quizId' }
             ]}>
               <Quiz />
+            </StudentLayout>
+          }
+        />
+        <Route
+          path="/quiz/:quizId/results/:attemptId"
+          element={
+            <StudentLayout breadcrumbs={[
+              { title: 'Quiz & Exercices', href: '/quiz' },
+              { title: 'Résultats', href: '/quiz/:quizId/results/:attemptId' }
+            ]}>
+              <QuizResults />
             </StudentLayout>
           }
         />

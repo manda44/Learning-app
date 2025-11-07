@@ -34,3 +34,20 @@ public class UpdateStudentChapterProgressDto
 
     public DateTime? CompletedDate { get; set; }
 }
+
+public class ChapterWithLockStatusDto
+{
+    public int ChapterId { get; set; }
+    public string Title { get; set; } = null!;
+    public string? Description { get; set; }
+    public int Order { get; set; }
+    public string Color { get; set; } = null!;
+    public bool IsLocked { get; set; }
+    public bool IsCompleted { get; set; }
+    public bool HasQuiz { get; set; }
+    public int? QuizId { get; set; }
+    public bool QuizPassed { get; set; }
+    public bool QuizLocked { get; set; }
+    public int? LastQuizScore { get; set; }
+    public int ProgressPercentage { get; set; }
+}

@@ -124,28 +124,49 @@ public class QuizRepository : Repository<Quiz>,IQuizRepository
     public async Task<bool> DeleteQuiz(int quizId)
     {
         var quiz = await _context.Quizzes.FindAsync(quizId);
-        
+
         if (quiz == null)
         {
             return false;
         }
 
-        // Delete related quiz responses first
-        var quizResponses = await _context.QuizResponses
-            .Where(qr => qr.QuizId == quizId)
+        // Delete related StudentQuizAttempts first
+        var studentQuizAttempts = await _context.StudentQuizAttempts
+            .Where(sqa => sqa.QuizId == quizId)
             .ToListAsync();
-        
-        foreach (var quizResponse in quizResponses)
+
+        _context.StudentQuizAttempts.RemoveRange(studentQuizAttempts);
+
+        // Delete StudentQuestionResponses related to questions in this quiz
+        var questionIds = await _context.Questions
+            .Where(q => q.QuizId == quizId)
+            .Select(q => q.QuestionId)
+            .ToListAsync();
+
+        if (questionIds.Any())
         {
-            // Delete related question responses
-            var questionResponses = await _context.QuestionResponses
-                .Where(qr => qr.QuizResponseId == quizResponse.QuizResponseId)
+            // Delete responses by QuestionId
+            var responsesByQuestionId = await _context.StudentQuestionResponses
+                .Where(sqr => questionIds.Contains(sqr.QuestionId))
                 .ToListAsync();
-            
-            _context.QuestionResponses.RemoveRange(questionResponses);
+
+            _context.StudentQuestionResponses.RemoveRange(responsesByQuestionId);
+
+            // Delete responses by QuestionItemId
+            var questionItemIds = await _context.QuestionItems
+                .Where(qi => questionIds.Contains(qi.QuestionId))
+                .Select(qi => qi.QuestionItemId)
+                .ToListAsync();
+
+            if (questionItemIds.Any())
+            {
+                var responsesByQuestionItemId = await _context.StudentQuestionResponses
+                    .Where(sqr => sqr.QuestionItemId.HasValue && questionItemIds.Contains(sqr.QuestionItemId.Value))
+                    .ToListAsync();
+
+                _context.StudentQuestionResponses.RemoveRange(responsesByQuestionItemId);
+            }
         }
-        
-        _context.QuizResponses.RemoveRange(quizResponses);
 
         // Delete related questions and their items
         var questions = await _context.Questions
@@ -162,7 +183,7 @@ public class QuizRepository : Repository<Quiz>,IQuizRepository
 
         // Finally delete the quiz
         _context.Quizzes.Remove(quiz);
-        
+
         await _context.SaveChangesAsync();
         return true;
     }

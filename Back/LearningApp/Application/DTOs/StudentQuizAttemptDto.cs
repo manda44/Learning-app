@@ -43,3 +43,19 @@ public class UpdateStudentQuizAttemptDto
 
     public int? TimeSpentSeconds { get; set; }
 }
+
+public class SubmitQuizAttemptDto
+{
+    public int TimeSpentSeconds { get; set; }
+
+    public List<SubmitQuestionAnswerDto> Answers { get; set; } = new List<SubmitQuestionAnswerDto>();
+}
+
+public class SubmitQuestionAnswerDto
+{
+    public int QuestionId { get; set; }
+
+    public List<int>? QuestionItemIds { get; set; } // Pour MCQ et UNIQUECHOICE
+
+    public string? ResponseContent { get; set; } // Pour OPENRESPONSE
+}

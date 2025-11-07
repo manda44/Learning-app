@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Box, Button, Title, Text, Loader, Center, Alert, Badge, Progress, Group, Stack, Paper, Grid, ScrollArea } from '@mantine/core';
-import { IconChevronRight, IconFileText } from '@tabler/icons-react';
+import { IconChevronRight, IconLock, IconCheck, IconFileText } from '@tabler/icons-react';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import { codeBlock } from '@blocknote/code-block';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/mantine/style.css';
 import courseService from '../services/courseService';
-import type { ChapterDetail, CourseNavItem, ChapterListItem, QuizItem } from '../services/courseService';
-import { isChapter, isQuiz } from '../services/courseService';
-import { useNavigate, useParams } from 'react-router-dom';
+import type { ChapterDetail } from '../services/courseService';
+import chapterProgressService, { type ChapterWithLockStatus } from '../services/chapterProgressService';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 export function CourseView() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { courseId } = useParams<{ courseId: string }>();
-  const [navItems, setNavItems] = useState<CourseNavItem[]>([]);
+  const [chapters, setChapters] = useState<ChapterWithLockStatus[]>([]);
   const [selectedChapterId, setSelectedChapterId] = useState<number | null>(null);
-  const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
   const [chapterDetail, setChapterDetail] = useState<ChapterDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,24 +35,36 @@ export function CourseView() {
     codeBlock,
   });
 
-  // Fetch all chapters and quizzes in the course on mount
+  // Function to fetch chapters (reusable, memoized)
+  const fetchChapters = useCallback(async () => {
+    try {
+      if (!courseId) {
+        throw new Error('Course ID is required');
+      }
+
+      // Fetch chapters with lock status
+      const chaptersData = await chapterProgressService.getChaptersWithLockStatus(parseInt(courseId), studentId);
+      setChapters(chaptersData);
+
+      // Select first unlocked chapter by default if no chapter is selected
+      if (!selectedChapterId) {
+        const firstUnlocked = chaptersData.find(c => !c.isLocked);
+        if (firstUnlocked) {
+          setSelectedChapterId(firstUnlocked.chapterId);
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load chapters');
+    }
+  }, [courseId, studentId, selectedChapterId]);
+
+  // Fetch all chapters with lock status on mount
   useEffect(() => {
-    const fetchNavItems = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        if (!courseId) {
-          throw new Error('Course ID is required');
-        }
-        const data = await courseService.getCourseChaptersWithContent(parseInt(courseId), studentId);
-        setNavItems(data);
-        // Select first chapter by default
-        if (data.length > 0) {
-          const firstChapter = data.find(item => isChapter(item));
-          if (firstChapter && isChapter(firstChapter)) {
-            setSelectedChapterId(firstChapter.chapterId);
-          }
-        }
+        await fetchChapters();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load chapters');
       } finally {
@@ -60,8 +72,34 @@ export function CourseView() {
       }
     };
 
-    fetchNavItems();
+    fetchData();
   }, [courseId]);
+
+  // Handle navigation state (refresh and selectChapterId)
+  useEffect(() => {
+    const state = location.state as any;
+    if (state?.refresh || state?.selectChapterId) {
+      // Refresh chapters to get updated lock status
+      fetchChapters().then(() => {
+        // After refreshing, select the chapter if specified
+        if (state?.selectChapterId) {
+          setSelectedChapterId(state.selectChapterId);
+        }
+      });
+      // Clear the state after using it
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate, fetchChapters]);
+
+  // Refetch chapters when window regains focus (e.g., returning from quiz)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchChapters();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [fetchChapters]);
 
   // Fetch chapter details when selected chapter changes
   useEffect(() => {
@@ -166,7 +204,7 @@ export function CourseView() {
     }
   }, [editor, chapterDetail]);
 
-  if (loading && navItems.length === 0) {
+  if (loading && chapters.length === 0) {
     return (
       <Center py="xl">
         <Loader />
@@ -174,7 +212,7 @@ export function CourseView() {
     );
   }
 
-  if (error && navItems.length === 0) {
+  if (error && chapters.length === 0) {
     return (
       <Container py="xl">
         <Alert color="red" title="Error">
@@ -187,7 +225,6 @@ export function CourseView() {
     );
   }
 
-  const chapters = navItems.filter(isChapter);
   const currentChapterIndex = chapters.findIndex((c) => c.chapterId === selectedChapterId);
 
   return (
@@ -201,93 +238,120 @@ export function CourseView() {
             </Title>
             <ScrollArea style={{ flex: 1 }}>
               <Stack gap="xs" pr="lg">
-                {navItems.map((item) => {
-                  if (isChapter(item)) {
-                    return (
-                      <Paper
-                        key={`chapter-${item.chapterId}`}
-                        p="md"
-                        radius="md"
-                        style={{
-                          cursor: 'pointer',
-                          border: selectedChapterId === item.chapterId ? '2px solid #4A9FD8' : '1px solid #e0e0e0',
-                          backgroundColor: selectedChapterId === item.chapterId ? '#f0f7ff' : 'white',
-                          transition: 'all 0.2s',
-                        }}
-                        onClick={() => {
-                          setSelectedChapterId(item.chapterId);
-                          setSelectedQuizId(null);
-                        }}
-                      >
-                        <Group justify="space-between" align="flex-start" mb="xs">
-                          <div>
+                {chapters.map((chapter) => (
+                  <React.Fragment key={`fragment-${chapter.chapterId}`}>
+                    {/* Chapter Card */}
+                    <Paper
+                      key={`chapter-${chapter.chapterId}`}
+                      p="md"
+                      radius="md"
+                      style={{
+                        cursor: chapter.isLocked ? 'not-allowed' : 'pointer',
+                        border: selectedChapterId === chapter.chapterId ? '2px solid #4A9FD8' : '1px solid #e0e0e0',
+                        backgroundColor: chapter.isLocked
+                          ? '#f5f5f5'
+                          : selectedChapterId === chapter.chapterId
+                          ? '#f0f7ff'
+                          : 'white',
+                        opacity: chapter.isLocked ? 0.6 : 1,
+                        transition: 'all 0.2s',
+                      }}
+                      onClick={() => {
+                        if (!chapter.isLocked) {
+                          setSelectedChapterId(chapter.chapterId);
+                        }
+                      }}
+                    >
+                      <Group justify="space-between" align="flex-start" mb="xs">
+                        <div style={{ flex: 1 }}>
+                          <Group gap="xs">
+                            {chapter.isLocked && <IconLock size={16} color="#666" />}
+                            {chapter.isCompleted && <IconCheck size={16} color="green" />}
                             <Text fw={500} size="sm">
-                              {item.order}. {item.title}
+                              {chapter.order}. {chapter.title}
                             </Text>
+                          </Group>
+                          {chapter.description && (
                             <Text size="xs" c="dimmed" mt="xs">
-                              {item.contentCount} bloc{item.contentCount !== 1 ? 's' : ''}
+                              {chapter.description}
                             </Text>
-                          </div>
-                          {selectedChapterId === item.chapterId && (
-                            <IconChevronRight size={20} style={{ color: '#4A9FD8', flexShrink: 0 }} />
                           )}
-                        </Group>
-
-                        {item.studentProgress && (
-                          <>
-                            <Progress value={item.studentProgress.progressPercentage} size="sm" mb="xs" />
-                            <Text size="xs" c="dimmed">
-                              {item.studentProgress.progressPercentage}% complété
-                            </Text>
-                          </>
+                        </div>
+                        {selectedChapterId === chapter.chapterId && !chapter.isLocked && (
+                          <IconChevronRight size={20} style={{ color: '#4A9FD8', flexShrink: 0 }} />
                         )}
+                      </Group>
 
-                        {item.hasQuiz && (
-                          <Badge size="sm" color="blue" mt="xs">
-                            Quiz disponible
-                          </Badge>
-                        )}
-                      </Paper>
-                    );
-                  } else if (isQuiz(item)) {
-                    return (
+                      {chapter.progressPercentage > 0 && (
+                        <>
+                          <Progress value={chapter.progressPercentage} size="sm" mb="xs" />
+                          <Text size="xs" c="dimmed">
+                            {chapter.progressPercentage}% complété
+                          </Text>
+                        </>
+                      )}
+
+                      {chapter.isLocked && (
+                        <Text size="xs" c="red" mt="xs">
+                          Terminez le quiz précédent pour débloquer
+                        </Text>
+                      )}
+                    </Paper>
+
+                    {/* Quiz Card (after chapter) */}
+                    {chapter.hasQuiz && chapter.quizId && (
                       <Paper
-                        key={`quiz-${item.quizId}`}
+                        key={`quiz-${chapter.quizId}`}
                         p="md"
                         radius="md"
                         style={{
-                          cursor: 'pointer',
+                          cursor: chapter.quizLocked ? 'not-allowed' : 'pointer',
                           marginLeft: '16px',
-                          border: selectedQuizId === item.quizId ? '2px solid #f59f00' : '1px solid #ffe066',
-                          backgroundColor: selectedQuizId === item.quizId ? '#fff9e6' : '#fffbf0',
+                          border: '1px solid #ffe066',
+                          backgroundColor: chapter.quizLocked ? '#f5f5f5' : '#fffbf0',
+                          opacity: chapter.quizLocked ? 0.6 : 1,
                           transition: 'all 0.2s',
                         }}
                         onClick={() => {
-                          setSelectedQuizId(item.quizId);
-                          setSelectedChapterId(null);
-                          navigate(`/quiz/${item.quizId}`);
+                          if (!chapter.quizLocked) {
+                            navigate(`/quiz/${chapter.quizId}`);
+                          }
                         }}
                       >
                         <Group justify="space-between" align="flex-start">
                           <Group gap="xs" align="flex-start">
-                            <IconFileText size={20} style={{ color: '#f59f00', flexShrink: 0, marginTop: '2px' }} />
+                            {chapter.quizLocked ? (
+                              <IconLock size={20} color="#666" style={{ flexShrink: 0, marginTop: '2px' }} />
+                            ) : (
+                              <IconFileText size={20} style={{ color: '#f59f00', flexShrink: 0, marginTop: '2px' }} />
+                            )}
                             <div>
-                              <Text fw={500} size="sm">
-                                Quiz: {item.title}
-                              </Text>
-                              <Text size="xs" c="dimmed" mt="xs">
-                                Succès requis: {item.successPercentage}%
-                              </Text>
+                              <Group gap="xs">
+                                <Text fw={500} size="sm">
+                                  Quiz
+                                </Text>
+                                {chapter.quizPassed && <IconCheck size={16} color="green" />}
+                              </Group>
+                              {chapter.lastQuizScore !== null && chapter.lastQuizScore !== undefined && (
+                                <Badge size="sm" color={chapter.quizPassed ? 'green' : 'gray'} mt="xs">
+                                  Dernier score: {chapter.lastQuizScore}%
+                                </Badge>
+                              )}
                             </div>
                           </Group>
-                          {selectedQuizId === item.quizId && (
+                          {!chapter.quizLocked && (
                             <IconChevronRight size={20} style={{ color: '#f59f00', flexShrink: 0 }} />
                           )}
                         </Group>
+                        {chapter.quizLocked && (
+                          <Text size="xs" c="red" mt="xs">
+                            Terminez le chapitre pour débloquer le quiz
+                          </Text>
+                        )}
                       </Paper>
-                    );
-                  }
-                })}
+                    )}
+                  </React.Fragment>
+                ))}
               </Stack>
             </ScrollArea>
           </Paper>
@@ -452,6 +516,30 @@ export function CourseView() {
                 )}
               </Box>
 
+              {/* Mark as Completed Button */}
+              {chapterDetail && selectedChapterId && !chapters.find(c => c.chapterId === selectedChapterId)?.isCompleted && (
+                <Box mt="lg">
+                  <Button
+                    fullWidth
+                    size="md"
+                    color="green"
+                    leftSection={<IconCheck size={18} />}
+                    onClick={async () => {
+                      try {
+                        await chapterProgressService.markChapterAsCompleted(studentId, selectedChapterId);
+                        // Refresh chapters
+                        const chaptersData = await chapterProgressService.getChaptersWithLockStatus(parseInt(courseId!), studentId);
+                        setChapters(chaptersData);
+                      } catch (err) {
+                        console.error('Failed to mark chapter as completed:', err);
+                      }
+                    }}
+                  >
+                    Marquer comme terminé
+                  </Button>
+                </Box>
+              )}
+
               {/* Navigation Buttons */}
               <Group justify="space-between" mt="xl" pt="xl" style={{ borderTop: '1px solid #e0e0e0', flexShrink: 0 }}>
                 <Button
@@ -465,17 +553,37 @@ export function CourseView() {
                 >
                   Chapitre Précédent
                 </Button>
-                <Button
-                  onClick={() => {
-                    if (currentChapterIndex < chapters.length - 1) {
-                      setSelectedChapterId(chapters[currentChapterIndex + 1].chapterId);
-                    }
-                  }}
-                  disabled={currentChapterIndex === chapters.length - 1}
-                  rightSection={<IconChevronRight size={16} />}
-                >
-                  Chapitre Suivant
-                </Button>
+                {/* Show quiz button if chapter has a quiz, otherwise show next chapter button */}
+                {selectedChapterId && chapters.find(c => c.chapterId === selectedChapterId)?.hasQuiz &&
+                 chapters.find(c => c.chapterId === selectedChapterId)?.quizId ? (
+                  <Button
+                    color="orange"
+                    onClick={() => {
+                      const currentChapter = chapters.find(c => c.chapterId === selectedChapterId);
+                      if (currentChapter?.quizId) {
+                        navigate(`/quiz/${currentChapter.quizId}`);
+                      }
+                    }}
+                    disabled={chapters.find(c => c.chapterId === selectedChapterId)?.quizLocked}
+                    rightSection={<IconChevronRight size={16} />}
+                  >
+                    {chapters.find(c => c.chapterId === selectedChapterId)?.quizLocked
+                      ? 'Quiz verrouillé'
+                      : 'Commencer le quiz'}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      if (currentChapterIndex < chapters.length - 1) {
+                        setSelectedChapterId(chapters[currentChapterIndex + 1].chapterId);
+                      }
+                    }}
+                    disabled={currentChapterIndex === chapters.length - 1}
+                    rightSection={<IconChevronRight size={16} />}
+                  >
+                    Chapitre Suivant
+                  </Button>
+                )}
               </Group>
             </Box>
           ) : (

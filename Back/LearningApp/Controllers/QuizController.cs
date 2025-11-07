@@ -110,7 +110,17 @@ namespace LearningApp.Controllers
         {
             try
             {
-                await _quizService.DeleteAllQuestions(1);
+                // Get the QuizId from the first question (all questions should have the same QuizId)
+                if (dtos == null || !dtos.Any())
+                {
+                    return BadRequest("No questions provided");
+                }
+
+                int quizId = dtos[0].QuizId;
+
+                // Delete all existing questions for this quiz
+                await _quizService.DeleteAllQuestions(quizId);
+
                 var createdQuestions = new List<QuestionDto>();
                 foreach (var dto in dtos)
                 {
@@ -122,7 +132,7 @@ namespace LearningApp.Controllers
                         await _quizService.AddQuestionItem(questionItemCreate);
                     }
                 }
-                
+
                 return Ok(createdQuestions);
             }
             catch (Exception ex)
@@ -189,6 +199,44 @@ namespace LearningApp.Controllers
         {
             // This method will need to be implemented in QuizService
             return NotFound("GetQuestionItem method not implemented yet");
+        }
+
+        // GET: api/quizzes/{id} (alternative route for frontend compatibility)
+        [HttpGet]
+        [Route("/api/quizzes/{id}")]
+        public async Task<ActionResult<QuizDto>> GetQuizAlternate(int id)
+        {
+            try
+            {
+                var quiz = await _quizService.GetQuizById(id);
+
+                if (quiz == null)
+                {
+                    return NotFound($"Quiz with ID {id} not found");
+                }
+
+                return Ok(quiz);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error fetching quiz: {ex.Message}");
+            }
+        }
+
+        // GET: api/quizzes/{id}/questions (alternative route for frontend compatibility)
+        [HttpGet]
+        [Route("/api/quizzes/{id}/questions")]
+        public async Task<ActionResult<List<QuestionDto>>> GetQuizzesQuestions(int id)
+        {
+            try
+            {
+                var questions = await _quizService.GetQuestion(id);
+                return Ok(questions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error fetching questions: {ex.Message}");
+            }
         }
     }
 }

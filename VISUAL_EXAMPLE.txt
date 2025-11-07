@@ -1,0 +1,178 @@
+VISUAL EXAMPLE - DATA FLOW
+==========================
+
+1. BROWSER LOADS PAGE
+─────────────────────────────────────────────────────────────────
+
+   User navigates to: http://localhost:5173/courses
+
+   AllCourses.tsx component mounts
+   └─ useEffect triggers immediately
+      └─ calls fetchAllCoursesWithEnrollment(1)
+
+
+2. FRONTEND SENDS REQUEST
+─────────────────────────────────────────────────────────────────
+
+   HTTP Request:
+   ┌─────────────────────────────────────────────────────────┐
+   │ GET https://localhost:7121/api/courses/with-enrollment/1 │
+   │                                                          │
+   │ Headers:                                                │
+   │   Content-Type: application/json                        │
+   │   Authorization: Bearer eyJ0eXAi... (if token exists)  │
+   └─────────────────────────────────────────────────────────┘
+
+
+3. BACKEND PROCESSES REQUEST
+─────────────────────────────────────────────────────────────────
+
+   CoursesController.GetCoursesWithEnrollment(studentId: 1)
+
+   a) Query Courses Table
+      SELECT * FROM Courses
+
+      Results:
+      - Course 1: Python (courseId=1)
+      - Course 2: JavaScript (courseId=2)
+      - Course 3: React (courseId=3)
+      - Course 4: SQL (courseId=4)
+      - ... (12 total courses)
+
+   b) Query StudentCourseEnrollments for Student 1
+      SELECT * FROM StudentCourseEnrollments
+      WHERE StudentId = 1
+
+      Results:
+      - Enrollment 1: StudentId=1, CourseId=1
+        Status: active, Progress: 65%
+      - Enrollment 2: StudentId=1, CourseId=3
+        Status: active, Progress: 45%
+      - Enrollment 3: StudentId=1, CourseId=6
+        Status: completed, Progress: 100%
+
+   c) Combine Data
+      For each course:
+
+      Course 1 (Python) + Enrollment 1
+       └─ isEnrolled: true
+          status: active, progress: 65%
+
+      Course 2 (JavaScript) + null
+       └─ isEnrolled: false
+          status: null, progress: null
+
+      Course 3 (React) + Enrollment 2
+       └─ isEnrolled: true
+          status: active, progress: 45%
+
+
+4. BACKEND SENDS RESPONSE
+─────────────────────────────────────────────────────────────────
+
+   HTTP Response 200 OK:
+
+   [
+     {
+       "courseId": 1,
+       "title": "Python Programming",
+       "description": "Learn Python basics...",
+       "createdAt": "2024-01-15T10:00:00Z",
+       "updatedAt": null,
+       "userId": 1,
+       "enrollmentId": 101,              ✓ ENROLLED
+       "enrollmentDate": "2024-02-01T10:00:00Z",
+       "status": "active",
+       "progressPercentage": 65,
+       "completionDate": null,
+       "isEnrolled": true
+     },
+     {
+       "courseId": 2,
+       "title": "JavaScript Advanced",
+       "description": "Master JavaScript...",
+       "createdAt": "2024-01-10T10:00:00Z",
+       "updatedAt": null,
+       "userId": 1,
+       "enrollmentId": null,              ✗ NOT ENROLLED
+       "enrollmentDate": null,
+       "status": null,
+       "progressPercentage": null,
+       "completionDate": null,
+       "isEnrolled": false
+     }
+     ... (10 more courses)
+   ]
+
+
+5. FRONTEND RECEIVES DATA
+─────────────────────────────────────────────────────────────────
+
+   store.set({
+     coursesWithEnrollment: [...],
+     coursesLoading: false
+   })
+
+   Component re-renders with new data
+
+
+6. UI DISPLAYS COURSES
+─────────────────────────────────────────────────────────────────
+
+   ┌────────────────────────────────────────────────┐
+   │         Tous les cours disponibles              │
+   │   Découvrez et inscrivez-vous à nos cours      │
+   └────────────────────────────────────────────────┘
+
+   Course 1: Python Programming
+   ├─ Beginner | 20 hours
+   ├─ Status: active | Progress: 65%
+   └─ [Déjà inscrit] (disabled button)
+
+   Course 2: JavaScript Advanced
+   ├─ Advanced | 25 hours
+   ├─ Not enrolled
+   └─ [S'inscrire] (enabled button)
+
+   Course 3: React.js Mastery
+   ├─ Advanced | 26 hours
+   ├─ Status: active | Progress: 45%
+   └─ [Déjà inscrit] (disabled button)
+
+   ... (9 more courses)
+
+
+7. USER INTERACTION
+─────────────────────────────────────────────────────────────────
+
+   User clicks "S'inscrire" on JavaScript course
+
+   └─ handleEnroll(2)
+      └─ enrollCourse(1, 2)  // StudentId=1, CourseId=2
+         └─ POST /api/enrollments
+            └─ Creates StudentCourseEnrollment in database
+               └─ Next page load, JavaScript shows as enrolled
+
+
+KEY FEATURES
+════════════════════════════════════════════════════════════════════
+
+✓ Single API Call
+  └─ Returns ALL courses with enrollment status
+
+✓ Smart Display
+  └─ Auto shows "Déjà inscrit" for enrolled courses
+  └─ Shows "S'inscrire" for available courses
+  └─ Displays progress only for enrolled
+
+✓ Efficient Filtering
+  └─ Filter by search (title/description)
+  └─ Filter by level (Beginner/Intermediate/Advanced)
+
+✓ Real-time Updates
+  └─ Enrollment button updates immediately
+  └─ New enrollments appear
+
+✓ Persistent Storage
+  └─ Data cached in localStorage
+  └─ Quick page reloads

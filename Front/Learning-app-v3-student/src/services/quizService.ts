@@ -16,17 +16,18 @@ export interface Question {
   questionId: number;
   quizId: number;
   content: string;
-  type: 'multiple_choice' | 'short_answer' | 'true_false';
-  points: number;
-  items?: QuestionItem[];
+  type: string; // 'MCQ' | 'UNIQUECHOICE' | 'OPENRESPONSE' from backend, or 'multiple_choice' | 'short_answer' | 'true_false' from other sources
+  rank: number;
+  explanation?: string;
+  questionItems?: QuestionItem[];
 }
 
 export interface QuestionItem {
   questionItemId: number;
   questionId: number;
   content: string;
-  isCorrect: boolean;
-  order: number;
+  isRight: boolean;
+  rightResponse?: string;
 }
 
 export interface StudentQuizAttempt {
@@ -108,7 +109,7 @@ export const quizService = {
   // Get student's quiz attempts
   getStudentQuizAttempts: async (studentId: number, quizId: number): Promise<StudentQuizAttempt[]> => {
     const response = await fetch(
-      `${API_URL}/students/${studentId}/quizzes/${quizId}/attempts`,
+      `${API_URL}/StudentQuizAttempt/student/${studentId}/quiz/${quizId}`,
       {
         method: 'GET',
         headers: getHeaders(),
@@ -122,24 +123,6 @@ export const quizService = {
     return response.json();
   },
 
-  // Create a new quiz attempt
-  startQuizAttempt: async (studentId: number, quizId: number, chapterProgressId?: number): Promise<StudentQuizAttempt> => {
-    const response = await fetch(`${API_URL}/quiz-attempts`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({
-        studentId,
-        quizId,
-        chapterProgressId,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to start quiz attempt');
-    }
-
-    return response.json();
-  },
 
   // Submit answer to a question
   submitAnswer: async (
@@ -198,6 +181,65 @@ export const quizService = {
 
     if (!response.ok) {
       throw new Error('Failed to fetch quiz attempt');
+    }
+
+    return response.json();
+  },
+
+  // Start a new quiz attempt
+  startQuizAttempt: async (studentId: number, quizId: number, chapterProgressId?: number): Promise<StudentQuizAttempt> => {
+    const response = await fetch(`${API_URL}/StudentQuizAttempt/start`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        studentId,
+        quizId,
+        chapterProgressId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to start quiz attempt');
+    }
+
+    return response.json();
+  },
+
+  // Submit quiz attempt with all answers
+  submitQuizAttempt: async (
+    attemptId: number,
+    answers: Array<{
+      questionId: number;
+      questionItemIds?: number[];
+      responseContent?: string;
+    }>,
+    timeSpentSeconds: number
+  ): Promise<StudentQuizAttempt> => {
+    const response = await fetch(`${API_URL}/StudentQuizAttempt/${attemptId}/submit`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        timeSpentSeconds,
+        answers,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit quiz attempt');
+    }
+
+    return response.json();
+  },
+
+  // Get quiz attempt with results
+  getQuizAttemptWithResults: async (attemptId: number): Promise<StudentQuizAttempt> => {
+    const response = await fetch(`${API_URL}/StudentQuizAttempt/${attemptId}`, {
+      method: 'GET',
+      headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch quiz attempt results');
     }
 
     return response.json();

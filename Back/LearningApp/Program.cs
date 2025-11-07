@@ -23,6 +23,9 @@ builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add HttpClient for AI API calls
+builder.Services.AddHttpClient();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -93,6 +96,8 @@ builder.Services.AddScoped<UserRoleService>();
 builder.Services.AddScoped<ChapterService>();
 builder.Services.AddScoped<ChapterContentService>();
 builder.Services.AddScoped<QuizService>();
+builder.Services.AddScoped<StudentQuizAttemptService>();
+builder.Services.AddScoped<StudentChapterProgressService>();
 builder.Services.AddScoped<AuthService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

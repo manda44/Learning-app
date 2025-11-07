@@ -54,4 +54,34 @@ public class StudentQuizAttemptRepository : Repository<StudentQuizAttempt>, IStu
         return await _dbSet
             .CountAsync(e => e.StudentId == studentId && e.QuizId == quizId);
     }
+
+    public async Task<List<StudentQuizAttempt>> GetStudentQuizAttempts(int studentId, int quizId)
+    {
+        return await _dbSet
+            .Where(e => e.StudentId == studentId && e.QuizId == quizId)
+            .OrderByDescending(e => e.AttemptDate)
+            .ToListAsync();
+    }
+
+    public async Task<StudentQuizAttempt?> GetQuizAttemptWithResponses(int attemptId)
+    {
+        return await _dbSet
+            .Include(e => e.StudentQuestionResponses)
+            .ThenInclude(r => r.Question)
+            .Include(e => e.StudentQuestionResponses)
+            .ThenInclude(r => r.QuestionItem)
+            .FirstOrDefaultAsync(e => e.QuizAttemptId == attemptId);
+    }
+
+    public async Task AddQuestionResponseAsync(StudentQuestionResponse response)
+    {
+        await _context.Set<StudentQuestionResponse>().AddAsync(response);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(StudentQuizAttempt attempt)
+    {
+        _context.Set<StudentQuizAttempt>().Update(attempt);
+        await _context.SaveChangesAsync();
+    }
 }

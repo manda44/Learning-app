@@ -1,6 +1,7 @@
 ﻿using LearningApp.Application.DTOs;
 using LearningApp.Application.Interfaces;
 using LearningApp.Domain;
+using System.Linq;
 
 namespace LearningApp.Application.Services
 {
@@ -9,12 +10,14 @@ namespace LearningApp.Application.Services
         private readonly IQuestionRepository _questionRepository;
         private readonly IQuizRepository _quizRepository;
         private readonly IQuestionItemRepository _questionItemRepository;
+        private readonly Infrastructure.Data.ApplicationDbContext _context;
 
-        public QuizService(IQuestionItemRepository questionItemRepository,IQuizRepository quizRepository,IQuestionRepository questionRepository)
+        public QuizService(IQuestionItemRepository questionItemRepository,IQuizRepository quizRepository,IQuestionRepository questionRepository, Infrastructure.Data.ApplicationDbContext context)
         {
             _questionItemRepository = questionItemRepository;
             _quizRepository = quizRepository;
             _questionRepository = questionRepository;
+            _context = context;
         }
 
         public async Task<QuizDto> AddQuiz(QuizCreateDto quizCreateDto)
@@ -55,6 +58,26 @@ namespace LearningApp.Application.Services
         {
             IEnumerable<Question> questions = (await _questionRepository.GetAllAsync()).Where(q => q.QuizId == QuizId);
             foreach (Question question in questions) {
+                // First, delete all StudentQuestionResponse entries that reference this question's items
+                var questionItemIds = (await _questionItemRepository.GetAllAsync())
+                    .Where(qi => qi.QuestionId == question.QuestionId)
+                    .Select(qi => qi.QuestionItemId)
+                    .ToList();
+
+                if (questionItemIds.Any())
+                {
+                    var studentResponses = _context.StudentQuestionResponses
+                        .Where(sqr => questionItemIds.Contains(sqr.QuestionItemId ?? 0))
+                        .ToList();
+
+                    if (studentResponses.Any())
+                    {
+                        _context.StudentQuestionResponses.RemoveRange(studentResponses);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                // Now delete the question items
                 IEnumerable<QuestionItem> questionItems = (await _questionItemRepository.GetAllAsync()).Where(qi => qi.QuestionId == question.QuestionId);
                 foreach (QuestionItem questionItem in questionItems) {
                     _questionItemRepository.Delete(questionItem);
