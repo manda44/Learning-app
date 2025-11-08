@@ -59,3 +59,14 @@ public class SubmitQuestionAnswerDto
 
     public string? ResponseContent { get; set; } // Pour OPENRESPONSE
 }
+
+public class SubmitQuizDto
+{
+    public int StudentId { get; set; }
+
+    public int QuizId { get; set; }
+
+    public int TimeSpentSeconds { get; set; }
+
+    public List<SubmitQuestionAnswerDto> Answers { get; set; } = new List<SubmitQuestionAnswerDto>();
+}

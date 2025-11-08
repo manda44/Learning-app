@@ -40,7 +40,15 @@
       "Bash(wmic process where \"ProcessId=222284\" delete)",
       "Bash(wmic process where \"ProcessId=212664\" delete)",
       "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & echo All dotnet processes killed\")",
-      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(cmd /c \"taskkill /PID 247688 /F\")",
+      "Bash(wmic process where \"ProcessId=247688\" delete)",
+      "Bash(cmd /c \"taskkill /PID 154568 /F\")",
+      "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & taskkill /F /IM LearningApp.exe 2>nul & echo All processes killed\")",
+      "Bash(wmic process where \"ProcessId=193640\" delete)",
+      "Bash(timeout /t 3)",
+      "Bash(wmic process where \"ProcessId=111988\" delete)",
+      "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & taskkill /F /IM LearningApp.exe 2>nul & echo Done\")"
     ],
     "deny": [],
     "ask": []

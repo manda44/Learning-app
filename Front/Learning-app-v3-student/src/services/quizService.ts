@@ -205,9 +205,10 @@ export const quizService = {
     return response.json();
   },
 
-  // Submit quiz attempt with all answers
+  // Submit quiz attempt with all answers (creates attempt on submission)
   submitQuizAttempt: async (
-    attemptId: number,
+    studentId: number,
+    quizId: number,
     answers: Array<{
       questionId: number;
       questionItemIds?: number[];
@@ -215,10 +216,12 @@ export const quizService = {
     }>,
     timeSpentSeconds: number
   ): Promise<StudentQuizAttempt> => {
-    const response = await fetch(`${API_URL}/StudentQuizAttempt/${attemptId}/submit`, {
+    const response = await fetch(`${API_URL}/StudentQuizAttempt/submit`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({
+        studentId,
+        quizId,
         timeSpentSeconds,
         answers,
       }),

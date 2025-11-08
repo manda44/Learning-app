@@ -205,7 +205,7 @@ export function Quiz() {
     codeBlock,
   });
 
-  // Fetch quiz questions and start quiz attempt
+  // Fetch quiz questions (no quiz attempt created until submission)
   useEffect(() => {
     const initializeQuiz = async () => {
       try {
@@ -221,35 +221,23 @@ export function Quiz() {
         // Check if user explicitly wants to start a new attempt
         const forceNewAttempt = location.state?.forceNewAttempt;
 
-        // Check if there's an in-progress attempt to continue
-        const previousAttempts = await quizService.getStudentQuizAttempts(studentId, parseInt(quizId));
-        const inProgressAttempt = previousAttempts.find(a => a.status === 'in_progress');
-
         // Check if there's a completed attempt (passed or failed)
+        const previousAttempts = await quizService.getStudentQuizAttempts(studentId, parseInt(quizId));
         const completedAttempt = previousAttempts
           .filter(a => a.status === 'passed' || a.status === 'failed')
           .sort((a, b) => new Date(b.attemptDate).getTime() - new Date(a.attemptDate).getTime())[0];
 
-        let attempt;
-        if (inProgressAttempt && !forceNewAttempt) {
-          // Continue the in-progress attempt (unless forcing new)
-          attempt = inProgressAttempt;
-        } else if (completedAttempt && !forceNewAttempt) {
+        // Only redirect if there's a completed attempt AND user didn't explicitly ask for a new attempt
+        if (completedAttempt && !forceNewAttempt) {
           // Redirect to the last completed attempt results (unless forcing new)
           navigate(`/quiz/${quizId}/results/${completedAttempt.quizAttemptId}`, { replace: true });
           return;
-        } else {
-          // Start a new quiz attempt
-          attempt = await quizService.startQuizAttempt(studentId, parseInt(quizId));
-          // Clear the forceNewAttempt state after using it
-          if (forceNewAttempt) {
-            navigate(location.pathname, { replace: true, state: {} });
-          }
         }
 
-        // Set quiz attempt details
-        setQuizAttemptId(attempt.quizAttemptId);
-        setStartTime(Date.now());
+        // Clear the forceNewAttempt state after using it
+        if (forceNewAttempt) {
+          navigate(location.pathname, { replace: true, state: {} });
+        }
 
         // Fetch questions
         const data = await quizService.getQuizQuestions(parseInt(quizId));
@@ -266,6 +254,9 @@ export function Quiz() {
           }
         });
         setAnswers(initialAnswers);
+
+        // Set start time for duration tracking
+        setStartTime(Date.now());
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load quiz');
       } finally {
@@ -366,14 +357,16 @@ export function Quiz() {
   };
 
   const handleSubmitQuiz = async () => {
-    if (!quizAttemptId) {
-      setError('No quiz attempt found');
-      return;
-    }
-
     try {
       setSubmitting(true);
       setError(null);
+
+      if (!quizId) {
+        throw new Error('Quiz ID is required');
+      }
+
+      // Use static student ID for now
+      const studentId = 1;
 
       // Calculate time spent in seconds
       const timeSpentSeconds = Math.floor((Date.now() - startTime) / 1000);
@@ -410,15 +403,16 @@ export function Quiz() {
         };
       });
 
-      // Submit the quiz
-      await quizService.submitQuizAttempt(
-        quizAttemptId,
+      // Create quiz attempt and submit in one call
+      const result = await quizService.submitQuizAttempt(
+        studentId,
+        parseInt(quizId),
         formattedAnswers,
         timeSpentSeconds
       );
 
       // Navigate to results page
-      navigate(`/quiz/${quizId}/results/${quizAttemptId}`);
+      navigate(`/quiz/${quizId}/results/${result.quizAttemptId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit quiz');
     } finally {

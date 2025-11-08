@@ -42,21 +42,27 @@ export function CourseView() {
         throw new Error('Course ID is required');
       }
 
+      console.log('[CourseView] Fetching chapters for course:', courseId, 'student:', studentId);
       // Fetch chapters with lock status
       const chaptersData = await chapterProgressService.getChaptersWithLockStatus(parseInt(courseId), studentId);
+      console.log('[CourseView] Chapters fetched:', chaptersData);
       setChapters(chaptersData);
 
       // Select first unlocked chapter by default if no chapter is selected
-      if (!selectedChapterId) {
-        const firstUnlocked = chaptersData.find(c => !c.isLocked);
-        if (firstUnlocked) {
-          setSelectedChapterId(firstUnlocked.chapterId);
+      // Use functional update to avoid including selectedChapterId in dependencies
+      setSelectedChapterId((currentId) => {
+        if (!currentId) {
+          const firstUnlocked = chaptersData.find(c => !c.isLocked);
+          console.log('[CourseView] No chapter selected, selecting first unlocked:', firstUnlocked);
+          return firstUnlocked ? firstUnlocked.chapterId : null;
         }
-      }
+        console.log('[CourseView] Keeping current chapter:', currentId);
+        return currentId;
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load chapters');
     }
-  }, [courseId, studentId, selectedChapterId]);
+  }, [courseId, studentId]);
 
   // Fetch all chapters with lock status on mount
   useEffect(() => {
@@ -78,11 +84,15 @@ export function CourseView() {
   // Handle navigation state (refresh and selectChapterId)
   useEffect(() => {
     const state = location.state as any;
+    console.log('[CourseView] Navigation state received:', state);
     if (state?.refresh || state?.selectChapterId) {
+      console.log('[CourseView] Refreshing chapters due to state change');
       // Refresh chapters to get updated lock status
       fetchChapters().then(() => {
+        console.log('[CourseView] Chapters refreshed');
         // After refreshing, select the chapter if specified
         if (state?.selectChapterId) {
+          console.log('[CourseView] Selecting chapter:', state.selectChapterId);
           setSelectedChapterId(state.selectChapterId);
         }
       });

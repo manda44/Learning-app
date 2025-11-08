@@ -89,15 +89,15 @@ namespace LearningApp.Application.Services
             var studentAttempts = await _quizAttemptRepository.GetStudentQuizAttempts(studentId, 0); // 0 to get all attempts
 
             var result = new List<ChapterWithLockStatusDto>();
-            bool previousChapterPassed = true; // First chapter is always unlocked
 
-            foreach (var chapter in chapters)
+            for (int i = 0; i < chapters.Count; i++)
             {
+                var chapter = chapters[i];
                 var chapterQuiz = courseQuizzes.FirstOrDefault(q => q.ChapterId == chapter.ChapterId);
                 var chapterProgress = progressDict.ContainsKey(chapter.ChapterId) ? progressDict[chapter.ChapterId] : null;
 
                 // Check if this chapter's quiz was passed and get last score
-                bool quizPassed = false;
+                bool currentQuizPassed = false;
                 int? lastQuizScore = null;
                 if (chapterQuiz != null)
                 {
@@ -107,15 +107,43 @@ namespace LearningApp.Application.Services
                         .ToList();
 
                     var passedAttempt = quizAttemptsForChapter.FirstOrDefault(a => a.Status == "passed");
-                    quizPassed = passedAttempt != null;
+                    currentQuizPassed = passedAttempt != null;
 
                     // Get the last attempt score (most recent)
                     var lastAttempt = quizAttemptsForChapter.FirstOrDefault();
                     lastQuizScore = lastAttempt?.Score;
                 }
 
-                // Chapter is locked if the previous chapter's quiz was not passed
-                bool isLocked = !previousChapterPassed;
+                // Determine if this chapter is locked
+                bool isLocked = false;
+                if (i == 0)
+                {
+                    // First chapter is always unlocked
+                    isLocked = false;
+                }
+                else
+                {
+                    // Check if the previous chapter's quiz was passed
+                    var previousChapter = chapters[i - 1];
+                    var previousChapterQuiz = courseQuizzes.FirstOrDefault(q => q.ChapterId == previousChapter.ChapterId);
+
+                    if (previousChapterQuiz != null)
+                    {
+                        // Previous chapter has a quiz - check if it was passed
+                        var previousQuizAttempts = studentAttempts
+                            .Where(a => a.QuizId == previousChapterQuiz.QuizId)
+                            .ToList();
+
+                        var previousQuizPassed = previousQuizAttempts.Any(a => a.Status == "passed");
+                        isLocked = !previousQuizPassed;
+                    }
+                    else
+                    {
+                        // Previous chapter has no quiz - inherit lock status from that chapter
+                        // This means if previous chapter was unlocked, this one is too
+                        isLocked = false;
+                    }
+                }
 
                 // Quiz is locked if chapter is not completed
                 bool quizLocked = chapterProgress?.Status != "completed";
@@ -131,20 +159,13 @@ namespace LearningApp.Application.Services
                     IsCompleted = chapterProgress?.Status == "completed",
                     HasQuiz = chapterQuiz != null,
                     QuizId = chapterQuiz?.QuizId,
-                    QuizPassed = quizPassed,
+                    QuizPassed = currentQuizPassed,
                     QuizLocked = quizLocked,
                     LastQuizScore = lastQuizScore,
                     ProgressPercentage = chapterProgress?.ProgressPercentage ?? 0
                 };
 
                 result.Add(chapterDto);
-
-                // Update for next iteration: next chapter is unlocked only if current quiz was passed OR no quiz exists
-                if (chapterQuiz != null)
-                {
-                    previousChapterPassed = quizPassed;
-                }
-                // If no quiz, chapter completion doesn't affect next chapter lock status
             }
 
             return result;

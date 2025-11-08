@@ -57,10 +57,21 @@ public class StudentQuizAttemptRepository : Repository<StudentQuizAttempt>, IStu
 
     public async Task<List<StudentQuizAttempt>> GetStudentQuizAttempts(int studentId, int quizId)
     {
-        return await _dbSet
+        if (quizId == 0)
+        {
+            return await _dbSet
+            .Where(e => e.StudentId == studentId)
+            .OrderByDescending(e => e.AttemptDate)
+            .ToListAsync();
+        }
+        else
+        {
+            return await _dbSet
             .Where(e => e.StudentId == studentId && e.QuizId == quizId)
             .OrderByDescending(e => e.AttemptDate)
             .ToListAsync();
+
+        }
     }
 
     public async Task<StudentQuizAttempt?> GetQuizAttemptWithResponses(int attemptId)

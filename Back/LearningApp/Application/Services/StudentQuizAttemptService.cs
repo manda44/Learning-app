@@ -242,6 +242,47 @@ namespace LearningApp.Application.Services
             };
         }
 
+        /// <summary>
+        /// Submit quiz (creates attempt and submits answers in one call)
+        /// Deletes all previous attempts and responses before creating the new one
+        /// </summary>
+        public async Task<StudentQuizAttemptDto> SubmitQuiz(SubmitQuizDto dto)
+        {
+            // Get all previous attempts for this student and quiz
+            var previousAttempts = await _quizAttemptRepository.GetStudentQuizAttempts(dto.StudentId, dto.QuizId);
+
+            // Delete all previous attempts and their responses
+            foreach (var oldAttempt in previousAttempts)
+            {
+                // Delete the attempt (cascade will delete responses if configured)
+                await _quizAttemptRepository.DeleteAsync(oldAttempt.QuizAttemptId);
+            }
+
+            // Create the new quiz attempt (always attempt number 1 since we deleted previous ones)
+            var attempt = new StudentQuizAttempt
+            {
+                StudentId = dto.StudentId,
+                QuizId = dto.QuizId,
+                ChapterProgressId = null,
+                AttemptNumber = 1, // Always 1 since we delete previous attempts
+                AttemptDate = DateTime.UtcNow,
+                Status = "in_progress",
+                Score = null,
+                TimeSpentSeconds = null
+            };
+
+            await _quizAttemptRepository.AddAsync(attempt);
+
+            // Now submit using the existing logic
+            var submitDto = new SubmitQuizAttemptDto
+            {
+                TimeSpentSeconds = dto.TimeSpentSeconds,
+                Answers = dto.Answers
+            };
+
+            return await SubmitQuizAttempt(attempt.QuizAttemptId, submitDto);
+        }
+
         public async Task<StudentQuizAttemptDto?> GetQuizAttemptById(int attemptId)
         {
             var attempt = await _quizAttemptRepository.GetQuizAttemptWithResponses(attemptId);

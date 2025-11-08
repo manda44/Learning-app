@@ -30,6 +30,22 @@ namespace LearningApp.Controllers
             }
         }
 
+        // POST: api/StudentQuizAttempt/submit (creates attempt and submits in one call)
+        [HttpPost("submit")]
+        public async Task<ActionResult<StudentQuizAttemptDto>> SubmitQuiz(
+            [FromBody] SubmitQuizDto dto)
+        {
+            try
+            {
+                var result = await _studentQuizAttemptService.SubmitQuiz(dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error submitting quiz: {ex.Message}");
+            }
+        }
+
         // POST: api/StudentQuizAttempt/{attemptId}/submit
         [HttpPost("{attemptId}/submit")]
         public async Task<ActionResult<StudentQuizAttemptDto>> SubmitQuizAttempt(
