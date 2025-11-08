@@ -221,16 +221,17 @@ export function Quiz() {
         // Check if user explicitly wants to start a new attempt
         const forceNewAttempt = location.state?.forceNewAttempt;
 
-        // Check if there's a completed attempt (passed or failed)
+        // Check if there's a PASSED attempt (only redirect for passed quizzes)
+        // Failed quizzes should allow retry without redirection
         const previousAttempts = await quizService.getStudentQuizAttempts(studentId, parseInt(quizId));
-        const completedAttempt = previousAttempts
-          .filter(a => a.status === 'passed' || a.status === 'failed')
+        const passedAttempt = previousAttempts
+          .filter(a => a.status === 'passed')
           .sort((a, b) => new Date(b.attemptDate).getTime() - new Date(a.attemptDate).getTime())[0];
 
-        // Only redirect if there's a completed attempt AND user didn't explicitly ask for a new attempt
-        if (completedAttempt && !forceNewAttempt) {
-          // Redirect to the last completed attempt results (unless forcing new)
-          navigate(`/quiz/${quizId}/results/${completedAttempt.quizAttemptId}`, { replace: true });
+        // Only redirect if there's a passed attempt AND user didn't explicitly ask for a new attempt
+        if (passedAttempt && !forceNewAttempt) {
+          // Redirect to the passed attempt results (unless forcing new to improve score)
+          navigate(`/quiz/${quizId}/results/${passedAttempt.quizAttemptId}`, { replace: true });
           return;
         }
 
