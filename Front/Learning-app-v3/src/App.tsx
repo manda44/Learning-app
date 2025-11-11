@@ -16,6 +16,7 @@ import LoginPage from '../pages/auth/LoginPage.tsx';
 import StudentEnrollmentsPage from '../pages/enrollment/StudentEnrollmentsPage.tsx';
 import TicketValidationPage from '../pages/validation/TicketValidationPage.tsx';
 import AdminDashboard from '../pages/dashboard/AdminDashboard.tsx';
+import ProfilePage from '../pages/profile/ProfilePage.tsx';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/quiz/:quizId" element={<QuizList/>}/>
                   <Route path="/quizPage" element={<QuizPage/>}/>
                   <Route path="/miniproject" element={<MiniProjectPage/>}/>
+                  <Route path="/profile" element={<ProfilePage/>}/>
                 </Routes>
               </MainLayout>
             </ProtectedRoute>

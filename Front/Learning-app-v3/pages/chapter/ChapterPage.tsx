@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
       Button,
       Modal,
@@ -14,8 +15,7 @@ import {
       Stack,
       Title,
       Text,
-      Table,
-      Badge
+      Table
 } from '@mantine/core';
 import {
       IconPlus,
@@ -33,6 +33,7 @@ import {
 
 
 const ChapterPage = () =>{
+    const navigate = useNavigate();
     const [selectedValue, setSelectedValue] = useState<string | null>(() => {
         const saved = localStorage.getItem('selectedCourseId');
         return saved || null;
@@ -278,7 +279,7 @@ const ChapterPage = () =>{
                                     ))}
                                 </Grid>
                             ) : (
-                                <Paper shadow="sm" radius="lg" withBorder overflow="hidden">
+                                <Paper shadow="sm" radius="lg" withBorder style={{ overflow: 'hidden' }}>
                                     <Table striped highlightOnHover>
                                         <Table.Thead>
                                             <Table.Tr>
@@ -327,7 +328,7 @@ const ChapterPage = () =>{
                                                                 variant="light"
                                                                 color="blue"
                                                                 title="Voir le contenu"
-                                                                onClick={() => window.location.href = `/chapterContent/${chapter.chapterId}`}
+                                                                onClick={() => navigate(`/chapterContent/${chapter.chapterId}`)}
                                                             >
                                                                 <IconEye size={14} />
                                                             </ActionIcon>

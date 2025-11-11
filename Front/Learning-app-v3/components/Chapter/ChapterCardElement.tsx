@@ -224,16 +224,17 @@ export default function ChapterCardElement({
                         </Group>
                     </Stack>
                 ) : (
-                    <Stack gap={6} p="sm" style={{ flex: 1, position: 'relative', zIndex: 1 }}>
+                    <Stack gap={12} p="lg" style={{ flex: 1, position: 'relative', zIndex: 1 }}>
                         {/* Title in compact mode */}
                         <div>
                             <Text
                                 fw={700}
-                                size="sm"
+                                size="xl"
                                 style={{
                                     color: 'white',
                                     lineHeight: 1.2,
-                                    letterSpacing: '-0.5px'
+                                    letterSpacing: '-0.5px',
+                                    fontFamily: '"Segoe UI", "Helvetica Neue", -apple-system, sans-serif'
                                 }}
                             >
                                 {title}
@@ -243,7 +244,7 @@ export default function ChapterCardElement({
                         {/* Description in compact mode */}
                         <Text
                             c="white"
-                            size="xs"
+                            size="lg"
                             opacity={0.85}
                             style={{
                                 flex: 1,
@@ -251,7 +252,8 @@ export default function ChapterCardElement({
                                 display: '-webkit-box',
                                 WebkitLineClamp: 2,
                                 WebkitBoxOrient: 'vertical',
-                                lineHeight: 1.4
+                                lineHeight: 1.4,
+                                fontFamily: '"Segoe UI", "Helvetica Neue", -apple-system, sans-serif'
                             }}
                         >
                             {description}
@@ -260,8 +262,11 @@ export default function ChapterCardElement({
                         {/* Date in compact mode */}
                         <Text
                             c="white"
-                            size="xs"
+                            size="md"
                             opacity={0.7}
+                            style={{
+                                fontFamily: '"Segoe UI", "Helvetica Neue", -apple-system, sans-serif'
+                            }}
                         >
                             {new Date(createdDate).toLocaleDateString('fr-FR')}
                         </Text>

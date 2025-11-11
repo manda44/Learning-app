@@ -139,7 +139,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
                                       <Menu.Dropdown>
                                             <Menu.Label>Mon compte</Menu.Label>
-                                            <Menu.Item leftSection={<IconUserProfile size={14} />}>
+                                            <Menu.Item
+                                                  leftSection={<IconUserProfile size={14} />}
+                                                  onClick={() => navigate('/profile')}
+                                            >
                                                   Mon profil
                                             </Menu.Item>
                                             <Menu.Item leftSection={<IconSettings size={14} />}>
