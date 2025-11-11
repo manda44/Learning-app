@@ -88,7 +88,6 @@ builder.Services.AddScoped<IStudentProjectEnrollmentRepository, StudentProjectEn
 builder.Services.AddScoped<IStudentTicketProgressRepository, StudentTicketProgressRepository>();
 builder.Services.AddScoped<IStudentAchievementRepository, StudentAchievementRepository>();
 builder.Services.AddScoped<IStudentActivityRepository, StudentActivityRepository>();
-builder.Services.AddScoped<ICourseMiniProjectRepository, CourseMiniProjectRepository>();
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleService>();

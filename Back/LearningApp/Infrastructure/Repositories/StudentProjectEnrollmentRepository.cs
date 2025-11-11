@@ -15,6 +15,7 @@ public class StudentProjectEnrollmentRepository : Repository<StudentProjectEnrol
     {
         return await _dbSet
             .Include(e => e.MiniProject)
+                .ThenInclude(mp => mp.Tickets)
             .Include(e => e.Student)
             .FirstOrDefaultAsync(e => e.StudentId == studentId && e.MiniProjectId == projectId);
     }
@@ -23,6 +24,7 @@ public class StudentProjectEnrollmentRepository : Repository<StudentProjectEnrol
     {
         return await _dbSet
             .Include(e => e.MiniProject)
+                .ThenInclude(mp => mp.Tickets)
             .Where(e => e.StudentId == studentId)
             .ToListAsync();
     }

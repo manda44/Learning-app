@@ -57,8 +57,6 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<StudentActivity> StudentActivities { get; set; }
 
-    public virtual DbSet<CourseMiniProject> CourseMiniProjects { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chapter>(entity =>
@@ -136,24 +134,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Course__UserId__398D8EEE");
-
-            entity.HasMany(d => d.MiniProjects).WithMany(p => p.Courses)
-                .UsingEntity<Dictionary<string, object>>(
-                    "CourseProject",
-                    r => r.HasOne<MiniProject>().WithMany()
-                        .HasForeignKey("MiniProjectId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__CoursePro__MiniP__5441852A"),
-                    l => l.HasOne<Course>().WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__CoursePro__Cours__534D60F1"),
-                    j =>
-                    {
-                        j.HasKey("CourseId", "MiniProjectId").HasName("PK__CoursePr__52AD9073E0A7F8B9");
-                        j.ToTable("CourseProject");
-                        j.HasIndex(new[] { "MiniProjectId" }, "IX_CourseProject_MiniProjectId");
-                    });
         });
 
         modelBuilder.Entity<MiniProject>(entity =>
@@ -162,11 +142,14 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("MiniProject");
 
+            entity.HasIndex(e => e.CourseId, "IX_MiniProject_CourseId");
+
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.Property(e => e.Description).IsUnicode(false);
+            // Description supports Unicode for emojis and special characters
+            entity.Property(e => e.Description);
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -174,6 +157,11 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Course).WithMany(p => p.MiniProjects)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__MiniProject__CourseId");
         });
 
         modelBuilder.Entity<Question>(entity =>
@@ -287,7 +275,8 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.Property(e => e.Description).IsUnicode(false);
+            // Description supports Unicode for emojis and special characters
+            entity.Property(e => e.Description);
 
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
@@ -550,29 +539,6 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Student).WithMany(p => p.StudentActivities)
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        // CourseMiniProject configuration
-        modelBuilder.Entity<CourseMiniProject>(entity =>
-        {
-            entity.HasKey(e => e.CourseMiniProjectId).HasName("PK__CourseMiniProject__52AD9073E0A7F8B9");
-
-            entity.ToTable("CourseMiniProject");
-
-            entity.HasIndex(e => e.CourseId, "IX__CourseMiniProject__CourseId");
-            entity.HasIndex(e => e.MiniProjectId, "IX__CourseMiniProject__MiniProjectId");
-
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
-
-            entity.HasOne(d => d.Course).WithMany(p => p.CourseMiniProjects)
-                .HasForeignKey(d => d.CourseId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(d => d.MiniProject).WithMany(p => p.CourseMiniProjects)
-                .HasForeignKey(d => d.MiniProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(new[] { "CourseId", "MiniProjectId" }, "UQ__CourseMiniProject__CourseId_MiniProjectId").IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

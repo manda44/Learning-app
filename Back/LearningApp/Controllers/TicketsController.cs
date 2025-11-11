@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LearningApp.Domain;
 using LearningApp.Infrastructure.Data;
+using LearningApp.Application.DTOs;
 
 namespace LearningApp.Controllers
 {
@@ -44,22 +45,17 @@ namespace LearningApp.Controllers
 
         // PUT: api/Tickets/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTicket(int id, Ticket ticket)
+        public async Task<IActionResult> PutTicket(int id, UpdateTicketDto ticketDto)
         {
-            if (id != ticket.TicketId)
-            {
-                return BadRequest();
-            }
-
             var existingTicket = await _context.Tickets.FindAsync(id);
             if (existingTicket == null)
             {
                 return NotFound();
             }
 
-            existingTicket.Title = ticket.Title;
-            existingTicket.Description = ticket.Description;
-            existingTicket.Status = ticket.Status;
+            existingTicket.Title = ticketDto.Title;
+            existingTicket.Description = ticketDto.Description;
+            existingTicket.Status = ticketDto.Status;
             existingTicket.UpdatedAt = DateTime.Now;
 
             try
@@ -83,14 +79,17 @@ namespace LearningApp.Controllers
 
         // POST: api/Tickets
         [HttpPost]
-        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
+        public async Task<ActionResult<Ticket>> PostTicket(CreateTicketDto ticketDto)
         {
-            ticket.CreatedAt = DateTime.Now;
-            ticket.UpdatedAt = DateTime.Now;
-            if (string.IsNullOrEmpty(ticket.Status))
+            var ticket = new Ticket
             {
-                ticket.Status = "pending";
-            }
+                MiniProjectId = ticketDto.MiniProjectId,
+                Title = ticketDto.Title,
+                Description = ticketDto.Description,
+                Status = string.IsNullOrEmpty(ticketDto.Status) ? "pending" : ticketDto.Status,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
 
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
@@ -109,6 +108,91 @@ namespace LearningApp.Controllers
             }
 
             _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // GET: api/Tickets/pending-validation
+        [HttpGet("pending-validation")]
+        public async Task<ActionResult<IEnumerable<PendingValidationTicketDto>>> GetPendingValidationTickets()
+        {
+            var completedTickets = await _context.StudentTicketProgresses
+                .Include(tp => tp.Ticket)
+                .ThenInclude(t => t.MiniProject)
+                .ThenInclude(mp => mp.Course)
+                .Include(tp => tp.Student)
+                .Where(tp => tp.Status == "completed")
+                .OrderByDescending(tp => tp.CompletedDate)
+                .Select(tp => new PendingValidationTicketDto
+                {
+                    TicketProgressId = tp.TicketProgressId,
+                    StudentId = tp.StudentId,
+                    StudentName = tp.Student.FirstName + " " + tp.Student.LastName,
+                    StudentEmail = tp.Student.Email,
+                    TicketId = tp.TicketId,
+                    TicketTitle = tp.Ticket.Title,
+                    TicketDescription = tp.Ticket.Description,
+                    MiniProjectId = tp.Ticket.MiniProjectId,
+                    MiniProjectTitle = tp.Ticket.MiniProject.Title,
+                    CourseId = tp.Ticket.MiniProject.CourseId,
+                    CourseName = tp.Ticket.MiniProject.Course.Title,
+                    CompletedDate = tp.CompletedDate,
+                    Notes = tp.Notes
+                })
+                .ToListAsync();
+
+            return Ok(completedTickets);
+        }
+
+        // GET: api/Tickets/pending-validation/course/{courseId}
+        [HttpGet("pending-validation/course/{courseId}")]
+        public async Task<ActionResult<IEnumerable<PendingValidationTicketDto>>> GetPendingValidationTicketsByCourse(int courseId)
+        {
+            var completedTickets = await _context.StudentTicketProgresses
+                .Include(tp => tp.Ticket)
+                .ThenInclude(t => t.MiniProject)
+                .ThenInclude(mp => mp.Course)
+                .Include(tp => tp.Student)
+                .Where(tp => tp.Status == "completed" && tp.Ticket.MiniProject.CourseId == courseId)
+                .OrderByDescending(tp => tp.CompletedDate)
+                .Select(tp => new PendingValidationTicketDto
+                {
+                    TicketProgressId = tp.TicketProgressId,
+                    StudentId = tp.StudentId,
+                    StudentName = tp.Student.FirstName + " " + tp.Student.LastName,
+                    StudentEmail = tp.Student.Email,
+                    TicketId = tp.TicketId,
+                    TicketTitle = tp.Ticket.Title,
+                    TicketDescription = tp.Ticket.Description,
+                    MiniProjectId = tp.Ticket.MiniProjectId,
+                    MiniProjectTitle = tp.Ticket.MiniProject.Title,
+                    CourseId = tp.Ticket.MiniProject.CourseId,
+                    CourseName = tp.Ticket.MiniProject.Course.Title,
+                    CompletedDate = tp.CompletedDate,
+                    Notes = tp.Notes
+                })
+                .ToListAsync();
+
+            return Ok(completedTickets);
+        }
+
+        // PUT: api/Tickets/{ticketProgressId}/validate
+        [HttpPut("{ticketProgressId}/validate")]
+        public async Task<IActionResult> ValidateTicket(int ticketProgressId)
+        {
+            var ticketProgress = await _context.StudentTicketProgresses.FindAsync(ticketProgressId);
+            if (ticketProgress == null)
+            {
+                return NotFound();
+            }
+
+            if (ticketProgress.Status != "completed")
+            {
+                return BadRequest(new { message = "Only completed tickets can be validated" });
+            }
+
+            ticketProgress.Status = "validated";
             await _context.SaveChangesAsync();
 
             return NoContent();

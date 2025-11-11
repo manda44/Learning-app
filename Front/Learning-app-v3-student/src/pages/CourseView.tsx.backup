@@ -9,9 +9,6 @@ import '@blocknote/mantine/style.css';
 import courseService from '../services/courseService';
 import type { ChapterDetail } from '../services/courseService';
 import chapterProgressService, { type ChapterWithLockStatus } from '../services/chapterProgressService';
-import type { MiniProjectBasic } from '../services/miniProjectService';
-import { getMiniProjectsByCourse } from '../services/miniProjectService';
-import { MiniProjectItem } from '../components/MiniProjectItem';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 export function CourseView() {
@@ -19,7 +16,6 @@ export function CourseView() {
   const location = useLocation();
   const { courseId } = useParams<{ courseId: string }>();
   const [chapters, setChapters] = useState<ChapterWithLockStatus[]>([]);
-  const [miniProjects, setMiniProjects] = useState<MiniProjectBasic[]>([]);
   const [selectedChapterId, setSelectedChapterId] = useState<number | null>(null);
   const [chapterDetail, setChapterDetail] = useState<ChapterDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,16 +64,6 @@ export function CourseView() {
     }
   }, [courseId, studentId]);
 
-  const fetchMiniProjects = useCallback(async () => {
-    try {
-      if (!courseId) return;
-      const projects = await getMiniProjectsByCourse(parseInt(courseId));
-      setMiniProjects(projects);
-    } catch (err) {
-      console.error('Failed to load mini projects:', err);
-        }
-  }, [courseId]);
-
   // Fetch all chapters with lock status on mount
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +71,6 @@ export function CourseView() {
         setLoading(true);
         setError(null);
         await fetchChapters();
-        await fetchMiniProjects();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load chapters');
       } finally {
@@ -376,10 +361,6 @@ export function CourseView() {
                       </Paper>
                     )}
                   </React.Fragment>
-                ))}
-                {/* Mini-Projects */}
-                {miniProjects.map((project) => (
-                  <MiniProjectItem key={`miniproject-${project.miniProjectId}`} miniProject={project} />
                 ))}
               </Stack>
             </ScrollArea>

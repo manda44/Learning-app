@@ -14,11 +14,13 @@ public class StudentTicketProgressDto
 
     public DateTime? CompletedDate { get; set; }
 
-    public string Status { get; set; } = null!; // pending, in_progress, completed, blocked
+    public string Status { get; set; } = null!; // pending, in_progress, completed, validated
 
     public int ProgressPercentage { get; set; } // 0-100
 
     public string? Notes { get; set; }
+
+    public TicketBasicDto? Ticket { get; set; }
 }
 
 public class CreateStudentTicketProgressDto

@@ -190,7 +190,6 @@ export function Quiz() {
   const [error, setError] = useState<string | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [questionId: number]: any }>({});
-  const [quizAttemptId, setQuizAttemptId] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [submitting, setSubmitting] = useState(false);
 

@@ -21,8 +21,6 @@ public partial class StudentTicketProgress
 
     public string? Notes { get; set; }
 
-    public virtual StudentProjectEnrollment? ProjectEnrollment { get; set; }
-
     public virtual Users Student { get; set; } = null!;
 
     public virtual Ticket Ticket { get; set; } = null!;

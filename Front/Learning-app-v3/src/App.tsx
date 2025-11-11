@@ -13,6 +13,8 @@ import QuizList from '../pages/quiz/QuizList.tsx'
 import QuizPage from "../pages/quiz/QuizPage.tsx";
 import MiniProjectPage from '../pages/miniproject/MiniProjectPage.tsx';
 import LoginPage from '../pages/auth/LoginPage.tsx';
+import StudentEnrollmentsPage from '../pages/enrollment/StudentEnrollmentsPage.tsx';
+import TicketValidationPage from '../pages/validation/TicketValidationPage.tsx';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
                   <Route path="/" element={<CourseList />} />
                   <Route path="/course" element={<CourseList />} />
                   <Route path="/user" element={<UserList />} />
+                  <Route path="/enrollments" element={<StudentEnrollmentsPage />} />
+                  <Route path="/validation" element={<TicketValidationPage />} />
                   <Route path="/chapter" element={<ChapterPage />} />
                   <Route path="/chapterContent/:chapterId" element={<ChapterContentPage />} />
                   <Route path="/quiz/:quizId" element={<QuizList/>}/>

@@ -13,6 +13,8 @@ import {
       IconChartDots2,
       IconBrandTrello,
       IconSettingsCog,
+      IconSchool,
+      IconCheckupList,
 } from '@tabler/icons-react';
 import { Menu,Text, Container, Anchor, Breadcrumbs } from '@mantine/core';
 import ModalMessage from '../components/ModalMessages.tsx';
@@ -247,10 +249,18 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                           <NavLink href="#required-for-focus" label="Profils & acces" />
                     </NavLink>
                     <NavLink
+                          component={Link}
+                          to="/enrollments"
+                          label="Inscriptions étudiants"
+                          leftSection={<IconSchool size={26} stroke={1.5} />}
+                          active={isActive('/enrollments')}
+                          style={getNavLinkStyle(isActive('/enrollments'))}
+                    />
+                    <NavLink
                           label="Mini-projets & tickets"
                           leftSection={<IconBrandTrello size={26} stroke={1.5} />}
                           childrenOffset={28}
-                          defaultOpened={isActive('/miniproject')}
+                          defaultOpened={isActive('/miniproject') || isActive('/validation')}
                     >
                           <NavLink
                                 component={Link}
@@ -259,7 +269,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                 active={isActive('/miniproject')}
                                 style={getNavLinkStyle(isActive('/miniproject'))}
                           />
-                          <NavLink label="Tickets" href="#required-for-focus" />
+                          <NavLink
+                                component={Link}
+                                to="/validation"
+                                label="Validation des tickets"
+                                active={isActive('/validation')}
+                                style={getNavLinkStyle(isActive('/validation'))}
+                          />
                           <NavLink label="Git / Repos crees" href="#required-for-focus" />
                     </NavLink>
                     <NavLink

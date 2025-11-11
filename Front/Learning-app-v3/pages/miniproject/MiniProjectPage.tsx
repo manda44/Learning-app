@@ -1,5 +1,6 @@
-import type { MiniProject, Ticket } from '../../types/MiniProject';
+import type { MiniProject, Ticket, Course } from '../../types/MiniProject';
 import { getMiniProjectList, createMiniProject, getMiniProjectById, updateMiniProject, deleteMiniProject, getMiniProjectTickets } from '../../services/miniProjectService';
+import { getCourseList } from '../../services/courseService';
 import { useEffect, useState } from 'react';
 import {
   Container,
@@ -12,7 +13,8 @@ import {
   Card,
   SimpleGrid,
   Text,
-  Badge
+  Badge,
+  Select
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
@@ -46,6 +48,7 @@ const MiniProjectPage = () => {
   });
   const [fetching, setFetching] = useState(false);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const setBreadCrumb = useGeneralStore(state => state.setBreadCrumb);
 
   const breadCrumbs = [
@@ -61,7 +64,18 @@ const MiniProjectPage = () => {
 
   useEffect(() => {
     setBreadCrumb(breadCrumbs as any);
+    fetchCourses();
   }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const courseList = await getCourseList();
+      setCourses(courseList);
+    } catch (error) {
+      showModal('error', 'Une erreur est survenue lors du chargement des cours');
+      console.log(error);
+    }
+  };
 
   const fetchMiniProjects = async () => {
     setFetching(true);
@@ -135,6 +149,7 @@ const MiniProjectPage = () => {
     setProjectIdUpdate(projectId);
     form.setFieldValue('title', project.title);
     form.setFieldValue('description', project.description);
+    form.setFieldValue('courseId', project.courseId?.toString() || '');
     setIsUpdating(true);
     open();
   };
@@ -154,6 +169,7 @@ const MiniProjectPage = () => {
     initialValues: {
       title: '',
       description: '',
+      courseId: '',
       miniProjectId: 0
     },
     validate: (values) => ({
@@ -168,22 +184,32 @@ const MiniProjectPage = () => {
           ? 'La description est obligatoire'
           : values.description.length < 2
             ? 'La description doit contenir au moins 2 caractères'
-            : null
+            : null,
+      courseId:
+        !values.courseId || values.courseId.length === 0
+          ? 'Le cours est obligatoire'
+          : null
     })
   });
 
   function onSubmitForm(values: any) {
+    const payload = {
+      ...values,
+      courseId: parseInt(values.courseId)
+    };
+
     if (isUpdating) {
-      values.miniProjectId = projectIdUpdate;
-      handleUpdateProject(values).then(() => {
+      payload.miniProjectId = projectIdUpdate;
+      handleUpdateProject(payload).then(() => {
         setIsUpdating(false);
         form.reset();
         close();
       });
-    } else
-      addMiniProject(values);
-    form.reset();
-    close();
+    } else {
+      addMiniProject(payload);
+      form.reset();
+      close();
+    }
   }
 
   function setPageSizeFooter(pageSize: any) {
@@ -207,6 +233,12 @@ const MiniProjectPage = () => {
       accessor: 'description',
       title: 'Description',
       sortable: true
+    },
+    {
+      accessor: 'course.title',
+      title: 'Cours',
+      sortable: true,
+      render: ({ course }: { course?: Course }) => course?.title || 'N/A'
     },
     {
       accessor: 'createdAt',
@@ -275,18 +307,32 @@ const MiniProjectPage = () => {
         </Group>
 
         <Modal opened={opened} onClose={handleClose} title={isUpdating ? 'Modifier un mini-projet' : 'Ajouter un mini-projet'}>
-          <TextInput
-            label="Titre"
-            withAsterisk
-            key={form.key('title')}
-            {...form.getInputProps('title')}
-          />
-          <TextInput
-            label="Description"
-            withAsterisk
-            key={form.key('description')}
-            {...form.getInputProps('description')}
-          />
+          <Stack gap="md">
+            <TextInput
+              label="Titre"
+              withAsterisk
+              key={form.key('title')}
+              {...form.getInputProps('title')}
+            />
+            <TextInput
+              label="Description"
+              withAsterisk
+              key={form.key('description')}
+              {...form.getInputProps('description')}
+            />
+            <Select
+              label="Cours"
+              placeholder="Sélectionnez un cours"
+              withAsterisk
+              searchable
+              data={courses.map(course => ({
+                value: course.courseId.toString(),
+                label: course.title
+              }))}
+              key={form.key('courseId')}
+              {...form.getInputProps('courseId')}
+            />
+          </Stack>
           <Group mt='md' justify="flex-end">
             <Button onClick={close} color="red">Annuler</Button>
             <form onSubmit={form.onSubmit(onSubmitForm)}>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Container, Card, Text, Button, Badge, Group, SimpleGrid, Loader, Center, Alert, Progress, Box } from '@mantine/core';
-import { IconBook, IconTrophy, IconClock, IconBriefcase } from '@tabler/icons-react';
+import { IconBook, IconTrophy, IconClock, IconBriefcase, IconPlayerPlay, IconArrowRight } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import useStudentStore from '../store/studentStore';
 import { getUserInfo } from '../services/authService';
+import { courseService } from '../services/courseService';
 
 const COURSE_COLORS: { [key: string]: { bg: string; icon: React.ReactNode } } = {
   'Python': { bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', icon: '🐍' },
@@ -19,6 +20,7 @@ export function Dashboard() {
   const [userName, setUserName] = useState('Mon Étudiant');
   const [selectedFilter, setSelectedFilter] = useState('Tous les cours');
   const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
+  const [enrollingCourseId, setEnrollingCourseId] = useState<number | null>(null);
 
   const { coursesWithEnrollment, enrollments, fetchAllCoursesWithEnrollment, coursesLoading, coursesError, fetchStudentPoints } = useStudentStore();
 
@@ -61,6 +63,28 @@ export function Dashboard() {
     const course = coursesWithEnrollment.find(c => c.courseId === courseId);
     if (!course || !course.isEnrolled) return { status: 'notEnrolled', progress: 0 };
     return { status: course.status || 'active', progress: course.progressPercentage || 0 };
+  };
+
+  const handleStartCourse = async (courseId: number) => {
+    try {
+      setEnrollingCourseId(courseId);
+      const userInfo = getUserInfo();
+      const STUDENT_ID = userInfo?.id || 1;
+
+      // Enroll in the course
+      await courseService.enrollInCourse(STUDENT_ID, courseId);
+
+      // Refresh the courses list
+      await fetchAllCoursesWithEnrollment(STUDENT_ID);
+
+      // Navigate to course view
+      navigate(`/courses/${courseId}`);
+    } catch (error) {
+      console.error('Error enrolling in course:', error);
+      alert('Erreur lors de l\'inscription au cours');
+    } finally {
+      setEnrollingCourseId(null);
+    }
   };
 
   const filterOptions = ['Tous les cours', 'En cours', 'Non commencés', 'Terminés', 'Python', 'JavaScript', 'Web'];
@@ -268,36 +292,44 @@ export function Dashboard() {
                     </Group>
 
                     {/* Action Buttons */}
-                    <Group grow>
-                      {enrollment.status === 'notEnrolled' ? (
-                        <>
-                          <Button size="sm" color="blue" variant="filled" onClick={() => navigate(`/courses/${course.courseId}`)}>
-                            S'inscrire
-                          </Button>
-                          <Button size="sm" color="gray" variant="light" onClick={() => navigate(`/courses/${course.courseId}`)}>
-                            Détails
-                          </Button>
-                        </>
-                      ) : enrollment.status === 'completed' ? (
-                        <>
-                          <Button size="sm" color="green" variant="filled" onClick={() => navigate(`/courses/${course.courseId}`)}>
-                            Revenir
-                          </Button>
-                          <Button size="sm" color="gray" variant="light">
-                            Certificat
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button size="sm" color="blue" variant="filled" onClick={() => navigate(`/courses/${course.courseId}`)}>
-                            Continuer
-                          </Button>
-                          <Button size="sm" color="gray" variant="light" onClick={() => navigate(`/courses/${course.courseId}`)}>
-                            Détails
-                          </Button>
-                        </>
-                      )}
-                    </Group>
+                    {enrollment.status === 'notEnrolled' ? (
+                      <Button
+                        fullWidth
+                        size="md"
+                        color="blue"
+                        variant="filled"
+                        leftSection={<IconPlayerPlay size={18} />}
+                        rightSection={<IconArrowRight size={18} />}
+                        loading={enrollingCourseId === course.courseId}
+                        onClick={() => handleStartCourse(course.courseId)}
+                      >
+                        Commencer
+                      </Button>
+                    ) : enrollment.status === 'completed' ? (
+                      <Button
+                        fullWidth
+                        size="md"
+                        color="green"
+                        variant="filled"
+                        leftSection={<IconPlayerPlay size={18} />}
+                        rightSection={<IconArrowRight size={18} />}
+                        onClick={() => navigate(`/courses/${course.courseId}`)}
+                      >
+                        Revoir
+                      </Button>
+                    ) : (
+                      <Button
+                        fullWidth
+                        size="md"
+                        color="blue"
+                        variant="filled"
+                        leftSection={<IconPlayerPlay size={18} />}
+                        rightSection={<IconArrowRight size={18} />}
+                        onClick={() => navigate(`/courses/${course.courseId}`)}
+                      >
+                        Continuer
+                      </Button>
+                    )}
                   </Box>
                 </Card>
               );

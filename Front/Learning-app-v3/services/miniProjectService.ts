@@ -56,3 +56,34 @@ export const updateTicket = async (id: number, ticket: Partial<Ticket>): Promise
 export const deleteTicket = async (id: number): Promise<void> => {
   await apiClient.delete(`${TICKETS_API_URL}/${id}`);
 };
+
+// Ticket Validation endpoints
+export interface PendingValidationTicket {
+  ticketProgressId: number;
+  studentId: number;
+  studentName: string;
+  studentEmail: string;
+  ticketId: number;
+  ticketTitle: string;
+  ticketDescription?: string;
+  miniProjectId: number;
+  miniProjectTitle: string;
+  courseId: number;
+  courseName: string;
+  completedDate?: string;
+  notes?: string;
+}
+
+export const getPendingValidationTickets = async (): Promise<PendingValidationTicket[]> => {
+  const response = await apiClient.get<PendingValidationTicket[]>(`${TICKETS_API_URL}/pending-validation`);
+  return response.data;
+};
+
+export const getPendingValidationTicketsByCourse = async (courseId: number): Promise<PendingValidationTicket[]> => {
+  const response = await apiClient.get<PendingValidationTicket[]>(`${TICKETS_API_URL}/pending-validation/course/${courseId}`);
+  return response.data;
+};
+
+export const validateTicket = async (ticketProgressId: number): Promise<void> => {
+  await apiClient.put(`${TICKETS_API_URL}/${ticketProgressId}/validate`, {});
+};

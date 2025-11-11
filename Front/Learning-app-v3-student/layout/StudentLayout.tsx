@@ -280,16 +280,11 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
 
         <NavLink
           component={Link}
-          to="/projects"
+          to="/mini-projects"
           label="Mini-projets"
           leftSection={<IconTrophy size={26} stroke={1.5} />}
-          active={isActive('/projects')}
-          style={getNavLinkStyle(isActive('/projects'))}
-          rightSection={
-            <Text size="sm" fw={700} c="white" style={{ backgroundColor: '#4A9FD8', padding: '2px 8px', borderRadius: '12px' }}>
-              2
-            </Text>
-          }
+          active={isActive('/mini-projects')}
+          style={getNavLinkStyle(isActive('/mini-projects'))}
         />
 
         <NavLink

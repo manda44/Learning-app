@@ -24,6 +24,12 @@ import { format } from 'date-fns';
 import { useModalStore } from '../../store/modalStore';
 import { DataTable, type DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
+import { RichTextEditor } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Underline from '@tiptap/extension-underline';
+import '@mantine/tiptap/styles.css';
 
 interface TicketManagementProps {
   miniProjectId: number;
@@ -44,6 +50,17 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
   });
   const [fetching, setFetching] = useState(false);
 
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link.configure({
+        openOnClick: false,
+      }),
+      Underline,
+    ],
+    content: '',
+  });
+
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
@@ -58,12 +75,6 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
           ? 'Le titre est obligatoire'
           : values.title.length < 2
             ? 'Le titre doit contenir au moins 2 caractères'
-            : null,
-      description:
-        values.description.length === 0
-          ? 'La description est obligatoire'
-          : values.description.length < 2
-            ? 'La description doit contenir au moins 2 caractères'
             : null
     })
   });
@@ -113,6 +124,7 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
   const handleClose = () => {
     if (isUpdating)
       form.reset();
+    editor?.commands.setContent('');
     close();
   };
 
@@ -123,23 +135,33 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
       form.setFieldValue('title', ticket.title);
       form.setFieldValue('description', ticket.description);
       form.setFieldValue('status', ticket.status);
+      editor?.commands.setContent(ticket.description || '');
       setIsUpdating(true);
       open();
     }
   };
 
   function onSubmitForm(values: any) {
+    const htmlContent = editor?.getHTML() || '';
+    const ticketData = {
+      ...values,
+      description: htmlContent
+    };
+
     if (isUpdating) {
-      values.ticketId = ticketIdUpdate;
-      handleUpdateTicket(values).then(() => {
+      ticketData.ticketId = ticketIdUpdate;
+      handleUpdateTicket(ticketData).then(() => {
         setIsUpdating(false);
         form.reset();
+        editor?.commands.setContent('');
         close();
       });
-    } else
-      addTicket(values);
-    form.reset();
-    close();
+    } else {
+      addTicket(ticketData);
+      form.reset();
+      editor?.commands.setContent('');
+      close();
+    }
   }
 
   const getStatusColor = (status: string) => {
@@ -164,7 +186,11 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
     {
       accessor: 'description',
       title: 'Description',
-      sortable: true
+      sortable: true,
+      render: ({ description }: { description: string }) => {
+        const plainText = description?.replace(/<[^>]*>/g, '').substring(0, 100);
+        return <Text size="sm" lineClamp={2}>{plainText || '-'}</Text>;
+      }
     },
     {
       accessor: 'status',
@@ -234,36 +260,105 @@ const TicketManagement = ({ miniProjectId, tickets, onTicketsChange }: TicketMan
         </Group>
       </Card.Section>
 
-      <Modal opened={opened} onClose={handleClose} title={isUpdating ? 'Modifier un ticket' : 'Ajouter un ticket'}>
-        <TextInput
-          label="Titre"
-          withAsterisk
-          key={form.key('title')}
-          {...form.getInputProps('title')}
-        />
-        <TextInput
-          label="Description"
-          withAsterisk
-          key={form.key('description')}
-          {...form.getInputProps('description')}
-        />
-        <Select
-          label="Statut"
-          placeholder="Sélectionnez un statut"
-          data={[
-            { value: 'pending', label: 'En attente' },
-            { value: 'in_progress', label: 'En cours' },
-            { value: 'completed', label: 'Complété' }
-          ]}
-          key={form.key('status')}
-          {...form.getInputProps('status')}
-        />
-        <Group mt='md' justify="flex-end">
-          <Button onClick={close} color="red">Annuler</Button>
-          <form onSubmit={form.onSubmit(onSubmitForm)}>
-            <Button type="submit">Valider</Button>
-          </form>
-        </Group>
+      <Modal
+        opened={opened}
+        onClose={handleClose}
+        title={isUpdating ? 'Modifier un ticket' : 'Ajouter un ticket'}
+        size="xl"
+        styles={{
+          body: { minHeight: '600px' },
+          content: { maxWidth: '90vw' }
+        }}
+      >
+        <Stack gap="md">
+          <TextInput
+            label="Titre"
+            withAsterisk
+            key={form.key('title')}
+            {...form.getInputProps('title')}
+          />
+          <div style={{ flex: 1 }}>
+            <Text size="sm" fw={500} mb={8}>
+              Description <span style={{ color: 'red' }}>*</span>
+            </Text>
+            <RichTextEditor
+              editor={editor}
+              styles={{
+                root: {
+                  border: '1px solid #dee2e6',
+                  borderRadius: '4px',
+                },
+                content: {
+                  minHeight: '400px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  '& .ProseMirror': {
+                    minHeight: '380px',
+                    outline: 'none',
+                  }
+                },
+                toolbar: {
+                  borderBottom: '1px solid #dee2e6',
+                  padding: '8px',
+                  backgroundColor: '#f8f9fa',
+                }
+              }}
+            >
+              <RichTextEditor.Toolbar>
+                <RichTextEditor.ControlsGroup>
+                  <RichTextEditor.Bold />
+                  <RichTextEditor.Italic />
+                  <RichTextEditor.Underline />
+                  <RichTextEditor.Strikethrough />
+                  <RichTextEditor.ClearFormatting />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                  <RichTextEditor.H1 />
+                  <RichTextEditor.H2 />
+                  <RichTextEditor.H3 />
+                  <RichTextEditor.H4 />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                  <RichTextEditor.Blockquote />
+                  <RichTextEditor.Hr />
+                  <RichTextEditor.BulletList />
+                  <RichTextEditor.OrderedList />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                  <RichTextEditor.Link />
+                  <RichTextEditor.Unlink />
+                </RichTextEditor.ControlsGroup>
+
+                <RichTextEditor.ControlsGroup>
+                  <RichTextEditor.Undo />
+                  <RichTextEditor.Redo />
+                </RichTextEditor.ControlsGroup>
+              </RichTextEditor.Toolbar>
+
+              <RichTextEditor.Content />
+            </RichTextEditor>
+          </div>
+          <Select
+            label="Statut"
+            placeholder="Sélectionnez un statut"
+            data={[
+              { value: 'pending', label: 'En attente' },
+              { value: 'in_progress', label: 'En cours' },
+              { value: 'completed', label: 'Complété' }
+            ]}
+            key={form.key('status')}
+            {...form.getInputProps('status')}
+          />
+          <Group mt='md' justify="flex-end">
+            <Button onClick={handleClose} color="red">Annuler</Button>
+            <form onSubmit={form.onSubmit(onSubmitForm)}>
+              <Button type="submit">Valider</Button>
+            </form>
+          </Group>
+        </Stack>
       </Modal>
 
       <DataTable

@@ -26,6 +26,4 @@ public partial class StudentProjectEnrollment
     public virtual MiniProject MiniProject { get; set; } = null!;
 
     public virtual Users Student { get; set; } = null!;
-
-    public virtual ICollection<StudentTicketProgress> StudentTicketProgresses { get; set; } = new List<StudentTicketProgress>();
 }

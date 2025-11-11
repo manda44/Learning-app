@@ -25,7 +25,10 @@ namespace LearningApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MiniProject>>> GetMiniProjects()
         {
-            return await _context.MiniProjects.Include(mp => mp.Tickets).ToListAsync();
+            return await _context.MiniProjects
+                .Include(mp => mp.Tickets)
+                .Include(mp => mp.Course)
+                .ToListAsync();
         }
 
         // GET: api/MiniProjects/5
@@ -34,6 +37,7 @@ namespace LearningApp.Controllers
         {
             var miniProject = await _context.MiniProjects
                 .Include(mp => mp.Tickets)
+                .Include(mp => mp.Course)
                 .FirstOrDefaultAsync(mp => mp.MiniProjectId == id);
 
             if (miniProject == null)
@@ -61,6 +65,7 @@ namespace LearningApp.Controllers
 
             existingProject.Title = miniProject.Title;
             existingProject.Description = miniProject.Description;
+            existingProject.CourseId = miniProject.CourseId;
             existingProject.UpdatedAt = DateTime.Now;
 
             try
@@ -120,6 +125,18 @@ namespace LearningApp.Controllers
                 .ToListAsync();
 
             return tickets;
+        }
+
+        // GET: api/MiniProjects/course/5
+        [HttpGet("course/{courseId}")]
+        public async Task<ActionResult<IEnumerable<MiniProject>>> GetMiniProjectsByCourse(int courseId)
+        {
+            var miniProjects = await _context.MiniProjects
+                .Include(mp => mp.Tickets)
+                .Where(mp => mp.CourseId == courseId)
+                .ToListAsync();
+
+            return miniProjects;
         }
 
         private bool MiniProjectExists(int id)

@@ -13,6 +13,8 @@ import Achievements from './pages/Achievements';
 import CourseView from './pages/CourseView';
 import Quiz from './pages/Quiz';
 import QuizResults from './pages/QuizResults';
+import MiniProjects from './pages/MiniProjects';
+import MiniProjectView from './pages/MiniProjectView';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;
@@ -117,6 +119,27 @@ function App() {
               { title: 'Mes projets', href: '/projects' }
             ]}>
               <Projects />
+            </StudentLayout>
+          }
+        />
+        <Route
+          path="/mini-projects"
+          element={
+            <StudentLayout breadcrumbs={[
+              { title: 'Mini-projets', href: '/mini-projects' }
+            ]}>
+              <MiniProjects />
+            </StudentLayout>
+          }
+        />
+        <Route
+          path="/mini-projects/:projectId"
+          element={
+            <StudentLayout breadcrumbs={[
+              { title: 'Mini-projets', href: '/mini-projects' },
+              { title: 'Projet', href: '/mini-projects/:projectId' }
+            ]}>
+              <MiniProjectView />
             </StudentLayout>
           }
         />
