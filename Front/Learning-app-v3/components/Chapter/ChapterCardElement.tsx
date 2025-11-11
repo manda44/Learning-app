@@ -169,43 +169,41 @@ export default function ChapterCardElement({
                 </Group>
 
                 {/* Main Content */}
-                <Stack gap={compact ? 6 : 16} p={compact ? 'sm' : 'lg'} style={{ flex: 1, position: 'relative', zIndex: 1 }}>
-                    {/* Title */}
-                    <div>
-                        <Text
-                            fw={700}
-                            size={compact ? 'sm' : 'xl'}
-                            style={{
-                                color: 'white',
-                                lineHeight: compact ? 1.2 : 1.3,
-                                letterSpacing: '-0.5px'
-                            }}
-                        >
-                            {title}
-                        </Text>
-                    </div>
+                {!compact ? (
+                    <Stack gap={16} p="lg" style={{ flex: 1, position: 'relative', zIndex: 1 }}>
+                        {/* Title */}
+                        <div>
+                            <Text
+                                fw={700}
+                                size="xl"
+                                style={{
+                                    color: 'white',
+                                    lineHeight: 1.3,
+                                    letterSpacing: '-0.5px'
+                                }}
+                            >
+                                {title}
+                            </Text>
+                        </div>
 
-                    {/* Description */}
-                    {!compact && (
+                        {/* Description */}
                         <Text
                             c="white"
-                            size={compact ? 'xs' : 'sm'}
+                            size="sm"
                             opacity={0.85}
                             style={{
                                 flex: 1,
                                 overflow: 'hidden',
                                 display: '-webkit-box',
-                                WebkitLineClamp: compact ? 2 : 4,
+                                WebkitLineClamp: 4,
                                 WebkitBoxOrient: 'vertical',
                                 lineHeight: 1.5
                             }}
                         >
                             {description}
                         </Text>
-                    )}
 
-                    {/* Metadata */}
-                    {!compact && (
+                        {/* Metadata */}
                         <Group gap={8} style={{ marginTop: 'auto' }}>
                             <Badge
                                 leftSection={<IconClock size={12} />}
@@ -224,8 +222,25 @@ export default function ChapterCardElement({
                                 })}
                             </Badge>
                         </Group>
-                    )}
-                </Stack>
+                    </Stack>
+                ) : (
+                    <Stack gap={6} p="sm" style={{ flex: 1, position: 'relative', zIndex: 1, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                        {/* Title only in compact mode */}
+                        <div>
+                            <Text
+                                fw={700}
+                                size="sm"
+                                style={{
+                                    color: 'white',
+                                    lineHeight: 1.2,
+                                    letterSpacing: '-0.5px'
+                                }}
+                            >
+                                {title}
+                            </Text>
+                        </div>
+                    </Stack>
+                )}
 
                 {/* Footer - Action Bar */}
                 <Group
