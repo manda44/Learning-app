@@ -199,9 +199,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                       />
                     </div>
                     <NavLink
-                          href="#required-for-focus"
+                          component={Link}
+                          to="/dashboard"
                           label="Tableau de bord"
                           leftSection={<IconLayoutDashboard size={26} stroke={1.5} />}
+                          active={isActive('/dashboard') || isActive('/')}
+                          style={getNavLinkStyle(isActive('/dashboard') || isActive('/'))}
                           mt='lg'
                     />
                     <NavLink

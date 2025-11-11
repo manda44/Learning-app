@@ -48,6 +48,7 @@
     "react-dom": "^19.1.0",
     "react-editor-js": "^2.1.0",
     "react-router-dom": "^7.6.3",
+    "recharts": "^2.15.4",
     "shiki": "^3.9.2",
     "zustand": "^5.0.6"
   },

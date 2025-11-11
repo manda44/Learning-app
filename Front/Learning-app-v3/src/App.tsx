@@ -15,6 +15,7 @@ import MiniProjectPage from '../pages/miniproject/MiniProjectPage.tsx';
 import LoginPage from '../pages/auth/LoginPage.tsx';
 import StudentEnrollmentsPage from '../pages/enrollment/StudentEnrollmentsPage.tsx';
 import TicketValidationPage from '../pages/validation/TicketValidationPage.tsx';
+import AdminDashboard from '../pages/dashboard/AdminDashboard.tsx';
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <Routes>
-                  <Route path="/" element={<CourseList />} />
+                  <Route path="/" element={<AdminDashboard />} />
+                  <Route path="/dashboard" element={<AdminDashboard />} />
                   <Route path="/course" element={<CourseList />} />
                   <Route path="/user" element={<UserList />} />
                   <Route path="/enrollments" element={<StudentEnrollmentsPage />} />
