@@ -273,6 +273,7 @@ const ChapterPage = () =>{
                                         description={chapter.description ?? ""}
                                         color= {chapter.color}
                                         openModal = {(id: string | number) => { void openEditModal(Number(id)); }}
+                                        compact={true}
                                         />
                                     ))}
                                 </Grid>
@@ -326,7 +327,7 @@ const ChapterPage = () =>{
                                                                 variant="light"
                                                                 color="blue"
                                                                 title="Voir le contenu"
-                                                                onClick={() => {}}
+                                                                onClick={() => window.location.href = `/chapterContent/${chapter.chapterId}`}
                                                             >
                                                                 <IconEye size={14} />
                                                             </ActionIcon>
