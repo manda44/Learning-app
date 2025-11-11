@@ -224,8 +224,8 @@ export default function ChapterCardElement({
                         </Group>
                     </Stack>
                 ) : (
-                    <Stack gap={6} p="sm" style={{ flex: 1, position: 'relative', zIndex: 1, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                        {/* Title only in compact mode */}
+                    <Stack gap={6} p="sm" style={{ flex: 1, position: 'relative', zIndex: 1 }}>
+                        {/* Title in compact mode */}
                         <div>
                             <Text
                                 fw={700}
@@ -239,6 +239,32 @@ export default function ChapterCardElement({
                                 {title}
                             </Text>
                         </div>
+
+                        {/* Description in compact mode */}
+                        <Text
+                            c="white"
+                            size="xs"
+                            opacity={0.85}
+                            style={{
+                                flex: 1,
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                lineHeight: 1.4
+                            }}
+                        >
+                            {description}
+                        </Text>
+
+                        {/* Date in compact mode */}
+                        <Text
+                            c="white"
+                            size="xs"
+                            opacity={0.7}
+                        >
+                            {new Date(createdDate).toLocaleDateString('fr-FR')}
+                        </Text>
                     </Stack>
                 )}
 
