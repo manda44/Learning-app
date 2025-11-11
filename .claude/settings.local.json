@@ -76,7 +76,9 @@
       "Bash(wmic process where \"ProcessId=9200\" delete)",
       "Bash(npx tsc:*)",
       "Bash(wmic process where ProcessId=28020 delete 2)",
-      "Bash(cmd /c \"taskkill /PID 28020 /F\")"
+      "Bash(cmd /c \"taskkill /PID 28020 /F\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImprove chapter display with grid/list view toggle and responsive design\n\n- Add toggle between grid (card) and list (table) views with localStorage persistence\n- Implement compact mode for cards: reduced height (280px vs 400px), smaller text, better spacing\n- Create efficient list view with table showing title, description, date, and actions\n- Add color indicator dots in list view for visual consistency\n- Improve card grid to 2 columns in compact mode vs 3 in normal mode\n- Add responsive action buttons in list view (View, Edit, Delete)\n- Enhanced course selection card with gradient background\n- Better control panel with active state indicators for view mode\n- Maintain localStorage state for user''s preferred view mode\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

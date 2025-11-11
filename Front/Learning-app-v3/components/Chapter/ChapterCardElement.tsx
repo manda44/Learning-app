@@ -5,9 +5,11 @@ import {
     Text,
     Group,
     ActionIcon,
-    Tooltip
+    Tooltip,
+    Badge,
+    Box
 } from '@mantine/core'
-import {IconStar} from '@tabler/icons-react';
+import {IconStar, IconClock} from '@tabler/icons-react';
 import { IconEdit, IconTrash, IconArrowRight } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +22,7 @@ type ChapterCardElementProps = {
     description: string;
     color?: string;
     openModal: (id: string | number) => void;
+    compact?: boolean;
 };
 
 export default function ChapterCardElement({
@@ -28,7 +31,8 @@ export default function ChapterCardElement({
     createdDate,
     description,
     color,
-    openModal
+    openModal,
+    compact = false
 }: ChapterCardElementProps) {
     const navigate = useNavigate();
 
@@ -66,38 +70,53 @@ export default function ChapterCardElement({
     };
 
     return(
-        <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
+        <Grid.Col span={{ base: 12, sm: 6, md: compact ? 6 : 4 }}>
             <Card
                 shadow="md"
-                radius="lg"
-                p="lg"
+                radius="xl"
+                p={0}
                 style={{
                     background: `linear-gradient(135deg, ${color} 0%, ${gradientColors[color]} 100%)`,
-                    minHeight: 360,
+                    minHeight: compact ? 280 : 400,
                     position: 'relative',
                     overflow: 'hidden',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     transform: 'translateY(0)',
                     display: 'flex',
                     flexDirection: 'column',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
                 }}
                 onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)';
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-12px)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 20px 40px rgba(0,0,0,0.25)';
                 }}
                 onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
                 }}
             >
-                {/* Action Buttons - Top Right */}
-                <Group
-                    gap={8}
+                {/* Decorative Background Element */}
+                <Box
                     style={{
                         position: 'absolute',
-                        top: 12,
-                        right: 12,
+                        top: -40,
+                        right: -40,
+                        width: 120,
+                        height: 120,
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: '50%',
+                        pointerEvents: 'none'
+                    }}
+                />
+
+                {/* Action Buttons - Top Right */}
+                <Group
+                    gap={6}
+                    style={{
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
                         zIndex: 10,
                     }}
                 >
@@ -108,8 +127,17 @@ export default function ChapterCardElement({
                             variant="light"
                             onClick={handleEdit}
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                backdropFilter: 'blur(4px)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                backdropFilter: 'blur(8px)',
+                                transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                             }}
                         >
                             <IconEdit size={18} color="#0D47A1" />
@@ -122,8 +150,17 @@ export default function ChapterCardElement({
                             variant="light"
                             onClick={handleDelete}
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                backdropFilter: 'blur(4px)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                backdropFilter: 'blur(8px)',
+                                transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+                                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
                             }}
                         >
                             <IconTrash size={18} color="#fa5252" />
@@ -132,69 +169,93 @@ export default function ChapterCardElement({
                 </Group>
 
                 {/* Main Content */}
-                <Stack gap={12} style={{ flex: 1 }}>
+                <Stack gap={compact ? 8 : 16} p={compact ? 'md' : 'lg'} style={{ flex: 1, position: 'relative', zIndex: 1 }}>
                     {/* Title */}
-                    <Text
-                        fw={700}
-                        size="lg"
-                        style={{
-                            color: 'white',
-                            lineHeight: 1.4
-                        }}
-                    >
-                        {title}
-                    </Text>
+                    <div>
+                        <Text
+                            fw={700}
+                            size={compact ? 'md' : 'xl'}
+                            style={{
+                                color: 'white',
+                                lineHeight: 1.3,
+                                letterSpacing: '-0.5px'
+                            }}
+                        >
+                            {title}
+                        </Text>
+                    </div>
 
                     {/* Description */}
                     <Text
                         c="white"
-                        size="sm"
-                        opacity={0.9}
+                        size={compact ? 'xs' : 'sm'}
+                        opacity={0.85}
                         style={{
                             flex: 1,
                             overflow: 'hidden',
                             display: '-webkit-box',
-                            WebkitLineClamp: 3,
+                            WebkitLineClamp: compact ? 2 : 4,
                             WebkitBoxOrient: 'vertical',
+                            lineHeight: 1.5
                         }}
                     >
                         {description}
                     </Text>
 
-                    {/* Date */}
-                    <Text
-                        c="white"
-                        size="xs"
-                        opacity={0.7}
-                    >
-                        Créé le: {new Date(createdDate).toLocaleDateString('fr-FR')}
-                    </Text>
+                    {/* Metadata */}
+                    <Group gap={8} style={{ marginTop: 'auto' }}>
+                        <Badge
+                            leftSection={<IconClock size={12} />}
+                            variant="light"
+                            size="sm"
+                            style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                color: 'white',
+                                border: 'none'
+                            }}
+                        >
+                            {new Date(createdDate).toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                            })}
+                        </Badge>
+                    </Group>
                 </Stack>
 
-                {/* Footer - Star and View Button */}
+                {/* Footer - Action Bar */}
                 <Group
                     justify="space-between"
                     align="center"
+                    p={compact ? 'md' : 'lg'}
                     style={{
-                        marginTop: 'auto',
-                        paddingTop: 12,
-                        borderTop: 'rgba(255, 255, 255, 0.2) 1px solid'
+                        borderTop: 'rgba(255, 255, 255, 0.15) 1px solid',
+                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                        position: 'relative',
+                        zIndex: 1
                     }}
                 >
-                    <Group gap={4} align="center" opacity={0.6}>
+                    <Group gap={6} align="center" style={{ opacity: 0.7 }}>
                         <IconStar size={16} color="white" fill="white" />
-                        <Text size="xs" c="white">Favoris</Text>
+                        <Text size="xs" c="white" fw={500}>Favoris</Text>
                     </Group>
-                    <Tooltip label="Voir le contenu">
+                    <Tooltip label="Voir le contenu du chapitre">
                         <ActionIcon
-                            size="sm"
+                            size="lg"
                             variant="light"
                             onClick={handleViewContent}
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'translateX(4px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
                             }}
                         >
-                            <IconArrowRight size={16} color="#0D47A1" />
+                            <IconArrowRight size={18} color="#0D47A1" />
                         </ActionIcon>
                     </Tooltip>
                 </Group>
