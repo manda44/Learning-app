@@ -9,14 +9,13 @@ export function MyCourses() {
 
   useEffect(() => {
     const userInfo = getUserInfo();
-    if (userInfo) {
+    if (userInfo && userInfo.id) {
       fetchStudentCourses(userInfo.id);
     }
-  }, [fetchStudentCourses]);
+  }, []);
 
   const activeCourses = enrollments.filter(e => e.status === 'active');
   const completedCourses = enrollments.filter(e => e.status === 'completed');
-  const droppedCourses = enrollments.filter(e => e.status === 'dropped');
 
   const renderCourseCard = (enrollment: any) => (
     <Card key={enrollment.enrollmentId} shadow="sm" padding="lg" radius="md" withBorder>
@@ -24,10 +23,10 @@ export function MyCourses() {
         <Group justify="space-between">
           <Text fw={700} lineClamp={2}>{enrollment.course?.title || 'Cours sans titre'}</Text>
           <Badge
-            color={enrollment.status === 'completed' ? 'green' : enrollment.status === 'active' ? 'blue' : 'gray'}
+            color={enrollment.status === 'completed' ? 'green' : 'blue'}
             variant="light"
           >
-            {enrollment.status === 'completed' ? 'Terminé' : enrollment.status === 'active' ? 'En cours' : 'Abandonné'}
+            {enrollment.status === 'completed' ? 'Terminé' : 'En cours'}
           </Badge>
         </Group>
       </Card.Section>
@@ -51,11 +50,6 @@ export function MyCourses() {
           <Button variant="light" color="blue" size="sm">
             Continuer
           </Button>
-          {enrollment.status === 'active' && (
-            <Button variant="light" color="gray" size="sm">
-              Abandonner
-            </Button>
-          )}
         </Group>
       </Card.Section>
     </Card>
@@ -89,11 +83,6 @@ export function MyCourses() {
             <Tabs.Tab value="completed" leftSection={<IconChecks size={14} />}>
               Terminés ({completedCourses.length})
             </Tabs.Tab>
-            {droppedCourses.length > 0 && (
-              <Tabs.Tab value="dropped">
-                Abandonnés ({droppedCourses.length})
-              </Tabs.Tab>
-            )}
           </Tabs.List>
 
           <Tabs.Panel value="active" pt="xl">
@@ -127,18 +116,6 @@ export function MyCourses() {
               </Grid>
             )}
           </Tabs.Panel>
-
-          {droppedCourses.length > 0 && (
-            <Tabs.Panel value="dropped" pt="xl">
-              <Grid gutter="md">
-                {droppedCourses.map(enrollment => (
-                  <Grid.Col key={enrollment.enrollmentId} span={{ base: 12, sm: 6, md: 4 }}>
-                    {renderCourseCard(enrollment)}
-                  </Grid.Col>
-                ))}
-              </Grid>
-            </Tabs.Panel>
-          )}
         </Tabs>
       )}
     </Container>

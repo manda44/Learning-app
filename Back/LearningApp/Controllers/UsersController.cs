@@ -244,5 +244,110 @@ namespace LearningApp.Controllers
                 });
             }
         }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                // Valider les entrées
+                if (string.IsNullOrEmpty(changePasswordDto.CurrentPassword) ||
+                    string.IsNullOrEmpty(changePasswordDto.NewPassword) ||
+                    string.IsNullOrEmpty(changePasswordDto.ConfirmPassword))
+                {
+                    return BadRequest(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Tous les champs sont requis"
+                    });
+                }
+
+                // Vérifier que les nouveaux mots de passe correspondent
+                if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+                {
+                    return BadRequest(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Les mots de passe ne correspondent pas"
+                    });
+                }
+
+                // Vérifier la longueur minimale
+                if (changePasswordDto.NewPassword.Length < 8)
+                {
+                    return BadRequest(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Le nouveau mot de passe doit contenir au moins 8 caractères"
+                    });
+                }
+
+                // Récupérer l'ID utilisateur depuis les claims du token
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (!int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Utilisateur non authentifié"
+                    });
+                }
+
+                // Récupérer l'utilisateur
+                var user = await _userService.GetUserByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Utilisateur non trouvé"
+                    });
+                }
+
+                // Vérifier le mot de passe actuel
+                if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
+                {
+                    _logger.LogWarning($"Tentative de changement de mot de passe échouée pour l'utilisateur: {user.Email}");
+                    return Unauthorized(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Le mot de passe actuel est incorrect"
+                    });
+                }
+
+                // Vérifier que le nouveau mot de passe est différent de l'ancien
+                if (BCrypt.Net.BCrypt.Verify(changePasswordDto.NewPassword, user.Password))
+                {
+                    return BadRequest(new ChangePasswordResponseDto
+                    {
+                        Success = false,
+                        Message = "Le nouveau mot de passe doit être différent de l'ancien"
+                    });
+                }
+
+                // Hasher le nouveau mot de passe
+                user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+                // Mettre à jour l'utilisateur
+                await _userService.UpdateUserAsync(user);
+
+                _logger.LogInformation($"Mot de passe changé avec succès pour l'utilisateur: {user.Email}");
+                return Ok(new ChangePasswordResponseDto
+                {
+                    Success = true,
+                    Message = "Mot de passe changé avec succès"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erreur lors du changement de mot de passe: {ex.Message}");
+                return StatusCode(500, new ChangePasswordResponseDto
+                {
+                    Success = false,
+                    Message = "Une erreur est survenue lors du changement de mot de passe"
+                });
+            }
+        }
     }
 }

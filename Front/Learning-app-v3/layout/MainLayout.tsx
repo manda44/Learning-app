@@ -1,4 +1,4 @@
-import { AppShell, Burger, Group, NavLink, Input, ActionIcon, useMantineColorScheme } from '@mantine/core';
+import { AppShell, Burger, Group, NavLink, Input, ActionIcon, useMantineColorScheme, Modal, Stack, TextInput, Button, PasswordInput, Notification } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {IconSearch, IconBrightnessDown, IconBell, IconMessageFilled, IconUserCircle, IconLogout, IconSun, IconMoon } from '@tabler/icons-react';
 import {
@@ -21,7 +21,7 @@ import ModalMessage from '../components/ModalMessages.tsx';
 import ConfirmMessage from '../components/ConfirmMessage.tsx';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {useGeneralStore} from '../store/generalStore';
-import { getUserInfo, logoutUser } from '../services/authService';
+import { getUserInfo, logoutUser, changePassword } from '../services/authService';
 import { useState, useEffect } from 'react';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
@@ -29,6 +29,17 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>('Utilisateur');
   const { colorScheme, setColorScheme } = useMantineColorScheme();
+
+  // Password change modal state
+  const [passwordModalOpened, setPasswordModalOpened] = useState(false);
+  const [passwordFormData, setPasswordFormData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordFormErrors, setPasswordFormErrors] = useState<Record<string, string>>({});
+  const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false);
+  const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
 
   // Initialize drawer state from localStorage
   const [opened, setOpened] = useState<boolean>(() => {
@@ -78,6 +89,80 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
     }
   }, []);
+
+  // Handle password change form submission
+  const handlePasswordChangeSubmit = async () => {
+    const errors: Record<string, string> = {};
+
+    // Validation
+    if (!passwordFormData.currentPassword) {
+      errors.currentPassword = 'Le mot de passe actuel est requis';
+    }
+    if (!passwordFormData.newPassword) {
+      errors.newPassword = 'Le nouveau mot de passe est requis';
+    }
+    if (passwordFormData.newPassword.length < 8) {
+      errors.newPassword = 'Le mot de passe doit contenir au moins 8 caractères';
+    }
+    if (passwordFormData.newPassword !== passwordFormData.confirmPassword) {
+      errors.confirmPassword = 'Les mots de passe ne correspondent pas';
+    }
+    if (passwordFormData.currentPassword === passwordFormData.newPassword) {
+      errors.newPassword = 'Le nouveau mot de passe doit être différent du mot de passe actuel';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setPasswordFormErrors(errors);
+      return;
+    }
+
+    // Call backend API to change password
+    setPasswordChangeLoading(true);
+    try {
+      const response = await changePassword(
+        passwordFormData.currentPassword,
+        passwordFormData.newPassword,
+        passwordFormData.confirmPassword
+      );
+
+      if (response.success) {
+        setPasswordChangeSuccess(true);
+
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setPasswordChangeSuccess(false);
+        }, 5000);
+
+        // Close modal and reset form
+        setTimeout(() => {
+          setPasswordModalOpened(false);
+          setPasswordFormData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+          });
+          setPasswordFormErrors({});
+        }, 1500);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erreur lors du changement de mot de passe';
+      setPasswordFormErrors({
+        submit: errorMessage
+      });
+    } finally {
+      setPasswordChangeLoading(false);
+    }
+  };
+
+  const handlePasswordModalClose = () => {
+    setPasswordModalOpened(false);
+    setPasswordFormData({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+    setPasswordFormErrors({});
+  };
 
   // Fonction de déconnexion
   const handleLogout = async () => {
@@ -148,7 +233,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                             <Menu.Item leftSection={<IconSettings size={14} />}>
                                                   Paramètres
                                             </Menu.Item>
-                                            <Menu.Item leftSection={<IconLock size={14} />}>
+                                            <Menu.Item
+                                                  leftSection={<IconLock size={14} />}
+                                                  onClick={() => setPasswordModalOpened(true)}
+                                            >
                                                   Changer le mot de passe
                                             </Menu.Item>
 
@@ -314,6 +402,93 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               </AppShell.Main>
               <ModalMessage/>
               <ConfirmMessage/>
+
+              {/* Password Change Modal */}
+              <Modal
+                opened={passwordModalOpened}
+                onClose={handlePasswordModalClose}
+                title="Changer le mot de passe"
+                size="sm"
+                centered
+                closeOnClickOutside={false}
+              >
+                <Stack gap="lg">
+                  {passwordChangeSuccess && (
+                    <Notification
+                      title="Succès"
+                      color="green"
+                      withCloseButton={false}
+                      autoClose={3000}
+                    >
+                      Votre mot de passe a été changé avec succès. ✓
+                    </Notification>
+                  )}
+                  {passwordFormErrors.submit && (
+                    <Notification
+                      title="Erreur"
+                      color="red"
+                      withCloseButton={true}
+                      onClose={() => setPasswordFormErrors({ ...passwordFormErrors, submit: '' })}
+                    >
+                      {passwordFormErrors.submit}
+                    </Notification>
+                  )}
+                  <PasswordInput
+                    label="Mot de passe actuel"
+                    placeholder="Entrez votre mot de passe actuel"
+                    value={passwordFormData.currentPassword}
+                    onChange={(e) => {
+                      setPasswordFormData({ ...passwordFormData, currentPassword: e.currentTarget.value });
+                      if (passwordFormErrors.currentPassword) {
+                        setPasswordFormErrors({ ...passwordFormErrors, currentPassword: '' });
+                      }
+                    }}
+                    error={passwordFormErrors.currentPassword}
+                    withAsterisk
+                    disabled={passwordChangeLoading}
+                  />
+
+                  <PasswordInput
+                    label="Nouveau mot de passe"
+                    placeholder="Entrez votre nouveau mot de passe"
+                    value={passwordFormData.newPassword}
+                    onChange={(e) => {
+                      setPasswordFormData({ ...passwordFormData, newPassword: e.currentTarget.value });
+                      if (passwordFormErrors.newPassword) {
+                        setPasswordFormErrors({ ...passwordFormErrors, newPassword: '' });
+                      }
+                    }}
+                    error={passwordFormErrors.newPassword}
+                    withAsterisk
+                    description="Minimum 8 caractères"
+                    disabled={passwordChangeLoading}
+                  />
+
+                  <PasswordInput
+                    label="Confirmer le mot de passe"
+                    placeholder="Confirmez votre nouveau mot de passe"
+                    value={passwordFormData.confirmPassword}
+                    onChange={(e) => {
+                      setPasswordFormData({ ...passwordFormData, confirmPassword: e.currentTarget.value });
+                      if (passwordFormErrors.confirmPassword) {
+                        setPasswordFormErrors({ ...passwordFormErrors, confirmPassword: '' });
+                      }
+                    }}
+                    error={passwordFormErrors.confirmPassword}
+                    withAsterisk
+                    disabled={passwordChangeLoading}
+                  />
+
+                  <Group justify="flex-end" gap="md" mt="xl">
+                    <Button variant="light" onClick={handlePasswordModalClose} disabled={passwordChangeLoading}>
+                      Annuler
+                    </Button>
+                    <Button onClick={handlePasswordChangeSubmit} loading={passwordChangeLoading}>
+                      Mettre à jour
+                    </Button>
+                  </Group>
+                </Stack>
+              </Modal>
       </AppShell>
   );
 }

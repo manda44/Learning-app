@@ -146,42 +146,47 @@ namespace LearningApp.Application.Services
                 }
                 else if (question.Type == "OPENRESPONSE")
                 {
-                    // Open response - automatic grading using AI with retry
-                    var correctAnswer = question.QuestionItems.FirstOrDefault()?.RightResponse;
+                    // Open response - automatic grading based on word matching
+                    var correctAnswerRaw = question.QuestionItems.FirstOrDefault()?.RightResponse;
                     bool? isCorrect = null;
+                    GradingResult gradingResult = null;
 
-                    if (!string.IsNullOrWhiteSpace(correctAnswer) && !string.IsNullOrWhiteSpace(answer.ResponseContent))
+                    if (!string.IsNullOrWhiteSpace(correctAnswerRaw) && !string.IsNullOrWhiteSpace(answer.ResponseContent))
                     {
-                        // Retry up to 3 times to ensure AI evaluation succeeds
-                        for (int retryCount = 0; retryCount < 3; retryCount++)
+                        try
                         {
-                            try
-                            {
-                                // Use AI to evaluate the answer
-                                isCorrect = await EvaluateAnswerWithAI(correctAnswer, answer.ResponseContent);
+                            // Extract BOLD text from JSON content (from BlockNote editor) for keyword matching
+                            string correctAnswer = ExtractBoldTextFromJson(correctAnswerRaw);
+                            string studentAnswer = answer.ResponseContent;
 
-                                if (isCorrect == true)
-                                {
-                                    correctAnswers++;
-                                }
-                                break; // Success, exit retry loop
-                            }
-                            catch (Exception ex)
+                            // If no bold text found, fall back to extracting all text (for plain text responses)
+                            if (string.IsNullOrWhiteSpace(correctAnswer))
                             {
-                                Console.WriteLine($"AI evaluation attempt {retryCount + 1} failed: {ex.Message}");
-
-                                // If this was the last attempt, mark as incorrect rather than null
-                                if (retryCount == 2)
-                                {
-                                    Console.WriteLine("All AI evaluation attempts failed. Marking as incorrect.");
-                                    isCorrect = false;
-                                }
-                                else
-                                {
-                                    // Wait a bit before retrying
-                                    await Task.Delay(500);
-                                }
+                                correctAnswer = ExtractTextFromJson(correctAnswerRaw);
                             }
+                            if (string.IsNullOrWhiteSpace(studentAnswer))
+                            {
+                                studentAnswer = ExtractTextFromJson(answer.ResponseContent);
+                            }
+
+                            Console.WriteLine($"[Open Response Grading] Correct answer: {correctAnswer}");
+                            Console.WriteLine($"[Open Response Grading] Student answer: {studentAnswer}");
+
+                            // Evaluate the answer based on word matching with detailed results
+                            gradingResult = EvaluateAnswerWithWordMatchingDetailed(correctAnswer, studentAnswer);
+                            isCorrect = gradingResult.IsCorrect;
+
+                            if (isCorrect == true)
+                            {
+                                correctAnswers++;
+                            }
+
+                            Console.WriteLine($"[Open Response Grading] Result: {(isCorrect == true ? "CORRECT" : "INCORRECT")}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[Open Response Grading] Error during evaluation: {ex.Message}");
+                            isCorrect = false;
                         }
                     }
                     else
@@ -190,14 +195,16 @@ namespace LearningApp.Application.Services
                         isCorrect = false;
                     }
 
-                    questionResponses.Add(new StudentQuestionResponse
+                    var response = new StudentQuestionResponse
                     {
                         QuizAttemptId = attemptId,
                         QuestionId = answer.QuestionId,
                         QuestionItemId = null,
                         ResponseContent = answer.ResponseContent,
                         IsCorrect = isCorrect
-                    });
+                    };
+
+                    questionResponses.Add(response);
                 }
             }
 
@@ -237,7 +244,10 @@ namespace LearningApp.Application.Services
                     QuestionId = qr.QuestionId,
                     QuestionItemId = qr.QuestionItemId,
                     ResponseContent = qr.ResponseContent,
-                    IsCorrect = qr.IsCorrect
+                    IsCorrect = qr.IsCorrect,
+                    ExpectedKeywords = null,
+                    FoundKeywords = null,
+                    MatchPercentage = null
                 }).ToList()
             };
         }
@@ -306,7 +316,10 @@ namespace LearningApp.Application.Services
                     QuestionId = qr.QuestionId,
                     QuestionItemId = qr.QuestionItemId,
                     ResponseContent = qr.ResponseContent,
-                    IsCorrect = qr.IsCorrect
+                    IsCorrect = qr.IsCorrect,
+                    ExpectedKeywords = null,
+                    FoundKeywords = null,
+                    MatchPercentage = null
                 }).ToList()
             };
         }
@@ -330,85 +343,315 @@ namespace LearningApp.Application.Services
         }
 
         /// <summary>
-        /// Evaluate a student's answer using AI (Groq API with Llama model)
+        /// Extract only BOLD text from BlockNote JSON content
         /// </summary>
-        private async Task<bool> EvaluateAnswerWithAI(string correctAnswer, string studentAnswer)
+        private string ExtractBoldTextFromJson(string jsonContent)
         {
+            if (string.IsNullOrWhiteSpace(jsonContent))
+                return string.Empty;
+
             try
             {
-                // Groq API endpoint (free and fast)
-                const string apiUrl = "https://api.groq.com/openai/v1/chat/completions";
-
-                // You need to set this API key in your environment variables or configuration
-                // Get a free key from: https://console.groq.com/
-                const string apiKey = "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";
-
-                Console.WriteLine($"[AI Evaluation] Evaluating answer...");
-                Console.WriteLine($"[AI Evaluation] Correct: {correctAnswer}");
-                Console.WriteLine($"[AI Evaluation] Student: {studentAnswer}");
-
-                var requestBody = new
+                // Try to parse as JSON
+                using (JsonDocument doc = JsonDocument.Parse(jsonContent))
                 {
-                    model = "llama3-8b-8192",
-                    messages = new[]
+                    var root = doc.RootElement;
+                    var boldWords = new List<string>();
+
+                    // Handle array format (most common from BlockNote)
+                    if (root.ValueKind == JsonValueKind.Array)
                     {
-                        new
+                        foreach (var element in root.EnumerateArray())
                         {
-                            role = "system",
-                            content = "You are a teacher grading student answers. Compare the student's answer with the correct answer and determine if they convey the same meaning. Consider synonyms, paraphrasing, and equivalent explanations. Be lenient if the core concepts match. Respond with ONLY 'CORRECT' or 'INCORRECT'."
-                        },
-                        new
-                        {
-                            role = "user",
-                            content = $"Correct answer: {correctAnswer}\n\nStudent's answer: {studentAnswer}\n\nIs the student's answer correct?"
+                            ExtractBoldTextFromElement(element, boldWords);
                         }
-                    },
-                    temperature = 0.2,
-                    max_tokens = 20
-                };
+                    }
+                    // Handle object format
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    {
+                        ExtractBoldTextFromElement(root, boldWords);
+                    }
 
-                var jsonContent = JsonSerializer.Serialize(requestBody);
-                var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-                var request = new HttpRequestMessage(HttpMethod.Post, apiUrl);
-                request.Headers.Add("Authorization", $"Bearer {apiKey}");
-                request.Content = httpContent;
-
-                var response = await _httpClient.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"[AI Evaluation] API Error: {response.StatusCode} - {errorContent}");
-                    throw new Exception($"AI API returned {response.StatusCode}: {errorContent}");
+                    return string.Join(" ", boldWords).Trim();
                 }
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"[AI Evaluation] Raw Response: {responseContent}");
-
-                var jsonResponse = JsonDocument.Parse(responseContent);
-
-                var aiResponse = jsonResponse.RootElement
-                    .GetProperty("choices")[0]
-                    .GetProperty("message")
-                    .GetProperty("content")
-                    .GetString()
-                    ?.Trim()
-                    .ToUpper();
-
-                Console.WriteLine($"[AI Evaluation] AI Decision: {aiResponse}");
-
-                bool isCorrect = aiResponse?.Contains("CORRECT") == true && !aiResponse.Contains("INCORRECT");
-                Console.WriteLine($"[AI Evaluation] Final Result: {(isCorrect ? "CORRECT" : "INCORRECT")}");
-
-                return isCorrect;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[AI Evaluation] Error: {ex.Message}");
-                Console.WriteLine($"[AI Evaluation] Stack Trace: {ex.StackTrace}");
-                throw;
+                // If JSON parsing fails (invalid JSON, etc), return empty (no bold text found)
+                Console.WriteLine($"[ExtractBoldTextFromJson] Failed to parse JSON: {ex.Message}");
+                return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// Recursively extract only BOLD text from JSON elements
+        /// BlockNote format: {type: "text", text: "...", styles: {bold: true, ...}}
+        /// </summary>
+        private void ExtractBoldTextFromElement(JsonElement element, List<string> boldWords)
+        {
+            if (element.ValueKind == JsonValueKind.Object)
+            {
+                // Check if this element has text and bold style
+                if (element.TryGetProperty("text", out var textProp) && textProp.ValueKind == JsonValueKind.String &&
+                    element.TryGetProperty("styles", out var stylesProp) && stylesProp.ValueKind == JsonValueKind.Object)
+                {
+                    // Check if bold is true
+                    if (stylesProp.TryGetProperty("bold", out var boldProp) && boldProp.ValueKind == JsonValueKind.True)
+                    {
+                        string? text = textProp.GetString();
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            boldWords.Add(text);
+                        }
+                    }
+                }
+
+                // Recursively process content array
+                if (element.TryGetProperty("content", out var contentProp) && contentProp.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var contentElement in contentProp.EnumerateArray())
+                    {
+                        ExtractBoldTextFromElement(contentElement, boldWords);
+                    }
+                }
+
+                // Recursively process children array
+                if (element.TryGetProperty("children", out var childrenProp) && childrenProp.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var childElement in childrenProp.EnumerateArray())
+                    {
+                        ExtractBoldTextFromElement(childElement, boldWords);
+                    }
+                }
+            }
+            else if (element.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in element.EnumerateArray())
+                {
+                    ExtractBoldTextFromElement(item, boldWords);
+                }
+            }
+        }
+
+        private string ExtractTextFromJson(string jsonContent)
+        {
+            if (string.IsNullOrWhiteSpace(jsonContent))
+                return string.Empty;
+
+            try
+            {
+                // Try to parse as JSON
+                using (JsonDocument doc = JsonDocument.Parse(jsonContent))
+                {
+                    var root = doc.RootElement;
+                    var textParts = new List<string>();
+
+                    // Handle array format (most common from BlockNote)
+                    if (root.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var element in root.EnumerateArray())
+                        {
+                            ExtractTextFromElement(element, textParts);
+                        }
+                    }
+                    // Handle object format
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    {
+                        ExtractTextFromElement(root, textParts);
+                    }
+
+                    return string.Join(" ", textParts).Trim();
+                }
+            }
+            catch (JsonException)
+            {
+                // If JSON parsing fails, return the content as-is (it might be plain text)
+                return jsonContent.Trim();
+            }
+        }
+
+        /// <summary>
+        /// Recursively extract text from JSON elements
+        /// </summary>
+        private void ExtractTextFromElement(JsonElement element, List<string> textParts)
+        {
+            if (element.ValueKind == JsonValueKind.Object)
+            {
+                // Look for "text" property
+                if (element.TryGetProperty("text", out var textProp) && textProp.ValueKind == JsonValueKind.String)
+                {
+                    string? text = textProp.GetString();
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        textParts.Add(text);
+                    }
+                }
+
+                // Look for "content" property (array of content items)
+                if (element.TryGetProperty("content", out var contentProp) && contentProp.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var contentElement in contentProp.EnumerateArray())
+                    {
+                        ExtractTextFromElement(contentElement, textParts);
+                    }
+                }
+
+                // Recursively process other properties
+                foreach (var prop in element.EnumerateObject())
+                {
+                    if (prop.Name != "text" && prop.Name != "content")
+                    {
+                        ExtractTextFromElement(prop.Value, textParts);
+                    }
+                }
+            }
+            else if (element.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in element.EnumerateArray())
+                {
+                    ExtractTextFromElement(item, textParts);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Evaluate answer based on word matching percentage
+        /// Minimum 50% match of words from correct answer found in student answer
+        /// </summary>
+        private bool EvaluateAnswerWithWordMatching(string correctAnswer, string studentAnswer)
+        {
+            const int minimumMatchPercentage = 50;
+
+            // Normalize answers: lowercase and remove extra spaces
+            string normalizedCorrect = System.Text.RegularExpressions.Regex.Replace(
+                correctAnswer.ToLower().Trim(), @"\s+", " ");
+            string normalizedStudent = System.Text.RegularExpressions.Regex.Replace(
+                studentAnswer.ToLower().Trim(), @"\s+", " ");
+
+            // Split into words and remove common stop words
+            var correctWords = GetSignificantWords(normalizedCorrect);
+            var studentWords = GetSignificantWords(normalizedStudent);
+
+            Console.WriteLine($"[Word Matching] Correct words: {string.Join(", ", correctWords)}");
+            Console.WriteLine($"[Word Matching] Student words: {string.Join(", ", studentWords)}");
+
+            if (correctWords.Count == 0)
+                return studentWords.Count == 0;
+
+            // Count how many words from correct answer are found in student answer
+            int matchedWords = 0;
+            foreach (var word in correctWords)
+            {
+                if (studentWords.Contains(word))
+                {
+                    matchedWords++;
+                }
+            }
+
+            // Calculate match percentage
+            double matchPercentage = (double)matchedWords / correctWords.Count * 100;
+            Console.WriteLine($"[Word Matching] Match percentage: {matchPercentage:F2}% ({matchedWords}/{correctWords.Count} words)");
+            Console.WriteLine($"[Word Matching] Minimum required: {minimumMatchPercentage}%");
+
+            return matchPercentage >= minimumMatchPercentage;
+        }
+
+        /// <summary>
+        /// Extract significant words (remove stop words and very short words)
+        /// </summary>
+        private HashSet<string> GetSignificantWords(string text)
+        {
+            // Common English stop words to ignore
+            var stopWords = new HashSet<string>
+            {
+                "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "is", "was", "are", "be",
+                "been", "being", "have", "has", "had", "do", "does", "did", "will", "would", "could", "should", "may",
+                "might", "must", "can", "by", "from", "with", "as", "it", "this", "that", "these", "those", "i", "you",
+                "he", "she", "we", "they", "what", "which", "who", "when", "where", "why", "how", "all", "each", "every",
+                "both", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so",
+                "than", "too", "very", "just", "if", "then", "because", "while", "your", "his", "her", "its", "our", "their"
+            };
+
+            var words = text.Split(new[] { ' ', '.', ',', '!', '?', ';', ':', '\n', '\r' },
+                System.StringSplitOptions.RemoveEmptyEntries);
+
+            var significantWords = new HashSet<string>();
+            foreach (var word in words)
+            {
+                // Keep words longer than 2 characters and not in stop words list
+                if (word.Length > 2 && !stopWords.Contains(word))
+                {
+                    significantWords.Add(word);
+                }
+            }
+
+            return significantWords;
+        }
+
+        /// <summary>
+        /// Evaluate answer based on word matching and return detailed information
+        /// Minimum 50% match of words from correct answer found in student answer
+        /// </summary>
+        private GradingResult EvaluateAnswerWithWordMatchingDetailed(string correctAnswer, string studentAnswer)
+        {
+            const int minimumMatchPercentage = 50;
+
+            var result = new GradingResult();
+
+            // Normalize answers: lowercase and remove extra spaces
+            string normalizedCorrect = System.Text.RegularExpressions.Regex.Replace(
+                correctAnswer.ToLower().Trim(), @"\s+", " ");
+            string normalizedStudent = System.Text.RegularExpressions.Regex.Replace(
+                studentAnswer.ToLower().Trim(), @"\s+", " ");
+
+            // Split into words and remove common stop words
+            var correctWords = GetSignificantWords(normalizedCorrect);
+            var studentWords = GetSignificantWords(normalizedStudent);
+
+            result.ExpectedKeywords = new List<string>(correctWords);
+            result.FoundKeywords = new List<string>();
+
+            Console.WriteLine($"[Word Matching] Correct words: {string.Join(", ", correctWords)}");
+            Console.WriteLine($"[Word Matching] Student words: {string.Join(", ", studentWords)}");
+
+            if (correctWords.Count == 0)
+            {
+                result.IsCorrect = studentWords.Count == 0;
+                result.MatchPercentage = studentWords.Count == 0 ? 100 : 0;
+                return result;
+            }
+
+            // Count how many words from correct answer are found in student answer
+            int matchedWords = 0;
+            foreach (var word in correctWords)
+            {
+                if (studentWords.Contains(word))
+                {
+                    matchedWords++;
+                    result.FoundKeywords.Add(word);
+                }
+            }
+
+            // Calculate match percentage
+            double matchPercentage = (double)matchedWords / correctWords.Count * 100;
+            result.MatchPercentage = (int)Math.Round(matchPercentage);
+            result.IsCorrect = matchPercentage >= minimumMatchPercentage;
+
+            Console.WriteLine($"[Word Matching] Match percentage: {matchPercentage:F2}% ({matchedWords}/{correctWords.Count} words)");
+            Console.WriteLine($"[Word Matching] Minimum required: {minimumMatchPercentage}%");
+
+            return result;
+        }
+
+        /// <summary>
+        /// Class to hold grading results with keyword information
+        /// </summary>
+        private class GradingResult
+        {
+            public bool IsCorrect { get; set; }
+            public int MatchPercentage { get; set; }
+            public List<string> ExpectedKeywords { get; set; } = new List<string>();
+            public List<string> FoundKeywords { get; set; } = new List<string>();
         }
     }
 }

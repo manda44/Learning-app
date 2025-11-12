@@ -141,7 +141,7 @@ export const courseService = {
 
   // Get student's enrolled courses
   getStudentCourses: async (studentId: number): Promise<StudentCourseEnrollment[]> => {
-    const response = await fetch(`${API_URL}/students/${studentId}/enrollments`, {
+    const response = await fetch(`${API_URL}/enrollments/student/${studentId}`, {
       method: 'GET',
       headers: getHeaders(),
     });

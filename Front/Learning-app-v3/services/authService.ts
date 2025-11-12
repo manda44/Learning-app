@@ -188,3 +188,60 @@ export const refreshToken = async (): Promise<boolean> => {
   // For now, user needs to log in again
   return isAuthenticated();
 };
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Change user password
+ * @param currentPassword Current password for verification
+ * @param newPassword New password to set
+ * @param confirmPassword Confirmation of new password
+ * @returns Promise with change password response
+ */
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string
+): Promise<ChangePasswordResponse> => {
+  try {
+    const authHeader = getAuthorizationHeader();
+    if (!authHeader) {
+      throw new Error('Non authentifié');
+    }
+
+    const response = await axios.post<ChangePasswordResponse>(
+      `${API_BASE_URL}/users/change-password`,
+      {
+        currentPassword,
+        newPassword,
+        confirmPassword
+      } as ChangePasswordRequest,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        'Erreur lors du changement de mot de passe';
+      throw new Error(errorMessage);
+    }
+    throw error;
+  }
+};

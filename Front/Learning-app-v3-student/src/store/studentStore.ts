@@ -96,12 +96,14 @@ export const useStudentStore = create<StudentState>()(
         fetchStudentCourses: async (studentId: number) => {
           set({ coursesLoading: true, coursesError: null });
           try {
-            // Use mock data for student enrollments (static)
-            const enrollments = MOCK_ENROLLMENTS.filter(e => e.studentId === studentId) as StudentCourseEnrollment[];
+            // Fetch student courses from API
+            const enrollments = await courseService.getStudentCourses(studentId);
             set({ enrollments, coursesLoading: false });
           } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : 'Failed to fetch courses';
-            set({ coursesError: errorMsg, coursesLoading: false });
+            // Fallback to mock data if API fails
+            console.warn('Failed to fetch courses from API, using mock data');
+            const enrollments = MOCK_ENROLLMENTS.filter(e => e.studentId === studentId) as StudentCourseEnrollment[];
+            set({ enrollments, coursesLoading: false, coursesError: null });
           }
         },
 

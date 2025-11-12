@@ -21,6 +21,7 @@ import { Menu, Text, Container, Anchor, Breadcrumbs } from '@mantine/core';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserInfo, logoutUser } from '../src/services/authService';
+import useStudentStore from '../src/store/studentStore';
 
 interface BreadcrumbItem {
   title: string;
@@ -37,6 +38,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>('Étudiant');
   const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { enrollments, fetchStudentCourses } = useStudentStore();
 
   // Initialize drawer state from localStorage
   const [opened, setOpened] = useState<boolean>(() => {
@@ -84,8 +86,10 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
     const userInfo = getUserInfo();
     if (userInfo) {
       setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
+      // Fetch student courses to display count in badge
+      fetchStudentCourses(userInfo.id);
     }
-  }, []);
+  }, [fetchStudentCourses]);
 
   // Fonction de déconnexion
   const handleLogout = async () => {
@@ -181,7 +185,10 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
 
               <Menu.Dropdown>
                 <Menu.Label>Mon compte</Menu.Label>
-                <Menu.Item leftSection={<IconUserCircle size={14} />}>
+                <Menu.Item
+                  leftSection={<IconUserCircle size={14} />}
+                  onClick={() => navigate('/profile')}
+                >
                   Mon profil
                 </Menu.Item>
                 <Menu.Item leftSection={<IconSettings size={14} />}>
@@ -264,7 +271,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
           style={getNavLinkStyle(isActive('/my-courses') || isActive('/courses') || isActive('/chapter'))}
           rightSection={
             <Text size="sm" fw={700} c="white" style={{ backgroundColor: '#4A9FD8', padding: '2px 8px', borderRadius: '12px' }}>
-              5
+              {enrollments.length}
             </Text>
           }
         />

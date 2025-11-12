@@ -15,6 +15,7 @@ import Quiz from './pages/Quiz';
 import QuizResults from './pages/QuizResults';
 import MiniProjects from './pages/MiniProjects';
 import MiniProjectView from './pages/MiniProjectView';
+import Profile from './pages/Profile';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;
@@ -180,6 +181,16 @@ function App() {
               { title: 'Paramètres', href: '/settings' }
             ]}>
               <Settings />
+            </StudentLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <StudentLayout breadcrumbs={[
+              { title: 'Mon profil', href: '/profile' }
+            ]}>
+              <Profile />
             </StudentLayout>
           }
         />

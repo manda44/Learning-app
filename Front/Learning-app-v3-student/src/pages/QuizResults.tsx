@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Box, Button, Title, Text, Loader, Center, Alert, Group, Stack, Paper, Progress, Badge } from '@mantine/core';
-import { IconCheck, IconX, IconClock, IconTrophy, IconArrowLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconCheck, IconX, IconClock, IconTrophy, IconArrowLeft, IconChevronRight, IconAlertCircle } from '@tabler/icons-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BlockNoteView } from '@blocknote/mantine';
 import { useCreateBlockNote } from '@blocknote/react';
@@ -478,6 +478,68 @@ function QuestionResultCard({ result, index }: { result: QuestionResult; index: 
         {/* Show open response */}
         {questionType === 'OPENRESPONSE' && (
           <Box>
+            {/* Expected Keywords */}
+            {result.response[0]?.expectedKeywords && result.response[0].expectedKeywords.length > 0 && (
+              <Box mb="md">
+                <Text fw={600} size="sm" mb="xs">
+                  Mots-clés attendus:
+                </Text>
+                <Group gap="xs" wrap="wrap">
+                  {result.response[0].expectedKeywords.map((keyword, idx) => (
+                    <Badge key={idx} variant="outline" color="blue" size="lg">
+                      <strong>{keyword}</strong>
+                    </Badge>
+                  ))}
+                </Group>
+              </Box>
+            )}
+
+            {/* Found Keywords */}
+            {result.response[0]?.foundKeywords && (
+              <Box mb="md">
+                <Text fw={600} size="sm" mb="xs">
+                  Mots-clés trouvés dans votre réponse:
+                </Text>
+                {result.response[0].foundKeywords.length > 0 ? (
+                  <>
+                    <Group gap="xs" wrap="wrap" mb="sm">
+                      {result.response[0].foundKeywords.map((keyword, idx) => (
+                        <Badge key={idx} variant="filled" color="green" size="lg">
+                          ✓ {keyword}
+                        </Badge>
+                      ))}
+                    </Group>
+                  </>
+                ) : (
+                  <Alert icon={<IconAlertCircle size={16} />} color="orange" mb="md">
+                    Aucun mot-clé significatif trouvé dans votre réponse.
+                  </Alert>
+                )}
+              </Box>
+            )}
+
+            {/* Match Percentage */}
+            {result.response[0]?.matchPercentage !== undefined && result.response[0].matchPercentage !== null && (
+              <Box mb="md">
+                <Group justify="space-between" align="center" mb="xs">
+                  <Text fw={600} size="sm">
+                    Pourcentage de correspondance:
+                  </Text>
+                  <Badge
+                    size="lg"
+                    color={result.isCorrect ? 'green' : 'red'}
+                  >
+                    {result.response[0].matchPercentage}%
+                  </Badge>
+                </Group>
+                <Progress value={result.response[0].matchPercentage} color={result.isCorrect ? 'green' : 'red'} size="md" />
+                <Text size="xs" c="dimmed" mt="xs">
+                  Au moins 50% de correspondance requis
+                </Text>
+              </Box>
+            )}
+
+            {/* Student Response */}
             <Text fw={600} size="sm" mb="xs">
               Votre réponse:
             </Text>

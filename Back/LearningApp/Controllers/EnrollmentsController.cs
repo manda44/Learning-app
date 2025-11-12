@@ -23,6 +23,51 @@ namespace LearningApp.Controllers
             _enrollmentRepo = enrollmentRepo;
         }
 
+        // GET: api/Enrollments/student/{studentId}
+        [HttpGet("student/{studentId}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetStudentEnrollments(int studentId)
+        {
+            var enrollments = await _context.StudentCourseEnrollments
+                .Include(e => e.Course)
+                .Where(e => e.StudentId == studentId)
+                .OrderByDescending(e => e.EnrollmentDate)
+                .ToListAsync();
+
+            var result = new List<object>();
+
+            foreach (var enrollment in enrollments)
+            {
+                var overallProgress = await CalculateOverallProgress(enrollment.StudentId, enrollment.CourseId);
+
+                // Auto-complete enrollment when progress reaches 100%
+                if (overallProgress == 100 && enrollment.Status == "active")
+                {
+                    enrollment.Status = "completed";
+                    enrollment.CompletionDate = DateTime.UtcNow;
+                    await _enrollmentRepo.UpdateAsync(enrollment);
+                }
+
+                result.Add(new
+                {
+                    enrollmentId = enrollment.EnrollmentId,
+                    studentId = enrollment.StudentId,
+                    courseId = enrollment.CourseId,
+                    enrollmentDate = enrollment.EnrollmentDate,
+                    status = enrollment.Status,
+                    progress = overallProgress,
+                    completionDate = enrollment.CompletionDate,
+                    course = new
+                    {
+                        courseId = enrollment.Course.CourseId,
+                        title = enrollment.Course.Title,
+                        description = enrollment.Course.Description
+                    }
+                });
+            }
+
+            return Ok(result);
+        }
+
         // GET: api/Enrollments/all
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<object>>> GetAllEnrollments()
@@ -38,6 +83,14 @@ namespace LearningApp.Controllers
             foreach (var enrollment in enrollments)
             {
                 var overallProgress = await CalculateOverallProgress(enrollment.StudentId, enrollment.CourseId);
+
+                // Auto-complete enrollment when progress reaches 100%
+                if (overallProgress == 100 && enrollment.Status == "active")
+                {
+                    enrollment.Status = "completed";
+                    enrollment.CompletionDate = DateTime.UtcNow;
+                    await _enrollmentRepo.UpdateAsync(enrollment);
+                }
 
                 result.Add(new
                 {

@@ -1,9 +1,9 @@
-import {Grid, Paper, Box, Button, Center, Textarea, Text, Divider, Group, ActionIcon} from "@mantine/core";
+import {Grid, Paper, Box, Button, Center, Textarea, Text, Divider, Group, ActionIcon, Alert, Badge} from "@mantine/core";
 import {BlockNoteView} from "@blocknote/mantine";
 import {useCreateBlockNote} from "@blocknote/react";
 import {fr} from "@blocknote/core/locales";
 import {codeBlock} from "@blocknote/code-block";
-import {IconPlus, IconQuestionMark, IconFileText, IconMessageCircle, IconTrash, IconCopy, IconChevronUp, IconChevronDown} from "@tabler/icons-react";
+import {IconPlus, IconQuestionMark, IconFileText, IconMessageCircle, IconTrash, IconCopy, IconChevronUp, IconChevronDown, IconInfoCircle} from "@tabler/icons-react";
 import {useState, useCallback, useEffect} from "react";
 import { forwardRef, useImperativeHandle } from "react";
 import { useForm } from "@mantine/form";
@@ -111,6 +111,35 @@ const OpenResponse = forwardRef<OpenResponseRef, OpenResponseProps>((props, ref)
     const toggleExplanation = useCallback(() => {
         setShowExplanation(prev => !prev);
     }, []);
+
+    // Extract bold keywords from BlockNote document
+    const getSignificantWords = (document: any): string[] => {
+        const keywords: string[] = [];
+
+        // Iterate through each block in the document
+        if (Array.isArray(document)) {
+            document.forEach((block: any) => {
+                if (block.content && Array.isArray(block.content)) {
+                    // Iterate through content items (text nodes)
+                    block.content.forEach((item: any) => {
+                        // Check if this item has bold formatting
+                        if (item.styles && item.styles.bold && item.text) {
+                            // Split by whitespace and add each word
+                            const words = item.text.toLowerCase().split(/\s+/);
+                            words.forEach((word: string) => {
+                                const cleanWord = word.replace(/[.,!?;:'"()-]/g, '');
+                                if (cleanWord.length > 0) {
+                                    keywords.push(cleanWord);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        return keywords;
+    };
 
     useEffect(() => {
         if (props.data?.questionItems?.[0]) {
@@ -247,9 +276,45 @@ const OpenResponse = forwardRef<OpenResponseRef, OpenResponseProps>((props, ref)
                             </Grid.Col>
                         </Grid>
                     </Box>
-                    
+
+                    {/* Système de grading - Keywords explanation */}
+                    <Box p={20} style={{ backgroundColor: '#f0f7ff', borderLeft: '4px solid #4a9fd8' }}>
+                        <Alert icon={<IconInfoCircle size={16} />} title="Système de Grading Automatique" color="blue" variant="light">
+                            <Text size="sm" mb="md">
+                                Les réponses étudiantes seront évaluées automatiquement en comparant les <strong>mots-clés</strong> présents dans la réponse modèle.
+                            </Text>
+
+                            {(() => {
+                                // Extract keywords from the response editor document
+                                const keywords = getSignificantWords(ResponseEditor.document);
+
+                                return keywords.length > 0 ? (
+                                    <>
+                                        <Text size="sm" fw={600} mb="xs">
+                                            Mots-clés extraits : <Badge size="lg" color="blue">{keywords.length} mots</Badge>
+                                        </Text>
+                                        <Group gap="xs" wrap="wrap">
+                                            {keywords.map((keyword, idx) => (
+                                                <Badge key={idx} variant="dot" color="blue" size="lg">
+                                                    <strong>{keyword}</strong>
+                                                </Badge>
+                                            ))}
+                                        </Group>
+                                        <Text size="sm" c="dimmed" mt="md" fs="italic">
+                                            ✓ Au moins <strong>50%</strong> de ces mots-clés doivent être présents dans la réponse de l'étudiant pour que la réponse soit acceptée.
+                                        </Text>
+                                    </>
+                                ) : (
+                                    <Text size="sm" c="orange" fw={500}>
+                                        ⚠️ Aucun mot-clé significatif détecté. Assurez-vous que la réponse modèle contient des mots-clés pertinents.
+                                    </Text>
+                                );
+                            })()}
+                        </Alert>
+                    </Box>
+
                     <Divider style={{ borderColor: '#e9ecef', borderWidth: '2px' }} />
-                    
+
                     <Box p={20}>
                         <Grid>
                             <Grid.Col span={12}>

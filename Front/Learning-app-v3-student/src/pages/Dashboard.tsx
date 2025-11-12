@@ -22,19 +22,20 @@ export function Dashboard() {
   const [filteredCourses, setFilteredCourses] = useState<any[]>([]);
   const [enrollingCourseId, setEnrollingCourseId] = useState<number | null>(null);
 
-  const { coursesWithEnrollment, enrollments, fetchAllCoursesWithEnrollment, coursesLoading, coursesError, fetchStudentPoints } = useStudentStore();
+  const { coursesWithEnrollment, enrollments, fetchAllCoursesWithEnrollment, fetchStudentCourses, coursesLoading, coursesError, fetchStudentPoints } = useStudentStore();
 
   useEffect(() => {
     const userInfo = getUserInfo();
-    // Fetch all courses with enrollment status from API (Student ID = 1)
-    const STUDENT_ID = 1;
+    // Fetch both student courses (with progress) and all courses (with enrollment status)
+    const STUDENT_ID = userInfo?.id || 1;
+    fetchStudentCourses(STUDENT_ID);
     fetchAllCoursesWithEnrollment(STUDENT_ID);
 
     if (userInfo) {
       setUserName(userInfo.firstName + ' ' + userInfo.lastName);
       fetchStudentPoints();
     }
-  }, [fetchAllCoursesWithEnrollment, fetchStudentPoints]);
+  }, [fetchStudentCourses, fetchAllCoursesWithEnrollment, fetchStudentPoints]);
 
   useEffect(() => {
     if (selectedFilter === 'Tous les cours') {
@@ -60,9 +61,18 @@ export function Dashboard() {
   };
 
   const getEnrollmentStatus = (courseId: number) => {
-    const course = coursesWithEnrollment.find(c => c.courseId === courseId);
-    if (!course || !course.isEnrolled) return { status: 'notEnrolled', progress: 0 };
-    return { status: course.status || 'active', progress: course.progressPercentage || 0 };
+    // First check if student is enrolled in coursesWithEnrollment
+    const courseWithEnrollment = coursesWithEnrollment.find(c => c.courseId === courseId);
+    if (!courseWithEnrollment || !courseWithEnrollment.isEnrolled) return { status: 'notEnrolled', progress: 0 };
+
+    // Get actual enrollment data with correct progress percentage
+    const enrollment = enrollments.find(e => e.courseId === courseId);
+    if (enrollment) {
+      return { status: enrollment.status || 'active', progress: enrollment.progress || 0 };
+    }
+
+    // Fallback to coursesWithEnrollment data if no enrollment found
+    return { status: courseWithEnrollment.status || 'active', progress: courseWithEnrollment.progressPercentage || 0 };
   };
 
   const handleStartCourse = async (courseId: number) => {
