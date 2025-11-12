@@ -170,6 +170,14 @@ namespace LearningApp.Controllers
                              e.MiniProject.Tickets.Select(t => t.TicketId).Contains(tp.TicketId))
                 .ToListAsync();
 
+            // Calculate progress percentage based on validated/completed tickets
+            int progressPercentage = 0;
+            if (ticketProgresses.Any())
+            {
+                var validatedCount = ticketProgresses.Count(tp => tp.Status == "validated");
+                progressPercentage = (int)((validatedCount / (double)ticketProgresses.Count) * 100);
+            }
+
             return new StudentProjectEnrollmentDto
             {
                 ProjectEnrollmentId = e.ProjectEnrollmentId,
@@ -177,7 +185,7 @@ namespace LearningApp.Controllers
                 MiniProjectId = e.MiniProjectId,
                 EnrollmentDate = e.EnrollmentDate,
                 Status = e.Status,
-                ProgressPercentage = e.ProgressPercentage,
+                ProgressPercentage = progressPercentage,
                 GitRepositoryUrl = e.GitRepositoryUrl,
                 SubmissionDate = e.SubmissionDate,
                 SubmissionNotes = e.SubmissionNotes,

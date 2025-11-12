@@ -88,7 +88,10 @@
       "Bash(wmic process where ProcessId=60168 delete)",
       "Bash(wmic process where ProcessId=49136 delete)",
       "Bash(cd:*)",
-      "Bash(cmd /c dir:*)"
+      "Bash(cmd /c dir:*)",
+      "Bash(cmd /c \"cd D:\\stage\\Back\\LearningApp && dotnet build 2>&1\")",
+      "Bash(cmd /c \"taskkill /F /IM LearningApp.exe 2>nul & taskkill /F /IM dotnet.exe 2>nul & timeout /t 2 && cd D:\\stage\\Back\\LearningApp && dotnet clean && dotnet build 2>&1\")",
+      "Bash(wmic process where ProcessId=51720 delete 2)"
     ],
     "deny": [],
     "ask": []
