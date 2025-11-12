@@ -22,7 +22,7 @@ export function Achievements() {
   };
 
   return (
-    <Container size="lg" py="xl">
+    <div style={{ width: '100%', padding: '1rem' }}>
       <div style={{ marginBottom: '2rem' }}>
         <Text size="xl" fw={700} mb="lg">Mes accomplissements</Text>
         <Text c="dimmed" size="sm">Débloquez des badges et gagnez des points en progressant</Text>
@@ -210,7 +210,7 @@ export function Achievements() {
           </Tabs.Panel>
         </Tabs>
       )}
-    </Container>
+    </div>
   );
 }
 

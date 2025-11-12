@@ -42,7 +42,7 @@ const MiniProjects = () => {
   }
 
   return (
-    <Container size="xl" py="xl">
+    <div style={{ width: '100%', padding: '1rem' }}>
       <Stack gap="lg">
         <Title order={1}>Mes Mini-Projets</Title>
         
@@ -89,7 +89,7 @@ const MiniProjects = () => {
           </Card>
         )}
       </Stack>
-    </Container>
+    </div>
   );
 };
 

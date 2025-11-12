@@ -182,7 +182,7 @@ export default function Profile() {
     : 0;
 
   return (
-    <Container size="lg" py="xl">
+    <div style={{ width: '100%', padding: '1rem' }}>
       {/* Messages d'alerte */}
       {message && (
         <Alert
@@ -491,6 +491,6 @@ export default function Profile() {
           <Button>Enregistrer les préférences</Button>
         </Group>
       </Paper>
-    </Container>
+    </div>
   );
 }

@@ -56,7 +56,7 @@ export function AllCourses() {
   };
 
   return (
-    <Container size="lg" py="xl">
+    <div style={{ width: '100%', padding: '1rem' }}>
       <div style={{ marginBottom: '2rem' }}>
         <Text size="xl" fw={700} mb="lg">Tous les cours disponibles</Text>
         <Text c="dimmed" size="sm">Découvrez et inscrivez-vous à nos cours</Text>
@@ -156,7 +156,7 @@ export function AllCourses() {
           ))}
         </SimpleGrid>
       )}
-    </Container>
+    </div>
   );
 }
 

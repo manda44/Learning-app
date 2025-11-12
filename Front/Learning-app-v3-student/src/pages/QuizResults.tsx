@@ -167,7 +167,7 @@ export function QuizResults() {
   });
 
   return (
-    <Container py="xl" size="lg">
+    <div style={{ width: '100%', padding: '1rem' }}>
       <Stack gap="xl">
         {/* Header */}
         <Box>
@@ -297,7 +297,7 @@ export function QuizResults() {
           )}
         </Group>
       </Stack>
-    </Container>
+    </div>
   );
 }
 

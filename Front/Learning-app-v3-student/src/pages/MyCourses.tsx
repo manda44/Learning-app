@@ -56,7 +56,7 @@ export function MyCourses() {
   );
 
   return (
-    <Container size="lg" py="xl">
+    <div style={{ width: '100%', padding: '1rem' }}>
       <div style={{ marginBottom: '2rem' }}>
         <Text size="xl" fw={700} mb="lg">Mes cours</Text>
         <Text c="dimmed" size="sm">Suivez vos apprentissages et consultez votre progression</Text>
@@ -118,7 +118,7 @@ export function MyCourses() {
           </Tabs.Panel>
         </Tabs>
       )}
-    </Container>
+    </div>
   );
 }
 

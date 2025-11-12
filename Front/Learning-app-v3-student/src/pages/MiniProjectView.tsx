@@ -286,10 +286,10 @@ const MiniProjectView = () => {
 
   if (!enrollment) {
     return (
-      <Container>
+      <div style={{ width: '100%', padding: '1rem' }}>
         <Text>Projet non trouvé</Text>
         <Button onClick={() => navigate('/mini-projects')}>Retour aux projets</Button>
-      </Container>
+      </div>
     );
   }
 
@@ -301,7 +301,7 @@ const MiniProjectView = () => {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <Container size="xl" py="xl">
+      <div style={{ width: '100%', padding: '1rem' }}>
         <Stack gap="lg">
           <Group justify="apart">
             <div>
@@ -383,7 +383,6 @@ const MiniProjectView = () => {
             Retour aux projets
           </Button>
         </Stack>
-      </Container>
 
       <DragOverlay>
         {activeTicket ? (() => {
@@ -527,6 +526,7 @@ const MiniProjectView = () => {
           </Group>
         </Stack>
       </Modal>
+      </div>
     </DndContext>
   );
 };

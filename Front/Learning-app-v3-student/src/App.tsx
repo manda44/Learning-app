@@ -16,6 +16,7 @@ import QuizResults from './pages/QuizResults';
 import MiniProjects from './pages/MiniProjects';
 import MiniProjectView from './pages/MiniProjectView';
 import Profile from './pages/Profile';
+import Statistics from './pages/Statistics';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;
@@ -191,6 +192,16 @@ function App() {
               { title: 'Mon profil', href: '/profile' }
             ]}>
               <Profile />
+            </StudentLayout>
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <StudentLayout breadcrumbs={[
+              { title: 'Statistiques', href: '/statistics' }
+            ]}>
+              <Statistics />
             </StudentLayout>
           }
         />

@@ -296,9 +296,18 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
 
         <NavLink
           component={Link}
-          to="/achievements"
+          to="/statistics"
           label="Mes Statistiques"
           leftSection={<IconChartBar size={26} stroke={1.5} />}
+          active={isActive('/statistics')}
+          style={getNavLinkStyle(isActive('/statistics'))}
+        />
+
+        <NavLink
+          component={Link}
+          to="/achievements"
+          label="Mes Accomplissements"
+          leftSection={<IconTrophy size={26} stroke={1.5} />}
           active={isActive('/achievements')}
           style={getNavLinkStyle(isActive('/achievements'))}
         />
@@ -337,9 +346,9 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
 
       <AppShell.Main>
         <Breadcrumbs m='sm'>{breadcrumbElements}</Breadcrumbs>
-        <Container fluid mih='50dvh' p='lg' style={{ borderRadius: '5px' }}>
+        <div style={{ minHeight: '50dvh', padding: '1rem', borderRadius: '5px', width: '100%' }}>
           {children}
-        </Container>
+        </div>
       </AppShell.Main>
     </AppShell>
   );
