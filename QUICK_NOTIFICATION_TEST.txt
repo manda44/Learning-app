@@ -1,0 +1,253 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    TESTER LES NOTIFICATIONS EN 10 MINUTES
+═══════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                            ÉTAPE 1: PRÉPARER                                 │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+□ S'assurer que le Backend est lancé:
+  cd Back/LearningApp
+  dotnet run
+  ✓ Vérifier: https://localhost:7121 accessible
+
+□ Lancer l'Admin App (Terminal 2):
+  cd Front/Learning-app-v3
+  npm run dev
+  ✓ Ouvre: http://localhost:5173
+
+□ Lancer l'Étudiant App (Terminal 3):
+  cd Front/Learning-app-v3-student
+  npm run dev
+  ✓ Ouvre: http://localhost:5174
+
+□ Se connecter avec un compte admin dans l'Admin App
+□ Ouvrir les DevTools (F12) et récupérer le JWT token:
+  console.log(localStorage.getItem('authToken'))
+  → Copier le token
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                      ÉTAPE 2: CRÉER LES 7 TYPES (1 min)                      │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+OPTION A: Script PowerShell (Recommandé - Automatisé)
+──────────────────────────────────────────────────────
+.\test-all-notification-types.ps1 -Token "VOTRE_TOKEN" -StudentUserId 2
+
+→ Créera automatiquement les 7 types!
+
+
+OPTION B: REST Client (VS Code Extension)
+──────────────────────────────────────────
+1. Installer "REST Client" extension
+2. Ouvrir test-notifications.http
+3. Remplacer TOKEN par votre JWT
+4. Cliquer "Send Request" sur chaque requête
+
+
+OPTION C: cURL (Terminal)
+──────────────────────────
+export TOKEN="VOTRE_JWT_TOKEN"
+
+# Créer COURSE_UPDATE
+curl -X POST https://localhost:7121/api/notifications \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": 2,
+    "type": "COURSE_UPDATE",
+    "title": "Nouveau contenu",
+    "message": "Un nouveau chapitre React Hooks",
+    "priority": 1
+  }'
+
+# Créer QUIZ_REMINDER
+curl -X POST https://localhost:7121/api/notifications \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": 2,
+    "type": "QUIZ_REMINDER",
+    "title": "Quiz en attente",
+    "message": "TypeScript Basics - Date limite: 25 janvier",
+    "priority": 2
+  }'
+
+# ... (répéter pour les 5 autres types)
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│              ÉTAPE 3: VÉRIFIER DANS L'ADMIN APP (3 min)                      │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+URL: http://localhost:5173
+
+□ Vérifier la cloche 🔔 dans le header:
+  ✓ Cloche visible
+  ✓ Badge rouge avec nombre de notifications
+
+□ Cliquer sur la cloche:
+  ✓ Dropdown s'ouvre
+  ✓ Affiche les 5 dernières notifications
+  ✓ Chaque notification a sa couleur
+  ✓ Bouton "Mark all as read"
+  ✓ Bouton "View all notifications"
+
+□ Tester les actions dans le dropdown:
+  ✓ Cliquer sur ✓ pour marquer comme lue
+  ✓ Cliquer sur 🗑️ pour supprimer
+
+□ Cliquer "View all notifications":
+  → Allez à /notifications
+  ✓ Voir la page complète
+  ✓ Affiche 7 notifications créées
+  ✓ Pagination fonctionne
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│            ÉTAPE 4: VÉRIFIER LES COULEURS CORRECTES (1 min)                  │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+À http://localhost:5173/notifications, vérifier les couleurs:
+
+□ COURSE_UPDATE                → 🔵 BLEU
+□ ENROLLMENT_CONFIRMATION     → 🟢 VERT
+□ QUIZ_REMINDER              → 🟠 ORANGE
+□ GRADE_RECEIVED             → 🟣 VIOLET
+□ PROJECT_FEEDBACK           → 🔵 CYAN
+□ ADMIN_MESSAGE              → 🟦 INDIGO
+□ SYSTEM_ALERT               → 🔴 ROUGE
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│              ÉTAPE 5: TESTER LES FILTRES (2 min)                             │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+À http://localhost:5173/notifications:
+
+□ Filtrer par type:
+  1. Cliquer "Filter by type"
+  2. Sélectionner "QUIZ_REMINDER"
+  3. ✓ Vérifier que SEUL QUIZ_REMINDER s'affiche
+  4. Essayer d'autres types
+  5. Cliquer "Clear filters"
+
+□ Filtrer par statut:
+  1. Marquer une notification comme lue
+  2. Sélectionner "Read" → Affiche les lues
+  3. Sélectionner "Unread" → Affiche les non-lues
+
+□ Recherche:
+  1. Taper du texte dans le champ recherche
+  2. ✓ Vérifier que seules les notifications matching s'affichent
+
+□ Pagination:
+  1. Vérifier les numéros de pages
+  2. Cliquer page 1, 2, 3
+  3. ✓ Notifications changent
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│         ÉTAPE 6: VÉRIFIER DANS L'APP ÉTUDIANT (2 min)                        │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+URL: http://localhost:5174
+
+□ Se connecter avec un compte étudiant
+
+□ Vérifier la cloche 🔔:
+  ✓ Badge visible avec le même nombre de notifications
+  ✓ Dropdown fonctionne identiquement
+  ✓ Page /notifications affiche les notifications
+
+□ IMPORTANT: Tester ADMIN_MESSAGE:
+  1. Créer une nouvelle notification ADMIN_MESSAGE pour userId=2
+  2. Vérifier qu'elle apparaît dans ADMIN app (http://localhost:5173)
+  3. Vérifier qu'elle apparaît aussi dans STUDENT app (http://localhost:5174)
+  → Les autres types doivent apparaître SEULEMENT chez l'étudiant
+
+□ Les actions fonctionnent:
+  ✓ Marquer comme lue
+  ✓ Supprimer
+  ✓ Filtrer
+  ✓ Rechercher
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                     ÉTAPE 7: VÉRIFIER LES DÉTAILS (1 min)                    │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+Pour chaque notification, vérifier:
+
+□ Titre visible
+□ Message complet
+□ Date relative (ex: "il y a 2 minutes")
+□ Icône appropriée
+□ Couleur distinctive
+□ Badge "New" pour non-lues
+□ Priorité affichée (Low, Medium, High, Urgent)
+□ Cliquer navigue vers l'actionUrl
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                            CHECKLIST FINALE                                  │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+CLOCHE:
+□ Visible dans le header
+□ Badge rouge avec compteur
+□ Dropdown avec 5 notifications
+□ Bouton "View all" fonctionne
+□ Marquer comme lue fonctionne
+□ Supprimer fonctionne
+
+PAGE NOTIFICATIONS:
+□ Liste affichée
+□ Pagination (10 par page)
+□ Filtrer par type
+□ Filtrer par statut (lues/non-lues)
+□ Recherche textuelle
+□ Couleurs correctes
+
+TYPES DE NOTIFICATIONS:
+□ COURSE_UPDATE (Bleu)
+□ ENROLLMENT_CONFIRMATION (Vert)
+□ QUIZ_REMINDER (Orange)
+□ GRADE_RECEIVED (Violet)
+□ PROJECT_FEEDBACK (Cyan)
+□ ADMIN_MESSAGE (Indigo) - Visible partout
+□ SYSTEM_ALERT (Rouge)
+
+RESPONSIVE:
+□ Fonctionne sur desktop
+□ Fonctionne sur mobile (DevTools)
+□ Boutons tactiles
+□ Texte ne déborde pas
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                               RÉSUMÉ RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Lancer les apps (2 min)
+ÉTAPE 2: Créer les 7 types (1 min)  → .\test-all-notification-types.ps1 ...
+ÉTAPE 3: Admin app 🔔 (3 min)      → http://localhost:5173
+ÉTAPE 4: Vérifier couleurs (1 min)
+ÉTAPE 5: Tester filtres (2 min)
+ÉTAPE 6: Student app 🔔 (2 min)    → http://localhost:5174
+ÉTAPE 7: Détails (1 min)
+
+TOTAL: ~10 minutes de test complet! ✓
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              ✓ BON TESTING!
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous avez des questions:
+- Voir NOTIFICATION_TYPES_GUIDE.md pour les détails
+- Voir TESTING_NOTIFICATIONS.md pour les scénarios avancés
+- Voir NOTIFICATION_TYPES_SUMMARY.txt pour un tableau récapitulatif
+
+Bon testing! 🎉
