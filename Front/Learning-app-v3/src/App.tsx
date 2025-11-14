@@ -17,6 +17,7 @@ import StudentEnrollmentsPage from '../pages/enrollment/StudentEnrollmentsPage.t
 import TicketValidationPage from '../pages/validation/TicketValidationPage.tsx';
 import AdminDashboard from '../pages/dashboard/AdminDashboard.tsx';
 import ProfilePage from '../pages/profile/ProfilePage.tsx';
+import { NotificationsPage } from '../pages/notifications/NotificationsPage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                   <Route path="/quizPage" element={<QuizPage/>}/>
                   <Route path="/miniproject" element={<MiniProjectPage/>}/>
                   <Route path="/profile" element={<ProfilePage/>}/>
+                  <Route path="/notifications" element={<NotificationsPage/>}/>
                 </Routes>
               </MainLayout>
             </ProtectedRoute>

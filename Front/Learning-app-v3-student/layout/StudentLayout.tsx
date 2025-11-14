@@ -22,6 +22,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserInfo, logoutUser } from '../src/services/authService';
 import useStudentStore from '../src/store/studentStore';
+import { NotificationBell } from '../src/components/NotificationBell';
 
 interface BreadcrumbItem {
   title: string;
@@ -37,6 +38,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
   const location = useLocation();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>('Étudiant');
+  const [userId, setUserId] = useState<number>(0);
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const { enrollments, fetchStudentCourses } = useStudentStore();
 
@@ -86,6 +88,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
     const userInfo = getUserInfo();
     if (userInfo) {
       setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
+      setUserId(userInfo.id);
       // Fetch student courses to display count in badge
       fetchStudentCourses(userInfo.id);
     }
@@ -152,11 +155,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
                 <IconMoon size={28} stroke={1.5} />
               )}
             </ActionIcon>
-            <IconBell
-              size={28}
-              stroke={1.5}
-              style={{ cursor: 'pointer', color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }}
-            />
+            {userId > 0 && <NotificationBell userId={userId} />}
             <IconMessageFilled
               size={28}
               stroke={1.5}

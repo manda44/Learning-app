@@ -17,12 +17,12 @@ import MiniProjects from './pages/MiniProjects';
 import MiniProjectView from './pages/MiniProjectView';
 import Profile from './pages/Profile';
 import Statistics from './pages/Statistics';
+import { NotificationsPage } from './pages/NotificationsPage';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;
 const Projects = () => <div style={{ padding: '20px' }}><h1>Mes projets</h1></div>;
 const Chat = () => <div style={{ padding: '20px' }}><h1>Chat IA</h1></div>;
-const Notifications = () => <div style={{ padding: '20px' }}><h1>Notifications</h1></div>;
 const Settings = () => <div style={{ padding: '20px' }}><h1>Paramètres</h1></div>;
 
 function App() {
@@ -171,7 +171,7 @@ function App() {
             <StudentLayout breadcrumbs={[
               { title: 'Notifications', href: '/notifications' }
             ]}>
-              <Notifications />
+              <NotificationsPage />
             </StudentLayout>
           }
         />

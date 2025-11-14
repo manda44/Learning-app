@@ -19,6 +19,7 @@ import {
 import { Menu,Text, Container, Anchor, Breadcrumbs } from '@mantine/core';
 import ModalMessage from '../components/ModalMessages.tsx';
 import ConfirmMessage from '../components/ConfirmMessage.tsx';
+import { NotificationBell } from '../components/NotificationBell';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {useGeneralStore} from '../store/generalStore';
 import { getUserInfo, logoutUser, changePassword } from '../services/authService';
@@ -28,6 +29,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [userName, setUserName] = useState<string>('Utilisateur');
+  const [userId, setUserId] = useState<number>(0);
   const { colorScheme, setColorScheme } = useMantineColorScheme();
 
   // Password change modal state
@@ -87,6 +89,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     const userInfo = getUserInfo();
     if (userInfo) {
       setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
+      setUserId(userInfo.id);
     }
   }, []);
 
@@ -209,7 +212,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                 >
                                   {colorScheme === 'dark' ? <IconSun size={28} stroke={1.5} color="#FFD700" /> : <IconMoon size={28} stroke={1.5} />}
                                 </ActionIcon>
-                                <IconBell size={28} stroke={1.5} style={{ cursor: 'pointer', color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }} />
+                                {userId > 0 && <NotificationBell userId={userId} />}
                                 <IconMessageFilled size={28} stroke={1.5} style={{ cursor: 'pointer', color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }} />
                               <Group gap='xs'>
                                 <IconUserCircle size={28} stroke={1.5} style={{ color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }} />
