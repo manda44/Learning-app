@@ -1,0 +1,204 @@
+@baseUrl = https://localhost:7121/api
+@token = YOUR_JWT_TOKEN_HERE
+
+### 1. Créer une notification COURSE_UPDATE
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "COURSE_UPDATE",
+  "title": "Nouveau contenu disponible",
+  "message": "Un nouveau chapitre a été ajouté au cours 'React Avancé'",
+  "priority": 1,
+  "actionUrl": "/courses/1"
+}
+
+### 2. Créer une notification QUIZ_REMINDER
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "QUIZ_REMINDER",
+  "title": "Quiz en attente",
+  "message": "Vous avez un quiz à compléter: TypeScript Basics",
+  "priority": 2,
+  "actionUrl": "/quiz/5"
+}
+
+### 3. Créer une notification GRADE_RECEIVED
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "GRADE_RECEIVED",
+  "title": "Note reçue",
+  "message": "Votre note pour le quiz 'JavaScript Fundamentals' est de 85/100",
+  "priority": 1,
+  "actionUrl": "/quiz/3/results/1"
+}
+
+### 4. Créer une notification PROJECT_FEEDBACK
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "PROJECT_FEEDBACK",
+  "title": "Retour sur votre mini-projet",
+  "message": "Votre enseignant a laissé des commentaires sur 'Todo App React'",
+  "priority": 2,
+  "actionUrl": "/mini-projects/2"
+}
+
+### 5. Créer une notification ADMIN_MESSAGE
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "ADMIN_MESSAGE",
+  "title": "Message de l'administrateur",
+  "message": "La plateforme sera en maintenance le 15 janvier de 22h à 23h",
+  "priority": 2,
+  "actionUrl": "/dashboard"
+}
+
+### 6. Créer une notification SYSTEM_ALERT (URGENT)
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "SYSTEM_ALERT",
+  "title": "Alerte système",
+  "message": "Votre session va expirer dans 5 minutes",
+  "priority": 3,
+  "actionUrl": "/profile"
+}
+
+### 7. Créer une notification ENROLLMENT_CONFIRMATION
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "ENROLLMENT_CONFIRMATION",
+  "title": "Inscription confirmée",
+  "message": "Vous êtes maintenant inscrit au cours 'Python Avancé'",
+  "priority": 0,
+  "actionUrl": "/my-courses"
+}
+
+### 8. Récupérer toutes les notifications de l'utilisateur 1
+GET {{baseUrl}}/notifications/user/1
+Authorization: Bearer {{token}}
+
+### 9. Récupérer le compteur de non-lues
+GET {{baseUrl}}/notifications/user/1/unread-count
+Authorization: Bearer {{token}}
+
+### 10. Récupérer uniquement les non-lues
+GET {{baseUrl}}/notifications/user/1?unreadOnly=true
+Authorization: Bearer {{token}}
+
+### 11. Marquer la notification 1 comme lue
+PUT {{baseUrl}}/notifications/1/mark-as-read
+Authorization: Bearer {{token}}
+
+### 12. Marquer toutes les notifications comme lues
+PUT {{baseUrl}}/notifications/user/1/mark-all-as-read
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### 13. Supprimer la notification 1
+DELETE {{baseUrl}}/notifications/1
+Authorization: Bearer {{token}}
+
+### 14. Récupérer les préférences de notification
+GET {{baseUrl}}/notifications/preferences/1
+Authorization: Bearer {{token}}
+
+### 15. Activer/désactiver les notifications QUIZ_REMINDER
+PUT {{baseUrl}}/notifications/preferences/1/QUIZ_REMINDER
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "isEnabled": false,
+  "deliveryMethod": "email"
+}
+
+### Créer 10 notifications de test rapidement
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "COURSE_UPDATE",
+  "title": "Test 1 - Nouveau contenu",
+  "message": "Notification de test 1 pour tester le système",
+  "priority": 0
+}
+
+###
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "QUIZ_REMINDER",
+  "title": "Test 2 - Quiz",
+  "message": "Notification de test 2 pour tester le système",
+  "priority": 1
+}
+
+###
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "GRADE_RECEIVED",
+  "title": "Test 3 - Note",
+  "message": "Notification de test 3 pour tester le système",
+  "priority": 1
+}
+
+###
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "PROJECT_FEEDBACK",
+  "title": "Test 4 - Feedback",
+  "message": "Notification de test 4 pour tester le système",
+  "priority": 2
+}
+
+###
+POST {{baseUrl}}/notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "type": "ADMIN_MESSAGE",
+  "title": "Test 5 - Admin",
+  "message": "Notification de test 5 pour tester le système",
+  "priority": 2
+}
