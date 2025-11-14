@@ -10,7 +10,7 @@ import {
   Box,
   Loader,
 } from '@mantine/core';
-import { IconBell, IconCheck, IconTrash, IconArrowRight } from '@tabler/icons-react';
+import { IconBell, IconCheck, IconArrowRight } from '@tabler/icons-react';
 import { useNotificationStore } from '../store/notificationStore';
 import { NotificationItem } from './NotificationItem';
 import { useNavigate } from 'react-router-dom';

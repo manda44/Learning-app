@@ -17,7 +17,7 @@ import MiniProjects from './pages/MiniProjects';
 import MiniProjectView from './pages/MiniProjectView';
 import Profile from './pages/Profile';
 import Statistics from './pages/Statistics';
-import { NotificationsPage } from './pages/NotificationsPage';
+import { NotificationsPage } from './pages/notifications/NotificationsPage';
 
 // Placeholder pages (à implémenter)
 const QuizList = () => <div style={{ padding: '20px' }}><h1>Quiz & Exercices</h1></div>;

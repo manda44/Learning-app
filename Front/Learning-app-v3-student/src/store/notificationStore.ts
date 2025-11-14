@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { NotificationDto, NotificationPreferenceDto } from '../types/notification';
+import type { NotificationDto, NotificationPreferenceDto } from '../types/notification';
 import { notificationService } from '../services/notificationService';
 
 interface NotificationState {

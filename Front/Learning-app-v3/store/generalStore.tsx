@@ -6,7 +6,7 @@ type BreadCrumb = {
 
 type GeneralState= {
       breadCrumb: BreadCrumb[];
-      setBreadCrumb: (breadCrumb: [])=>void;
+      setBreadCrumb: (breadCrumb: BreadCrumb[])=>void;
 }
 
 export const useGeneralStore = create<GeneralState>((set) => ({

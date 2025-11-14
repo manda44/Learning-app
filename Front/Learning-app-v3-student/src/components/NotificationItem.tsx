@@ -6,12 +6,12 @@ import {
   Text,
   Badge,
   ActionIcon,
-  Box,
   ThemeIcon,
 } from '@mantine/core';
 import { IconTrash, IconCheck, IconAlertCircle, IconMail, IconAward } from '@tabler/icons-react';
 import { useNotificationStore } from '../store/notificationStore';
-import { NotificationDto, NotificationType, NotificationPriority } from '../types/notification';
+import type { NotificationDto } from '../types/notification';
+import { NotificationType, NotificationPriority } from '../types/notification';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 

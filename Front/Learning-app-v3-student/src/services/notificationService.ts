@@ -1,53 +1,72 @@
-import apiClient from './apiClient';
-import { NotificationDto, NotificationPreferenceDto } from '../types/notification';
+const API_URL = import.meta.env.VITE_API_URL || 'https://localhost:7121/api';
+
+const getToken = () => localStorage.getItem('authToken');
+
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const token = getToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url, { ...options, headers });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: response.statusText }));
+    throw new Error(error.message || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+};
 
 export const notificationService = {
   // Get all user notifications
   async getUserNotifications(userId: number, unreadOnly: boolean = false) {
-    const response = await apiClient.get<NotificationDto[]>(
-      `/api/notifications/user/${userId}?unreadOnly=${unreadOnly}`
+    return fetchWithAuth(
+      `${API_URL}/notifications/user/${userId}?unreadOnly=${unreadOnly}`
     );
-    return response.data;
   },
 
   // Get unread notification count
   async getUnreadCount(userId: number) {
-    const response = await apiClient.get<number>(
-      `/api/notifications/user/${userId}/unread-count`
+    return fetchWithAuth(
+      `${API_URL}/notifications/user/${userId}/unread-count`
     );
-    return response.data;
   },
 
   // Mark notification as read
   async markAsRead(notificationId: number) {
-    const response = await apiClient.put<NotificationDto>(
-      `/api/notifications/${notificationId}/mark-as-read`
+    return fetchWithAuth(
+      `${API_URL}/notifications/${notificationId}/mark-as-read`,
+      { method: 'PUT' }
     );
-    return response.data;
   },
 
   // Mark all notifications as read
   async markAllAsRead(userId: number) {
-    const response = await apiClient.put(
-      `/api/notifications/user/${userId}/mark-all-as-read`
+    return fetchWithAuth(
+      `${API_URL}/notifications/user/${userId}/mark-all-as-read`,
+      { method: 'PUT' }
     );
-    return response.data;
   },
 
   // Delete notification
   async deleteNotification(notificationId: number) {
-    const response = await apiClient.delete(
-      `/api/notifications/${notificationId}`
+    return fetchWithAuth(
+      `${API_URL}/notifications/${notificationId}`,
+      { method: 'DELETE' }
     );
-    return response.data;
   },
 
   // Get user preferences
   async getUserPreferences(userId: number) {
-    const response = await apiClient.get<NotificationPreferenceDto[]>(
-      `/api/notifications/preferences/${userId}`
+    return fetchWithAuth(
+      `${API_URL}/notifications/preferences/${userId}`
     );
-    return response.data;
   },
 
   // Update notification preference
@@ -57,13 +76,15 @@ export const notificationService = {
     enabled: boolean,
     deliveryMethod?: string
   ) {
-    const response = await apiClient.put<NotificationPreferenceDto>(
-      `/api/notifications/preferences/${userId}/${notificationType}`,
+    return fetchWithAuth(
+      `${API_URL}/notifications/preferences/${userId}/${notificationType}`,
       {
-        isEnabled: enabled,
-        deliveryMethod: deliveryMethod,
+        method: 'PUT',
+        body: JSON.stringify({
+          isEnabled: enabled,
+          deliveryMethod: deliveryMethod,
+        }),
       }
     );
-    return response.data;
   },
 };

@@ -33,20 +33,20 @@ export interface NotificationTemplate {
 }
 
 // Notification types for categorization
-export enum NotificationType {
-  COURSE_UPDATE = 'COURSE_UPDATE',
-  ENROLLMENT_CONFIRMATION = 'ENROLLMENT_CONFIRMATION',
-  QUIZ_REMINDER = 'QUIZ_REMINDER',
-  GRADE_RECEIVED = 'GRADE_RECEIVED',
-  PROJECT_FEEDBACK = 'PROJECT_FEEDBACK',
-  ADMIN_MESSAGE = 'ADMIN_MESSAGE',
-  SYSTEM_ALERT = 'SYSTEM_ALERT',
-}
+export const NotificationType = {
+  COURSE_UPDATE: 'COURSE_UPDATE',
+  ENROLLMENT_CONFIRMATION: 'ENROLLMENT_CONFIRMATION',
+  QUIZ_REMINDER: 'QUIZ_REMINDER',
+  GRADE_RECEIVED: 'GRADE_RECEIVED',
+  PROJECT_FEEDBACK: 'PROJECT_FEEDBACK',
+  ADMIN_MESSAGE: 'ADMIN_MESSAGE',
+  SYSTEM_ALERT: 'SYSTEM_ALERT',
+} as const;
 
 // Notification priority levels
-export enum NotificationPriority {
-  LOW = 0,
-  MEDIUM = 1,
-  HIGH = 2,
-  URGENT = 3,
-}
+export const NotificationPriority = {
+  LOW: 0,
+  MEDIUM: 1,
+  HIGH: 2,
+  URGENT: 3,
+} as const;

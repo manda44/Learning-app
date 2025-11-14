@@ -89,7 +89,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     const userInfo = getUserInfo();
     if (userInfo) {
       setUserName(`${userInfo.firstName} ${userInfo.lastName}`);
-      setUserId(userInfo.id);
+      setUserId(userInfo.userId);
     }
   }, []);
 

@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { NotificationDto, NotificationPreferenceDto } from '../types/notification';
+import type { NotificationDto, NotificationPreferenceDto } from '../types/notification';
 
 export const notificationService = {
   // Get all user notifications

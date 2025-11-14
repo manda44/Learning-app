@@ -9,32 +9,24 @@ import {
   ThemeIcon,
   Card,
   Pagination,
-  Badge,
-  Box,
-  ActionIcon,
   Loader,
   Center,
   TextInput,
-  MultiSelect,
 } from '@mantine/core';
 import {
   IconBell,
   IconCheck,
-  IconTrash,
   IconFilterOff,
   IconSearch,
-  IconDownload,
 } from '@tabler/icons-react';
 import { useNotificationStore } from '../../store/notificationStore';
 import { NotificationItem } from '../../components/NotificationItem';
-import { NotificationDto, NotificationType } from '../../types/notification';
+import { NotificationType } from '../../types/notification';
 import { useGeneralStore } from '../../store/generalStore';
-import { useNavigate } from 'react-router-dom';
 
 const ITEMS_PER_PAGE = 10;
 
 export const NotificationsPage: React.FC = () => {
-  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
@@ -47,14 +39,13 @@ export const NotificationsPage: React.FC = () => {
     isLoading,
     fetchNotifications,
     markAllAsRead,
-    deleteNotification,
   } = useNotificationStore();
 
   // Set breadcrumb
   useEffect(() => {
     setBreadCrumb([
-      { label: 'Dashboard', href: '/' },
-      { label: 'Notifications', href: '/notifications' },
+      { title: 'Dashboard', href: '/' },
+      { title: 'Notifications', href: '/notifications' },
     ]);
   }, [setBreadCrumb]);
 

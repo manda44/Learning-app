@@ -9,9 +9,6 @@ import {
   ThemeIcon,
   Card,
   Pagination,
-  Badge,
-  Box,
-  ActionIcon,
   Loader,
   Center,
   TextInput,
@@ -19,13 +16,12 @@ import {
 import {
   IconBell,
   IconCheck,
-  IconTrash,
   IconFilterOff,
   IconSearch,
 } from '@tabler/icons-react';
 import { useNotificationStore } from '../../store/notificationStore';
 import { NotificationItem } from '../../components/NotificationItem';
-import { NotificationDto, NotificationType } from '../../types/notification';
+import { NotificationType } from '../../types/notification';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -41,7 +37,6 @@ export const NotificationsPage: React.FC = () => {
     isLoading,
     fetchNotifications,
     markAllAsRead,
-    deleteNotification,
   } = useNotificationStore();
 
   // Fetch notifications on mount
