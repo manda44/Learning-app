@@ -99,6 +99,13 @@ builder.Services.AddScoped<StudentQuizAttemptService>();
 builder.Services.AddScoped<StudentChapterProgressService>();
 builder.Services.AddScoped<AuthService>();
 
+// Chat service and repositories
+builder.Services.AddScoped<IChatConversationRepository, ChatConversationRepository>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+builder.Services.AddScoped<IRepository<ChatMessageAttachment>, ChatMessageAttachmentRepository>();
+builder.Services.AddScoped<IRepository<ChatConversationParticipant>, ChatConversationParticipantRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

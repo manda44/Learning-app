@@ -24,4 +24,6 @@ public partial class Course
     public virtual ICollection<MiniProject> MiniProjects { get; set; } = new List<MiniProject>();
 
     public virtual ICollection<StudentCourseEnrollment> StudentCourseEnrollments { get; set; } = new List<StudentCourseEnrollment>();
+
+    public virtual ICollection<ChatConversation> ChatConversations { get; set; } = new List<ChatConversation>();
 }

@@ -41,4 +41,13 @@ public partial class Users
     public virtual ICollection<StudentAchievement> StudentAchievements { get; set; } = new List<StudentAchievement>();
 
     public virtual ICollection<StudentActivity> StudentActivities { get; set; } = new List<StudentActivity>();
+
+    // Chat relationships
+    public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
+
+    public virtual ICollection<ChatConversationParticipant> ChatConversationParticipants { get; set; } = new List<ChatConversationParticipant>();
+
+    public virtual ICollection<ChatConversation> ChatConversationsAsStudent { get; set; } = new List<ChatConversation>();
+
+    public virtual ICollection<ChatConversation> ChatConversationsAsAdmin { get; set; } = new List<ChatConversation>();
 }

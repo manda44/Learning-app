@@ -57,6 +57,15 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<StudentActivity> StudentActivities { get; set; }
 
+    // Chat-related tables
+    public virtual DbSet<ChatConversation> ChatConversations { get; set; }
+
+    public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+
+    public virtual DbSet<ChatMessageAttachment> ChatMessageAttachments { get; set; }
+
+    public virtual DbSet<ChatConversationParticipant> ChatConversationParticipants { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chapter>(entity =>
@@ -539,6 +548,137 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Student).WithMany(p => p.StudentActivities)
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ChatConversation configuration
+        modelBuilder.Entity<ChatConversation>(entity =>
+        {
+            entity.HasKey(e => e.ChatConversationId).HasName("PK__ChatConversation__ID");
+
+            entity.ToTable("ChatConversation");
+
+            entity.HasIndex(e => e.CourseId, "IX__ChatConversation__CourseId");
+            entity.HasIndex(e => e.StudentId, "IX__ChatConversation__StudentId");
+            entity.HasIndex(e => e.AdminId, "IX__ChatConversation__AdminId");
+            entity.HasIndex(e => e.IsActive, "IX__ChatConversation__IsActive");
+            entity.HasIndex(new[] { "CourseId", "StudentId" }, "UQ__ChatConversation__CourseId_StudentId").IsUnique();
+
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.ClosedAt).HasColumnType("datetime");
+            entity.Property(e => e.LastMessageAt).HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.UnreadStudentCount).HasDefaultValue(0);
+            entity.Property(e => e.UnreadAdminCount).HasDefaultValue(0);
+
+            entity.HasOne(d => d.Course).WithMany(p => p.ChatConversations)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Student).WithMany(p => p.ChatConversationsAsStudent)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.ChatConversationsAsAdmin)
+                .HasForeignKey(d => d.AdminId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ChatMessage configuration
+        modelBuilder.Entity<ChatMessage>(entity =>
+        {
+            entity.HasKey(e => e.ChatMessageId).HasName("PK__ChatMessage__ID");
+
+            entity.ToTable("ChatMessage");
+
+            entity.HasIndex(e => e.ChatConversationId, "IX__ChatMessage__ChatConversationId");
+            entity.HasIndex(e => e.SenderId, "IX__ChatMessage__SenderId");
+            entity.HasIndex(e => e.IsDeleted, "IX__ChatMessage__IsDeleted");
+            entity.HasIndex(e => e.CreatedAt, "IX__ChatMessage__CreatedAt");
+
+            entity.Property(e => e.Content)
+                .HasMaxLength(4000);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.EditedAt).HasColumnType("datetime");
+            entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+            entity.Property(e => e.IsEdited).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+
+            entity.HasOne(d => d.ChatConversation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.ChatConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.ChatMessages)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ChatMessageAttachment configuration
+        modelBuilder.Entity<ChatMessageAttachment>(entity =>
+        {
+            entity.HasKey(e => e.ChatMessageAttachmentId).HasName("PK__ChatMessageAttachment__ID");
+
+            entity.ToTable("ChatMessageAttachment");
+
+            entity.HasIndex(e => e.ChatMessageId, "IX__ChatMessageAttachment__ChatMessageId");
+            entity.HasIndex(e => e.FileType, "IX__ChatMessageAttachment__FileType");
+
+            entity.Property(e => e.FileType)
+                .HasMaxLength(50)
+                .HasDefaultValue("file");
+            entity.Property(e => e.OriginalFileName)
+                .HasMaxLength(255);
+            entity.Property(e => e.StoredFileName)
+                .HasMaxLength(255);
+            entity.Property(e => e.FileUrl)
+                .HasMaxLength(500);
+            entity.Property(e => e.MimeType)
+                .HasMaxLength(100);
+            entity.Property(e => e.ThumbnailUrl)
+                .HasMaxLength(500);
+            entity.Property(e => e.UploadedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.ChatMessage).WithMany(p => p.Attachments)
+                .HasForeignKey(d => d.ChatMessageId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ChatConversationParticipant configuration
+        modelBuilder.Entity<ChatConversationParticipant>(entity =>
+        {
+            entity.HasKey(e => e.ChatConversationParticipantId).HasName("PK__ChatConversationParticipant__ID");
+
+            entity.ToTable("ChatConversationParticipant");
+
+            entity.HasIndex(e => e.ChatConversationId, "IX__ChatConversationParticipant__ChatConversationId");
+            entity.HasIndex(e => e.UserId, "IX__ChatConversationParticipant__UserId");
+            entity.HasIndex(new[] { "ChatConversationId", "UserId" }, "UQ__ChatConversationParticipant__ConversationId_UserId").IsUnique();
+
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .HasDefaultValue("student");
+            entity.Property(e => e.JoinedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.LeftAt).HasColumnType("datetime");
+            entity.Property(e => e.LastReadAt).HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+
+            entity.HasOne(d => d.ChatConversation).WithMany(p => p.Participants)
+                .HasForeignKey(d => d.ChatConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.User).WithMany(p => p.ChatConversationParticipants)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         OnModelCreatingPartial(modelBuilder);
