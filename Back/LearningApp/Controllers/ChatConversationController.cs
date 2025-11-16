@@ -10,7 +10,6 @@ namespace LearningApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ChatConversationController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -185,6 +184,44 @@ namespace LearningApp.Controllers
             {
                 _logger.LogError($"Error marking conversation as read: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while marking the conversation as read.");
+            }
+        }
+
+        /// <summary>
+        /// Get all conversations for a specific course (admin view)
+        /// </summary>
+        [HttpGet("course/{courseId}/all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<ChatConversationDto>>> GetAllCourseConversations(int courseId)
+        {
+            try
+            {
+                var conversations = await _chatService.GetCourseConversationsAsync(courseId);
+                return Ok(conversations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving course conversations: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving conversations.");
+            }
+        }
+
+        /// <summary>
+        /// Get all conversations across all courses (admin view)
+        /// </summary>
+        [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<ChatConversationDto>>> GetAllConversations()
+        {
+            try
+            {
+                var conversations = await _chatService.GetAllConversationsAsync();
+                return Ok(conversations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving all conversations: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving conversations.");
             }
         }
     }

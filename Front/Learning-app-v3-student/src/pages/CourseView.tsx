@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Box, Button, Title, Text, Loader, Center, Alert, Badge, Progress, Group, Stack, Paper, Grid, ScrollArea } from '@mantine/core';
 import { IconChevronRight, IconLock, IconCheck, IconFileText } from '@tabler/icons-react';
+import { FloatingChatButton } from '../components/FloatingChat/FloatingChatButton';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 import { codeBlock } from '@blocknote/code-block';
@@ -254,6 +255,8 @@ export function CourseView() {
 
   return (
     <Box style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column' }}>
+      <FloatingChatButton courseId={Number(courseId ?? 0)} />
+
       <Grid gutter="md" style={{ flex: 1, margin: 0 }}>
         {/* Chapters Sidebar */}
         <Grid.Col span={{ base: 12, md: 3 }} style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>

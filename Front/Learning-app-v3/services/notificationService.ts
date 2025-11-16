@@ -5,7 +5,7 @@ export const notificationService = {
   // Get all user notifications
   async getUserNotifications(userId: number, unreadOnly: boolean = false) {
     const response = await apiClient.get<NotificationDto[]>(
-      `/api/notifications/user/${userId}?unreadOnly=${unreadOnly}`
+      `/notifications/user/${userId}?unreadOnly=${unreadOnly}`
     );
     return response.data;
   },
@@ -13,7 +13,7 @@ export const notificationService = {
   // Get unread notification count
   async getUnreadCount(userId: number) {
     const response = await apiClient.get<number>(
-      `/api/notifications/user/${userId}/unread-count`
+      `/notifications/user/${userId}/unread-count`
     );
     return response.data;
   },
@@ -21,7 +21,7 @@ export const notificationService = {
   // Mark notification as read
   async markAsRead(notificationId: number) {
     const response = await apiClient.put<NotificationDto>(
-      `/api/notifications/${notificationId}/mark-as-read`
+      `/notifications/${notificationId}/mark-as-read`
     );
     return response.data;
   },
@@ -29,7 +29,7 @@ export const notificationService = {
   // Mark all notifications as read
   async markAllAsRead(userId: number) {
     const response = await apiClient.put(
-      `/api/notifications/user/${userId}/mark-all-as-read`
+      `/notifications/user/${userId}/mark-all-as-read`
     );
     return response.data;
   },
@@ -37,7 +37,7 @@ export const notificationService = {
   // Delete notification
   async deleteNotification(notificationId: number) {
     const response = await apiClient.delete(
-      `/api/notifications/${notificationId}`
+      `/notifications/${notificationId}`
     );
     return response.data;
   },
@@ -45,7 +45,7 @@ export const notificationService = {
   // Get user preferences
   async getUserPreferences(userId: number) {
     const response = await apiClient.get<NotificationPreferenceDto[]>(
-      `/api/notifications/preferences/${userId}`
+      `/notifications/preferences/${userId}`
     );
     return response.data;
   },
@@ -58,7 +58,7 @@ export const notificationService = {
     deliveryMethod?: string
   ) {
     const response = await apiClient.put<NotificationPreferenceDto>(
-      `/api/notifications/preferences/${userId}/${notificationType}`,
+      `/notifications/preferences/${userId}/${notificationType}`,
       {
         isEnabled: enabled,
         deliveryMethod: deliveryMethod,

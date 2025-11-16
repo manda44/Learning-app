@@ -156,6 +156,39 @@ namespace LearningApp.Application.Services
             return true;
         }
 
+        public async Task<List<ChatConversationDto>> GetCourseConversationsAsync(int courseId)
+        {
+            var conversations = await _conversationRepository.GetAllAsync();
+            var result = conversations
+                .Where(c => c.CourseId == courseId)
+                .OrderByDescending(c => c.LastMessageAt ?? c.CreatedAt)
+                .ToList();
+
+            var dtos = new List<ChatConversationDto>();
+            foreach (var conv in result)
+            {
+                dtos.Add(await GetConversationAsync(conv.ChatConversationId));
+            }
+
+            return dtos;
+        }
+
+        public async Task<List<ChatConversationDto>> GetAllConversationsAsync()
+        {
+            var conversations = await _conversationRepository.GetAllAsync();
+            var result = conversations
+                .OrderByDescending(c => c.LastMessageAt ?? c.CreatedAt)
+                .ToList();
+
+            var dtos = new List<ChatConversationDto>();
+            foreach (var conv in result)
+            {
+                dtos.Add(await GetConversationAsync(conv.ChatConversationId));
+            }
+
+            return dtos;
+        }
+
         // Chat Message Methods
         public async Task<ChatMessageDto> SendMessageAsync(CreateChatMessageDto createDto)
         {
@@ -177,6 +210,19 @@ namespace LearningApp.Application.Services
 
             // Update conversation's last message time
             conversation.LastMessageAt = DateTime.UtcNow;
+
+            // Increment unread count based on who sent the message
+            if (createDto.SenderId == conversation.StudentId)
+            {
+                // Student sent the message, admin has unread messages
+                conversation.UnreadAdminCount++;
+            }
+            else
+            {
+                // Admin sent the message, student has unread messages
+                conversation.UnreadStudentCount++;
+            }
+
             await _conversationRepository.UpdateAsync(conversation);
 
             var sender = await _userRepository.GetByIdAsync(createDto.SenderId);
@@ -299,8 +345,9 @@ namespace LearningApp.Application.Services
             {
                 conversation.UnreadStudentCount = 0;
             }
-            else if (conversation.AdminId == userId)
+            else if (conversation.AdminId == userId || conversation.AdminId == null)
             {
+                // Admin or any non-student user marks as read
                 conversation.UnreadAdminCount = 0;
             }
 
@@ -330,11 +377,13 @@ namespace LearningApp.Application.Services
                 ChatMessageId = chatMessageId,
                 FileType = createDto.FileType,
                 OriginalFileName = createDto.OriginalFileName,
-                StoredFileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(createDto.OriginalFileName),
+                StoredFileName = createDto.StoredFileName,
                 FileSizeBytes = createDto.FileSizeBytes,
                 MimeType = createDto.MimeType,
                 ImageWidth = createDto.ImageWidth,
                 ImageHeight = createDto.ImageHeight,
+                FileUrl = createDto.FileUrl,
+                ThumbnailUrl = createDto.ThumbnailUrl,
                 UploadedAt = DateTime.UtcNow
             };
 
@@ -351,8 +400,46 @@ namespace LearningApp.Application.Services
                 MimeType = attachment.MimeType,
                 ImageWidth = attachment.ImageWidth,
                 ImageHeight = attachment.ImageHeight,
+                FileUrl = attachment.FileUrl,
+                ThumbnailUrl = attachment.ThumbnailUrl,
                 UploadedAt = attachment.UploadedAt
             };
+        }
+
+        public async Task<ChatMessageAttachmentDto> GetAttachmentAsync(int attachmentId)
+        {
+            var attachment = await _attachmentRepository.GetByIdAsync(attachmentId);
+            if (attachment == null)
+                return null;
+
+            return new ChatMessageAttachmentDto
+            {
+                ChatMessageAttachmentId = attachment.ChatMessageAttachmentId,
+                ChatMessageId = attachment.ChatMessageId,
+                FileType = attachment.FileType,
+                OriginalFileName = attachment.OriginalFileName,
+                StoredFileName = attachment.StoredFileName,
+                FileUrl = attachment.FileUrl,
+                FileSizeBytes = attachment.FileSizeBytes,
+                MimeType = attachment.MimeType,
+                ImageWidth = attachment.ImageWidth,
+                ImageHeight = attachment.ImageHeight,
+                ThumbnailUrl = attachment.ThumbnailUrl,
+                UploadedAt = attachment.UploadedAt
+            };
+        }
+
+        public async Task<bool> UpdateAttachmentUrlAsync(int attachmentId, string fileUrl, string thumbnailUrl)
+        {
+            var attachment = await _attachmentRepository.GetByIdAsync(attachmentId);
+            if (attachment == null)
+                return false;
+
+            attachment.FileUrl = fileUrl;
+            attachment.ThumbnailUrl = thumbnailUrl;
+
+            await _attachmentRepository.UpdateAsync(attachment);
+            return true;
         }
 
         public async Task<List<ChatMessageAttachmentDto>> GetMessageAttachmentsAsync(int chatMessageId)

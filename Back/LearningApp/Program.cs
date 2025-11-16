@@ -123,11 +123,25 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Enable CORS BEFORE authentication and authorization
+app.UseCors("AllowAll");
+
+// Enable static files for uploads directory
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
+
 // Ajouter l'authentification AVANT authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("AllowAll");
 
 app.UseMiddleware<ExceptionLoggingMiddleware>();
 

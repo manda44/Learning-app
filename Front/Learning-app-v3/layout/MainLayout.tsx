@@ -213,7 +213,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                                   {colorScheme === 'dark' ? <IconSun size={28} stroke={1.5} color="#FFD700" /> : <IconMoon size={28} stroke={1.5} />}
                                 </ActionIcon>
                                 {userId > 0 && <NotificationBell userId={userId} />}
-                                <IconMessageFilled size={28} stroke={1.5} style={{ cursor: 'pointer', color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }} />
+                                <ActionIcon
+                                  onClick={() => navigate('/chat/conversations')}
+                                  size={28}
+                                  variant="subtle"
+                                  title="Conversations avec les étudiants"
+                                >
+                                  <IconMessageFilled size={28} stroke={1.5} color={colorScheme === 'dark' ? '#FFFFFF' : '#000000'} />
+                                </ActionIcon>
                               <Group gap='xs'>
                                 <IconUserCircle size={28} stroke={1.5} style={{ color: colorScheme === 'dark' ? '#FFFFFF' : '#000000' }} />
                                 <div>

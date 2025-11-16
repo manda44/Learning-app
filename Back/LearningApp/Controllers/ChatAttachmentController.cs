@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace LearningApp.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
+    [Route("api/ChatAttachment")]
     public class ChatAttachmentController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -82,24 +81,37 @@ namespace LearningApp.Controllers
                     }
                 }
 
-                // Create attachment DTO
+                // Create attachment DTO with placeholder FileUrl (will be updated with real ID after save)
                 var createDto = new CreateChatMessageAttachmentDto
                 {
                     ChatMessageId = chatMessageId,
                     FileType = file.ContentType.StartsWith("image/") ? "image" : (file.ContentType.StartsWith("video/") ? "video" : "file"),
                     OriginalFileName = file.FileName,
+                    StoredFileName = fileName,
                     MimeType = file.ContentType,
                     FileSizeBytes = file.Length,
                     ImageWidth = imageWidth,
-                    ImageHeight = imageHeight
+                    ImageHeight = imageHeight,
+                    FileUrl = "", // Will be set after attachment is saved
+                    ThumbnailUrl = file.ContentType.StartsWith("image/") ? "" : null // Will be set after attachment is saved
                 };
 
                 var attachment = await _chatService.UploadAttachmentAsync(chatMessageId, createDto);
 
-                // Add file URL
-                attachment.FileUrl = $"/api/chat-attachment/download/{attachment.ChatMessageAttachmentId}";
-                if (file.ContentType.StartsWith("image/"))
-                    attachment.ThumbnailUrl = $"/api/chat-attachment/thumbnail/{attachment.ChatMessageAttachmentId}";
+                // Build absolute URLs using current request context
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                var downloadUrl = $"{baseUrl}/api/ChatAttachment/download/{attachment.ChatMessageAttachmentId}";
+                var thumbnailUrl = attachment.FileType == "image" ? $"{baseUrl}/api/ChatAttachment/thumbnail/{attachment.ChatMessageAttachmentId}" : null;
+
+                // Update FileUrl with actual attachment ID and save to database
+                await _chatService.UpdateAttachmentUrlAsync(attachment.ChatMessageAttachmentId,
+                    downloadUrl,
+                    thumbnailUrl);
+
+                // Reload attachment with updated URLs
+                attachment = await _chatService.GetAttachmentAsync(attachment.ChatMessageAttachmentId);
+
+                _logger.LogInformation($"Returning attachment to client: ID={attachment.ChatMessageAttachmentId}, FileUrl={attachment.FileUrl}, StoredFileName={attachment.StoredFileName}");
 
                 return CreatedAtAction(nameof(GetAttachments), new { messageId = chatMessageId }, attachment);
             }
@@ -146,13 +158,35 @@ namespace LearningApp.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DownloadAttachment(int attachmentId)
+        public async Task<IActionResult> DownloadAttachment(int attachmentId)
         {
             try
             {
-                // In a real implementation, you would retrieve the attachment info from the database
-                // For now, we'll return a generic response
-                return Ok(new { message = "Download endpoint placeholder. Implement file serving logic." });
+                _logger.LogInformation($"DownloadAttachment called with attachmentId: {attachmentId}");
+
+                // Get attachment from database
+                var attachment = await _chatService.GetAttachmentAsync(attachmentId);
+                if (attachment == null)
+                {
+                    _logger.LogWarning($"Attachment not found in database: {attachmentId}");
+                    return NotFound("Attachment not found.");
+                }
+
+                // Build file path
+                var filePath = Path.Combine(_uploadPath, attachment.StoredFileName);
+                _logger.LogInformation($"Attempting to serve file from: {filePath}");
+
+                // Check if file exists
+                if (!System.IO.File.Exists(filePath))
+                {
+                    _logger.LogWarning($"Attachment file not found on disk: {filePath}");
+                    return NotFound("File not found.");
+                }
+
+                // Read file and return as file result
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                _logger.LogInformation($"Serving file: {attachment.OriginalFileName}, Size: {fileBytes.Length} bytes");
+                return File(fileBytes, attachment.MimeType, attachment.OriginalFileName);
             }
             catch (Exception ex)
             {

@@ -45,7 +45,9 @@
     "react-dom": "^19.1.0",
     "react-editor-js": "^2.1.0",
     "react-router-dom": "^7.6.3",
+    "react-scroll-to-bottom": "^4.2.0",
     "shiki": "^3.9.2",
+    "yet-another-react-lightbox": "^3.25.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

@@ -11,6 +11,8 @@ namespace LearningApp.Application.Interfaces
         Task<ChatConversationDto> GetConversationAsync(int chatConversationId);
         Task<List<ChatConversationDto>> GetUserConversationsAsync(int userId);
         Task<List<ChatConversationDto>> GetCourseStudentConversationAsync(int courseId, int studentId);
+        Task<List<ChatConversationDto>> GetCourseConversationsAsync(int courseId);
+        Task<List<ChatConversationDto>> GetAllConversationsAsync();
         Task<ChatConversationDto> UpdateConversationAsync(int chatConversationId, UpdateChatConversationDto updateDto);
         Task<bool> DeleteConversationAsync(int chatConversationId);
 
@@ -24,6 +26,8 @@ namespace LearningApp.Application.Interfaces
 
         // Chat Attachment Methods
         Task<ChatMessageAttachmentDto> UploadAttachmentAsync(int chatMessageId, CreateChatMessageAttachmentDto createDto);
+        Task<ChatMessageAttachmentDto> GetAttachmentAsync(int attachmentId);
+        Task<bool> UpdateAttachmentUrlAsync(int attachmentId, string fileUrl, string thumbnailUrl);
         Task<List<ChatMessageAttachmentDto>> GetMessageAttachmentsAsync(int chatMessageId);
         Task<bool> DeleteAttachmentAsync(int attachmentId, int userId);
 

@@ -10,7 +10,6 @@ namespace LearningApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ChatMessageController : ControllerBase
     {
         private readonly IChatService _chatService;
