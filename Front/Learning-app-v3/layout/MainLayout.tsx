@@ -388,9 +388,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                           leftSection={<IconChartDots2 size={26} stroke={1.5} />}
                     />
                     <NavLink
-                          href="#required-for-focus"
+                          component={Link}
+                          to="/notifications"
                           label="Notifications"
                           leftSection={<IconBell size={26} stroke={1.5} />}
+                          active={isActive('/notifications')}
+                          style={getNavLinkStyle(isActive('/notifications'))}
                     />
                     <NavLink
                           href="#required-for-focus"
