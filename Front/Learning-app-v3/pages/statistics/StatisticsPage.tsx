@@ -20,7 +20,7 @@ import {
   IconTarget,
   IconTrendingUp,
   IconClock,
-  IconCheckCircle,
+  IconCheck,
   IconAlertCircle,
 } from '@tabler/icons-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -185,7 +185,7 @@ export const StatisticsPage: React.FC = () => {
                 Tickets Validés
               </Text>
               <ThemeIcon variant="light" size="lg" radius="md" color="teal">
-                <IconCheckCircle size={20} />
+                <IconCheck size={20} />
               </ThemeIcon>
             </Group>
             <Text fw={700} size="xl">
