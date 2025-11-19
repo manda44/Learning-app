@@ -383,9 +383,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                           <NavLink label="Git / Repos crees" href="#required-for-focus" />
                     </NavLink>
                     <NavLink
-                          href="#required-for-focus"
+                          component={Link}
+                          to="/statistics"
                           label="Suivi et statistiques"
                           leftSection={<IconChartDots2 size={26} stroke={1.5} />}
+                          active={isActive('/statistics')}
+                          style={getNavLinkStyle(isActive('/statistics'))}
                     />
                     <NavLink
                           component={Link}

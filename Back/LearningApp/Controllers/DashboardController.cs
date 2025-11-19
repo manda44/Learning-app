@@ -70,13 +70,45 @@ namespace LearningApp.Controllers
             // Static data for popular courses
             var data = new List<object>
             {
-                new { name = "JavaScript Avancé", progress = 85, color = "blue" },
-                new { name = "React Fundamentals", progress = 77, color = "green" },
-                new { name = "Node.js Backend", progress = 58, color = "yellow" },
-                new { name = "Git & GitHub", progress = 95, color = "cyan" }
+                new { name = "JavaScript Avancé", progress = 85, color = "#4A9FD8" },
+                new { name = "React Fundamentals", progress = 77, color = "#50C878" },
+                new { name = "Node.js Backend", progress = 58, color = "#FFB84D" },
+                new { name = "Git & GitHub", progress = 95, color = "#FF6B6B" }
             };
 
             return Ok(data);
+        }
+
+        // GET: api/Dashboard/enrollment-stats
+        [HttpGet("enrollment-stats")]
+        public async Task<ActionResult<object>> GetEnrollmentStats()
+        {
+            // Static data for enrollment statistics
+            var stats = new
+            {
+                totalEnrolled = 156,
+                completed = 45,
+                inProgress = 78,
+                notStarted = 33
+            };
+
+            return Ok(stats);
+        }
+
+        // GET: api/Dashboard/ticket-stats
+        [HttpGet("ticket-stats")]
+        public async Task<ActionResult<object>> GetTicketStats()
+        {
+            // Static data for ticket statistics
+            var stats = new
+            {
+                total = 342,
+                validated = 280,
+                pending = 42,
+                rejected = 20
+            };
+
+            return Ok(stats);
         }
     }
 }

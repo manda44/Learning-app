@@ -19,6 +19,7 @@ import AdminDashboard from '../pages/dashboard/AdminDashboard.tsx';
 import ProfilePage from '../pages/profile/ProfilePage.tsx';
 import { NotificationsPage } from '../pages/notifications/NotificationsPage';
 import AdminConversationsPage from '../pages/chat/AdminConversationsPage.tsx';
+import { StatisticsPage } from '../pages/statistics/StatisticsPage';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/miniproject" element={<MiniProjectPage/>}/>
                   <Route path="/profile" element={<ProfilePage/>}/>
                   <Route path="/notifications" element={<NotificationsPage/>}/>
+                  <Route path="/statistics" element={<StatisticsPage/>}/>
                   <Route path="/chat/conversations" element={<AdminConversationsPage/>}/>
                 </Routes>
               </MainLayout>
