@@ -10,7 +10,7 @@ import {
   Box,
   Loader,
 } from '@mantine/core';
-import { IconBell, IconCheck, IconArrowRight } from '@tabler/icons-react';
+import { IconBell, IconCheck, IconArrowRight, IconX } from '@tabler/icons-react';
 import { useNotificationStore } from '../store/notificationStore';
 import { NotificationItem } from './NotificationItem';
 import { useNavigate } from 'react-router-dom';
@@ -94,17 +94,28 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>
             <Text fw={600} size="md">
               Notifications
             </Text>
-            {unreadCount > 0 && (
-              <Button
+            <Group gap="xs">
+              {unreadCount > 0 && (
+                <Button
+                  variant="subtle"
+                  size="xs"
+                  leftSection={<IconCheck size={16} />}
+                  onClick={handleMarkAllAsRead}
+                  loading={isLoading}
+                >
+                  Mark all as read
+                </Button>
+              )}
+              <ActionIcon
                 variant="subtle"
-                size="xs"
-                leftSection={<IconCheck size={16} />}
-                onClick={handleMarkAllAsRead}
-                loading={isLoading}
+                color="gray"
+                size="sm"
+                onClick={() => setOpened(false)}
+                title="Close"
               >
-                Mark all as read
-              </Button>
-            )}
+                <IconX size={16} />
+              </ActionIcon>
+            </Group>
           </Group>
 
           {/* Notifications List */}
