@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LearningApp.Infrastructure.Data;
 using LearningApp.Application.Interfaces;
+using LearningApp.Application.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,13 +15,16 @@ namespace LearningApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IStudentCourseEnrollmentRepository _enrollmentRepo;
+        private readonly INotificationService _notificationService;
 
         public EnrollmentsController(
             ApplicationDbContext context,
-            IStudentCourseEnrollmentRepository enrollmentRepo)
+            IStudentCourseEnrollmentRepository enrollmentRepo,
+            INotificationService notificationService)
         {
             _context = context;
             _enrollmentRepo = enrollmentRepo;
+            _notificationService = notificationService;
         }
 
         // GET: api/Enrollments/student/{studentId}
@@ -45,6 +49,25 @@ namespace LearningApp.Controllers
                     enrollment.Status = "completed";
                     enrollment.CompletionDate = DateTime.UtcNow;
                     await _enrollmentRepo.UpdateAsync(enrollment);
+
+                    // Create completion notification for student
+                    try
+                    {
+                        await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                        {
+                            UserId = enrollment.StudentId,
+                            Type = "CourseCompleted",
+                            Title = "Vous avez terminé un cours!",
+                            Message = $"Félicitations! Vous avez complété le cours '{enrollment.Course.Title}'",
+                            RelatedEntityId = enrollment.CourseId,
+                            RelatedEntityType = "Course"
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log but don't fail the request
+                        System.Console.WriteLine($"Error creating CourseCompleted notification: {ex.Message}");
+                    }
                 }
 
                 result.Add(new
@@ -90,6 +113,25 @@ namespace LearningApp.Controllers
                     enrollment.Status = "completed";
                     enrollment.CompletionDate = DateTime.UtcNow;
                     await _enrollmentRepo.UpdateAsync(enrollment);
+
+                    // Create completion notification for student
+                    try
+                    {
+                        await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                        {
+                            UserId = enrollment.StudentId,
+                            Type = "CourseCompleted",
+                            Title = "Vous avez terminé un cours!",
+                            Message = $"Félicitations! Vous avez complété le cours '{enrollment.Course.Title}'",
+                            RelatedEntityId = enrollment.CourseId,
+                            RelatedEntityType = "Course"
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log but don't fail the request
+                        System.Console.WriteLine($"Error creating CourseCompleted notification: {ex.Message}");
+                    }
                 }
 
                 result.Add(new
@@ -170,6 +212,13 @@ namespace LearningApp.Controllers
                 return BadRequest(new { message = "Student is already enrolled in this course" });
             }
 
+            // Get course information for notification
+            var course = await _context.Courses.FindAsync(request.CourseId);
+            if (course == null)
+            {
+                return BadRequest(new { message = "Course not found" });
+            }
+
             // Create new enrollment
             var enrollment = new Domain.StudentCourseEnrollment
             {
@@ -182,6 +231,25 @@ namespace LearningApp.Controllers
 
             _context.StudentCourseEnrollments.Add(enrollment);
             await _context.SaveChangesAsync();
+
+            // Create CourseStarted notification
+            try
+            {
+                await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                {
+                    UserId = enrollment.StudentId,
+                    Type = "CourseStarted",
+                    Title = "Vous avez commencé un nouveau cours!",
+                    Message = $"Bienvenue dans le cours '{course.Title}'!",
+                    RelatedEntityId = enrollment.CourseId,
+                    RelatedEntityType = "Course"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log but don't fail the request
+                System.Console.WriteLine($"Error creating CourseStarted notification: {ex.Message}");
+            }
 
             return CreatedAtAction(nameof(GetAllEnrollments), new { id = enrollment.EnrollmentId }, new
             {

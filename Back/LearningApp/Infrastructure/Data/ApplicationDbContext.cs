@@ -66,6 +66,11 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<ChatConversationParticipant> ChatConversationParticipants { get; set; }
 
+    // Notification-related tables
+    public virtual DbSet<Notification> Notifications { get; set; }
+
+    public virtual DbSet<NotificationPreference> NotificationPreferences { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chapter>(entity =>
@@ -679,6 +684,58 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.ChatConversationParticipants)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure Notification entity
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(e => e.NotificationId);
+
+            entity.ToTable("Notification");
+
+            entity.HasIndex(e => e.UserId, "IX_Notification_UserId");
+
+            entity.HasIndex(e => new { e.UserId, e.IsRead }, "IX_Notification_UserIdIsRead");
+
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(e => e.Message).IsRequired();
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Notifications)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure NotificationPreference entity
+        modelBuilder.Entity<NotificationPreference>(entity =>
+        {
+            entity.HasKey(e => e.PreferenceId);
+
+            entity.ToTable("NotificationPreference");
+
+            entity.HasIndex(e => new { e.UserId, e.NotificationType }, "IX_NotificationPreference_UserIdType").IsUnique();
+
+            entity.Property(e => e.NotificationType)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(e => e.DeliveryMethod)
+                .HasMaxLength(50)
+                .HasDefaultValue("InApp");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.User).WithMany(p => p.NotificationPreferences)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);

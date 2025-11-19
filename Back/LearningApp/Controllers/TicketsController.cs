@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LearningApp.Domain;
 using LearningApp.Infrastructure.Data;
 using LearningApp.Application.DTOs;
+using LearningApp.Application.Interfaces;
 
 namespace LearningApp.Controllers
 {
@@ -16,10 +17,12 @@ namespace LearningApp.Controllers
     public class TicketsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ApplicationDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         // GET: api/Tickets
@@ -181,7 +184,11 @@ namespace LearningApp.Controllers
         [HttpPut("{ticketProgressId}/validate")]
         public async Task<IActionResult> ValidateTicket(int ticketProgressId)
         {
-            var ticketProgress = await _context.StudentTicketProgresses.FindAsync(ticketProgressId);
+            var ticketProgress = await _context.StudentTicketProgresses
+                .Include(tp => tp.Ticket)
+                .Include(tp => tp.Student)
+                .FirstOrDefaultAsync(tp => tp.TicketProgressId == ticketProgressId);
+
             if (ticketProgress == null)
             {
                 return NotFound();
@@ -194,6 +201,25 @@ namespace LearningApp.Controllers
 
             ticketProgress.Status = "validated";
             await _context.SaveChangesAsync();
+
+            // Create notification for student
+            try
+            {
+                await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                {
+                    UserId = ticketProgress.StudentId,
+                    Type = "TicketValidated",
+                    Title = "Votre ticket a été validé",
+                    Message = $"Le ticket '{ticketProgress.Ticket.Title}' a été approuvé par un administrateur",
+                    RelatedEntityId = ticketProgress.TicketId,
+                    RelatedEntityType = "Ticket"
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't fail the request
+                Console.WriteLine($"Error creating notification: {ex.Message}");
+            }
 
             return NoContent();
         }

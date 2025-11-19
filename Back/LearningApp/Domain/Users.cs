@@ -50,4 +50,9 @@ public partial class Users
     public virtual ICollection<ChatConversation> ChatConversationsAsStudent { get; set; } = new List<ChatConversation>();
 
     public virtual ICollection<ChatConversation> ChatConversationsAsAdmin { get; set; } = new List<ChatConversation>();
+
+    // Notification relationships
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+    public virtual ICollection<NotificationPreference> NotificationPreferences { get; set; } = new List<NotificationPreference>();
 }

@@ -106,6 +106,9 @@ builder.Services.AddScoped<IRepository<ChatMessageAttachment>, ChatMessageAttach
 builder.Services.AddScoped<IRepository<ChatConversationParticipant>, ChatConversationParticipantRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
 
+// Notification service
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
