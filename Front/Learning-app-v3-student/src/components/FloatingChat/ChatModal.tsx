@@ -27,12 +27,14 @@ interface ChatModalProps {
   courseId: number;
   opened: boolean;
   onClose: () => void;
+  onOpen?: () => void;
 }
 
 export const ChatModal: React.FC<ChatModalProps> = ({
   courseId,
   opened,
   onClose,
+  onOpen,
 }) => {
   const user = authService.getUserInfo();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -65,6 +67,10 @@ export const ChatModal: React.FC<ChatModalProps> = ({
         if (conversations.length > 0) {
           setConversation(conversations[0]);
           await loadMessages(conversations[0].chatConversationId);
+          // Mark conversation as read
+          await chatService.markConversationAsRead(conversations[0].chatConversationId, {
+            userId: user!.id,
+          });
         } else {
           // Create new conversation
           const newConversation = await chatService.createConversation({
@@ -74,6 +80,9 @@ export const ChatModal: React.FC<ChatModalProps> = ({
           });
           setConversation(newConversation);
         }
+
+        // Call onOpen callback to clear badge
+        onOpen?.();
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load chat';
         setError(errorMessage);
@@ -84,7 +93,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({
     };
 
     initializeConversation();
-  }, [opened, courseId, user]);
+  }, [opened, courseId, user, onOpen]);
 
   const loadMessages = async (conversationId: number) => {
     try {

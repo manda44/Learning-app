@@ -9,6 +9,7 @@ using LearningApp.Domain;
 using LearningApp.Infrastructure.Data;
 using LearningApp.Application;
 using LearningApp.Application.DTOs;
+using LearningApp.Application.Interfaces;
 
 namespace LearningApp.Controllers
 {
@@ -17,10 +18,12 @@ namespace LearningApp.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public CoursesController(ApplicationDbContext context)
+        public CoursesController(ApplicationDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         // GET: api/Courses

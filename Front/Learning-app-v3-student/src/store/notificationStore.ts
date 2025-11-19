@@ -39,9 +39,11 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         userId,
         unreadOnly
       );
+      console.log(`[Notification Store] Fetched ${notifications.length} notifications for user ${userId}`);
       set({ notifications });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch notifications';
+      console.error(`[Notification Store] Error fetching notifications: ${errorMessage}`);
       set({ error: errorMessage });
     } finally {
       set({ isLoading: false });

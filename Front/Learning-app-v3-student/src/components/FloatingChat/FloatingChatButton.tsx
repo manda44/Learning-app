@@ -75,6 +75,10 @@ export const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ courseId
       <ChatModal
         courseId={courseId}
         opened={opened}
+        onOpen={() => {
+          // Clear unread count when opening modal
+          setUnreadCount(0);
+        }}
         onClose={() => {
           setOpened(false);
           // Refresh unread count when closing chat

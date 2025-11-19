@@ -23,11 +23,16 @@ interface NotificationItemProps {
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case NotificationType.COURSE_UPDATE:
+    case 'CourseStarted':
+    case 'CourseCompleted':
       return <IconMail size={16} />;
     case NotificationType.GRADE_RECEIVED:
       return <IconAward size={16} />;
     case NotificationType.SYSTEM_ALERT:
+    case 'TicketValidated':
       return <IconAlertCircle size={16} />;
+    case 'Message':
+      return <IconMail size={16} />;
     default:
       return <IconMail size={16} />;
   }
@@ -38,15 +43,20 @@ const getNotificationColor = (type: string): string => {
     case NotificationType.COURSE_UPDATE:
       return 'blue';
     case NotificationType.ENROLLMENT_CONFIRMATION:
+    case 'CourseStarted':
       return 'green';
     case NotificationType.QUIZ_REMINDER:
       return 'orange';
     case NotificationType.GRADE_RECEIVED:
       return 'purple';
     case NotificationType.PROJECT_FEEDBACK:
+    case 'TicketValidated':
       return 'cyan';
     case NotificationType.ADMIN_MESSAGE:
+    case 'Message':
       return 'indigo';
+    case 'CourseCompleted':
+      return 'blue';
     case NotificationType.SYSTEM_ALERT:
       return 'red';
     default:
