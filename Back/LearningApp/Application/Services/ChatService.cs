@@ -15,20 +15,26 @@ namespace LearningApp.Application.Services
         private readonly IRepository<ChatMessage> _messageRepository;
         private readonly IRepository<ChatMessageAttachment> _attachmentRepository;
         private readonly IRepository<ChatConversationParticipant> _participantRepository;
-        private readonly IRepository<Users> _userRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly INotificationService _notificationService;
+        private readonly ILogger<ChatService> _logger;
 
         public ChatService(
             IRepository<ChatConversation> conversationRepository,
             IRepository<ChatMessage> messageRepository,
             IRepository<ChatMessageAttachment> attachmentRepository,
             IRepository<ChatConversationParticipant> participantRepository,
-            IRepository<Users> userRepository)
+            IUserRepository userRepository,
+            INotificationService notificationService,
+            ILogger<ChatService> logger)
         {
             _conversationRepository = conversationRepository;
             _messageRepository = messageRepository;
             _attachmentRepository = attachmentRepository;
             _participantRepository = participantRepository;
             _userRepository = userRepository;
+            _notificationService = notificationService;
+            _logger = logger;
         }
 
         // Chat Conversation Methods
@@ -211,6 +217,9 @@ namespace LearningApp.Application.Services
             // Update conversation's last message time
             conversation.LastMessageAt = DateTime.UtcNow;
 
+            var sender = await _userRepository.GetByIdAsync(createDto.SenderId);
+            var isAdminSender = await IsUserAdminAsync(createDto.SenderId);
+
             // Increment unread count based on who sent the message
             if (createDto.SenderId == conversation.StudentId)
             {
@@ -219,13 +228,72 @@ namespace LearningApp.Application.Services
             }
             else
             {
-                // Admin sent the message, student has unread messages
+                // Admin/Non-student sent the message, student has unread messages
                 conversation.UnreadStudentCount++;
             }
 
             await _conversationRepository.UpdateAsync(conversation);
 
-            var sender = await _userRepository.GetByIdAsync(createDto.SenderId);
+            // Create notification for the other party
+            try
+            {
+                if (isAdminSender)
+                {
+                    // Admin is sending a message to student - notify student
+                    var senderDisplayName = $"{sender?.FirstName} {sender?.LastName}".Trim();
+                    await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                    {
+                        UserId = conversation.StudentId,
+                        Type = "Message",
+                        Title = "Nouveau message",
+                        Message = $"{senderDisplayName} a répondu à votre message.",
+                        RelatedEntityId = conversation.ChatConversationId,
+                        RelatedEntityType = "ChatConversation"
+                    });
+                }
+                else if (createDto.SenderId == conversation.StudentId)
+                {
+                    // Student is sending a message to admin - notify all admins
+                    // Get all users with admin role
+                    var allUsers = await _userRepository.GetAllAsync();
+                    var adminUsers = new List<Users>();
+
+                    foreach (var user in allUsers)
+                    {
+                        if (await IsUserAdminAsync(user.UserId))
+                        {
+                            adminUsers.Add(user);
+                        }
+                    }
+
+                    // Create notification for each admin
+                    var studentDisplayName = $"{sender?.FirstName} {sender?.LastName}".Trim();
+                    foreach (var admin in adminUsers)
+                    {
+                        try
+                        {
+                            await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+                            {
+                                UserId = admin.UserId,
+                                Type = "Message",
+                                Title = "Nouveau message d'un étudiant",
+                                Message = $"{studentDisplayName} a envoyé un message.",
+                                RelatedEntityId = conversation.ChatConversationId,
+                                RelatedEntityType = "ChatConversation"
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning($"Error creating notification for admin {admin.UserId}: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Error creating notification: {ex.Message}");
+                // Don't fail the message sending if notification fails
+            }
 
             return new ChatMessageDto
             {
@@ -238,6 +306,28 @@ namespace LearningApp.Application.Services
                 SenderName = sender?.FirstName + " " + sender?.LastName,
                 SenderEmail = sender?.Email
             };
+        }
+
+        /// <summary>
+        /// Check if a user has admin or teacher role
+        /// </summary>
+        private async Task<bool> IsUserAdminAsync(int userId)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdWithRolesAsync(userId);
+                if (user?.UserRoles == null || user.UserRoles.Count == 0)
+                    return false;
+
+                return user.UserRoles.Any(ur =>
+                    ur.Role != null &&
+                    (ur.Role.Name.ToLower() == "admin" || ur.Role.Name.ToLower() == "teacher"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error checking admin status for user {userId}: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<ChatMessageDto> GetMessageAsync(int chatMessageId)

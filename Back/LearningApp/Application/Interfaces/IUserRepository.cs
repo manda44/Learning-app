@@ -10,5 +10,6 @@ namespace LearningApp.Application.Interfaces
         Task<IEnumerable<UserDto>> SearchUsersAsync(string query);
         Task DisableUserAsync(int userId);
         Task EnableUserAsync(int userId);
+        Task<Users> GetByIdWithRolesAsync(int userId);
     }
 }
