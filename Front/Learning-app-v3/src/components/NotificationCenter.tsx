@@ -103,20 +103,9 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ opened, 
       opened={opened}
       onClose={onClose}
       title={
-        <Group justify="space-between" style={{ width: '100%' }}>
-          <Group>
-            <IconBell size={20} />
-            <Text fw={600}>Notifications</Text>
-          </Group>
-          <ActionIcon
-            variant="subtle"
-            color="gray"
-            size="sm"
-            onClick={onClose}
-            title="Close"
-          >
-            <IconX size={18} />
-          </ActionIcon>
+        <Group>
+          <IconBell size={20} />
+          <Text fw={600}>Notifications</Text>
         </Group>
       }
       size="lg"
