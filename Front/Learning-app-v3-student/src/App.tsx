@@ -1,9 +1,13 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { StudentLayout } from '../layout/StudentLayout';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import '@mantine/core/styles.layer.css'; // 1️⃣ Styles de Mantine
 import 'mantine-datatable/styles.layer.css'; // 2️⃣ Styles de DataTable
 import '../styles/layout.css'; // 3️⃣ Tes styles persos (overlay)
+
+// Auth pages
+import LoginPage from '../pages/auth/LoginPage';
 
 // Pages étudiantes
 import Dashboard from './pages/Dashboard';
@@ -29,15 +33,24 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Routes étudiantes avec StudentLayout */}
+        {/* Auth route - accessible without login */}
+        <Route path="/auth/login" element={<LoginPage />} />
+
+        {/* Protected routes - require Student role */}
         <Route
-          path="/dashboard"
+          path="/*"
           element={
-            <StudentLayout breadcrumbs={[{ title: 'Tableau de bord', href: '/dashboard' }]}>
-              <Dashboard />
-            </StudentLayout>
-          }
-        />
+            <ProtectedRoute>
+              <Routes>
+                {/* Routes étudiantes avec StudentLayout */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <StudentLayout breadcrumbs={[{ title: 'Tableau de bord', href: '/dashboard' }]}>
+                      <Dashboard />
+                    </StudentLayout>
+                  }
+                />
         <Route
           path="/courses"
           element={
@@ -206,8 +219,12 @@ function App() {
           }
         />
 
-        {/* Redirection par défaut */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                {/* Redirection par défaut */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

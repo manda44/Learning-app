@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { isAuthenticated, isAdminOrTeacher } from '../services/authService';
+import { isAuthenticated, isStudent } from '../src/services/authService';
 import { Center, Loader } from '@mantine/core';
 import { useState, useEffect } from 'react';
 
@@ -8,8 +8,8 @@ interface ProtectedRouteProps {
 }
 
 /**
- * ProtectedRoute component that checks authentication and role-based access
- * Used for Admin/Teacher pages - restricts access to users with Admin or Teacher roles only
+ * ProtectedRoute component that checks authentication and role-based access for students
+ * Restricts access to users with Student role only
  */
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,8 +23,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       return;
     }
 
-    // Check role-based access for Admin or Teacher
-    if (!isAdminOrTeacher()) {
+    // Check role-based access for Student role
+    if (!isStudent()) {
       setIsAuthorized(false);
       setIsLoading(false);
       return;

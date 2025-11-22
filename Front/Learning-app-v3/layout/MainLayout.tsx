@@ -170,7 +170,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   // Fonction de déconnexion
   const handleLogout = async () => {
     await logoutUser();
-    navigate('/login');
+    navigate('/auth/login');
   };
 
   // Check if a path is active

@@ -177,8 +177,11 @@ namespace LearningApp.Controllers
                     });
                 }
 
+                // Charger les rôles de l'utilisateur avec eager loading
+                user = await _userService.GetUserByIdWithRolesAsync(user.UserId);
+
                 // Récupérer les rôles de l'utilisateur
-                var userRoles = user.UserRoles?.Select(ur => ur.Role?.Name ?? "Unknown").ToList() ?? new List<string>();
+                var userRoles = user?.UserRoles?.Select(ur => ur.Role?.Name ?? "Unknown").ToList() ?? new List<string>();
 
                 // Générer le JWT token
                 var jwtToken = _authService.GenerateJwtToken(user, userRoles);
@@ -191,7 +194,12 @@ namespace LearningApp.Controllers
                     LastName = user.LastName,
                     Email = user.Email,
                     CreationDate = user.CreationDate,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    Roles = user.UserRoles?.Select(ur => new RoleDto
+                    {
+                        RoleId = ur.Role?.RoleId ?? 0,
+                        Name = ur.Role?.Name ?? "Unknown"
+                    }).ToList() ?? new List<RoleDto>()
                 };
 
                 var loginResponse = new LoginResponseDto

@@ -39,7 +39,7 @@ import { DataTable, type DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import {useGeneralStore} from "../../store/generalStore";
 import { IconPhoto, IconDownload } from '@tabler/icons-react';
-import { Role } from "../../types/Role";
+import type { Role } from "../../types/Role";
 
 
 interface RoleItem{

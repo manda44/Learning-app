@@ -89,7 +89,7 @@ export const StatisticsPage: React.FC = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://localhost:7121/api';
 
       const [statsRes, progressionRes, activityRes, coursesRes, enrollmentRes, ticketsRes] = await Promise.all([
         fetch(`${apiUrl}/dashboard/stats`),

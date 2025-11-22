@@ -1,7 +1,7 @@
 import { Container, Paper, TextInput, PasswordInput, Button, Group, Stack, Center, Title, Text, Divider, Alert } from '@mantine/core';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, isAdminOrTeacher } from '../../services/authService';
+import { loginUser, isStudent } from '../../src/services/authService';
 import { IconAlertCircle } from '@tabler/icons-react';
 
 export default function LoginPage() {
@@ -19,17 +19,17 @@ export default function LoginPage() {
     try {
       const response = await loginUser(email, password);
 
-      // Check if user has Admin or Teacher role
-      if (!isAdminOrTeacher()) {
-        setError('Accès réservé aux administrateurs et enseignants. Veuillez utiliser un compte autorisé.');
+      // Check if user has Student role
+      if (!isStudent()) {
+        setError('Accès réservé aux étudiants. Veuillez utiliser un compte étudiant.');
         // Clear auth data
         localStorage.removeItem('authToken');
         localStorage.removeItem('userInfo');
         return;
       }
 
-      // Redirection après succès
-      navigate('/course');
+      // Redirect to dashboard on successful login
+      navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Email ou mot de passe incorrect');
     } finally {
@@ -61,32 +61,13 @@ export default function LoginPage() {
                   Learning App
                 </Title>
                 <Text size="sm" color="dimmed" align="center">
-                  Plateforme d'apprentissage en ligne
+                  Espace Étudiant
                 </Text>
               </div>
             </Stack>
           </Center>
 
           <Divider my="lg" style={{ borderColor: '#4A9FD8' }} />
-
-          {/* Bouton GitHub */}
-          <Button
-            fullWidth
-            size="md"
-            variant="filled"
-            color="orange"
-            leftSection={<span>🔗</span>}
-            mb="lg"
-          >
-            Continuer avec GitHub
-          </Button>
-
-          <Divider
-            label="ou"
-            labelPosition="center"
-            my="lg"
-            style={{ borderColor: '#E8F4FD' }}
-          />
 
           {/* Formulaire de connexion */}
           <form onSubmit={handleLogin}>
@@ -143,6 +124,15 @@ export default function LoginPage() {
               </Button>
             </Stack>
           </form>
+
+          <Divider my="lg" style={{ borderColor: '#E8F4FD' }} />
+
+          {/* Texte informatif */}
+          <Center>
+            <Text size="xs" color="dimmed" align="center">
+              Si vous êtes un administrateur ou enseignant, veuillez utiliser le portail d'administration.
+            </Text>
+          </Center>
         </Paper>
       </Container>
     </div>

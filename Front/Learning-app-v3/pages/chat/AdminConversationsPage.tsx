@@ -37,7 +37,7 @@ import { format } from 'date-fns';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useGeneralStore } from '../../store/generalStore';
 import { useModalStore } from '../../store/modalStore';
-import chatAdminService, { ChatConversationAdmin, ChatMessageAdmin } from '../../src/services/chatAdminService';
+import chatAdminService, { type ChatConversationAdmin, type ChatMessageAdmin } from '../../src/services/chatAdminService';
 import { getCourseList } from '../../services/courseService';
 import type { Course } from '../../types/Course';
 import { getUserInfo } from '../../services/authService';

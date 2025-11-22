@@ -7,6 +7,11 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RoleDto {
+  roleId: number;
+  name: string;
+}
+
 export interface UserInfo {
   userId: number;
   firstName: string;
@@ -14,6 +19,7 @@ export interface UserInfo {
   email: string;
   creationDate?: string;
   isActive?: boolean;
+  roles?: string[] | RoleDto[];
 }
 
 export interface LoginResponse {
@@ -57,7 +63,14 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
 
     // Store user info for reference
     if (response.data.user) {
-      localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      // Extract role names from RoleDto objects if they exist
+      const userInfo = { ...response.data.user };
+      if (response.data.user.roles && Array.isArray(response.data.user.roles)) {
+        userInfo.roles = response.data.user.roles.map((role: any) =>
+          typeof role === 'string' ? role : role.name
+        ) as string[];
+      }
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
     }
 
     return response.data;
@@ -187,6 +200,58 @@ export const refreshToken = async (): Promise<boolean> => {
   // TODO: Implement token refresh endpoint on backend
   // For now, user needs to log in again
   return isAuthenticated();
+};
+
+/**
+ * Helper to normalize roles to string array format
+ */
+const normalizeRoles = (roles: string[] | RoleDto[] | undefined): string[] => {
+  if (!roles) return [];
+  return roles.map(role => typeof role === 'string' ? role : role.name);
+};
+
+/**
+ * Check if user has a specific role
+ * @param role Role to check
+ * @returns true if user has the role
+ */
+export const hasRole = (role: string): boolean => {
+  const user = getUserInfo();
+  if (!user || !user.roles) {
+    return false;
+  }
+  const normalizedRoles = normalizeRoles(user.roles);
+  return normalizedRoles.includes(role);
+};
+
+/**
+ * Check if user has any of the provided roles
+ * @param roles Array of roles to check
+ * @returns true if user has at least one of the roles
+ */
+export const hasAnyRole = (roles: string[]): boolean => {
+  const user = getUserInfo();
+  if (!user || !user.roles) {
+    return false;
+  }
+  const normalizedRoles = normalizeRoles(user.roles);
+  return roles.some(role => normalizedRoles.includes(role));
+};
+
+/**
+ * Check if user is Admin or Teacher
+ * @returns true if user has Admin or Teacher role
+ */
+export const isAdminOrTeacher = (): boolean => {
+  return hasAnyRole(['Admin', 'Teacher']);
+};
+
+/**
+ * Check if user is Student
+ * @returns true if user has Student role
+ */
+export const isStudent = (): boolean => {
+  return hasRole('Student');
 };
 
 export interface ChangePasswordRequest {

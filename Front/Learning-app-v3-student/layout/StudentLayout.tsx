@@ -97,7 +97,7 @@ export function StudentLayout({ children, breadcrumbs = [] }: StudentLayoutProps
   // Fonction de déconnexion
   const handleLogout = async () => {
     await logoutUser();
-    navigate('/login');
+    navigate('/auth/login');
   };
 
   // Check if a path is active

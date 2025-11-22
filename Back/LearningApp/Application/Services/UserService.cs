@@ -69,5 +69,10 @@ namespace LearningApp.Application.Services
         {
             await _userRepository.EnableUserAsync(userId);
         }
+
+        public async Task<Users> GetUserByIdWithRolesAsync(int userId)
+        {
+            return await _userRepository.GetByIdWithRolesAsync(userId);
+        }
     }
 }

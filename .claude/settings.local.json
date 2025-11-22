@@ -125,7 +125,17 @@
       "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & timeout /t 2 & echo Stopped\")",
       "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & timeout /t 2 & cd D:\\stage\\Back\\LearningApp && dotnet build 2>&1 | tail -10\")",
       "Bash(wmic process where ProcessId=63544 delete)",
-      "Bash(wmic process:*)"
+      "Bash(wmic process:*)",
+      "Bash(cmd /c \"taskkill /F /IM dotnet.exe 2>nul & timeout /t 2 & cd D:\\stage\\Back\\LearningApp && dotnet clean && dotnet build 2>&1 | tail -20\")",
+      "Bash(cmd /c \"cd D:\\stage\\Back\\LearningApp && dotnet clean\")",
+      "Bash(find:*)",
+      "Bash(git reset:*)",
+      "Bash(cmd /c \"taskkill /F /IM LearningApp.exe 2>nul & taskkill /F /IM dotnet.exe 2>nul & timeout /t 2 & dotnet clean && dotnet build 2>&1 | tail -10\")",
+      "Bash(cmd /c \"tasklist | find /i \"\"LearningApp\"\"\")",
+      "Bash(cmd /c \"taskkill /PID 39688 /F\")",
+      "Bash(cmd /c \"wmic process where ProcessId=39688 delete 2>&1\")",
+      "Bash(cmd /c \"del /f \"\"D:\\stage\\Back\\LearningApp\\bin\\Debug\\net8.0\\LearningApp.exe\"\" 2>&1\")",
+      "Bash(cmd /c:*)"
     ],
     "deny": [],
     "ask": []
