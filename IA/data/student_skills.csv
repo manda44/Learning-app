@@ -1,0 +1,2001 @@
+student_id,skill_name
+589,CI/CD
+921,HTML/CSS
+111,Testing
+752,C#
+280,MongoDB
+940,Django
+586,Testing
+284,GraphQL
+82,Docker
+36,.NET
+215,Vue.js
+555,Data Structures
+207,AWS
+939,Azure
+644,React
+99,TypeScript
+465,Docker
+992,SQL Database
+294,Web Security
+116,AWS
+650,Angular
+871,Angular
+729,AWS
+478,JavaScript
+429,Python Programming
+608,TypeScript
+681,Vue.js
+669,Azure
+317,Flask
+859,DevOps
+546,Web Security
+273,System Design
+152,Git
+441,REST APIs
+516,Azure
+852,Testing
+153,REST APIs
+945,Python Programming
+21,Algorithms
+984,C#
+977,Algorithms
+615,Kubernetes
+511,JavaScript
+540,Angular
+925,Node.js
+380,Python Programming
+560,Web Security
+715,System Design
+873,Angular
+52,Linux
+487,HTML/CSS
+927,DevOps
+874,Data Structures
+266,Java
+81,Azure
+108,DevOps
+401,DevOps
+811,Data Structures
+298,Python Programming
+712,Python Programming
+25,AWS
+490,Flask
+173,Linux
+287,AWS
+451,System Design
+15,Python Programming
+483,Python Programming
+318,GraphQL
+379,Node.js
+966,HTML/CSS
+959,GraphQL
+12,TypeScript
+586,AWS
+15,AWS
+786,C#
+615,MongoDB
+278,Node.js
+158,GraphQL
+161,Testing
+438,HTML/CSS
+388,Kubernetes
+311,Angular
+336,Git
+404,Java
+504,Algorithms
+259,Vue.js
+534,React
+638,TypeScript
+959,Docker
+446,GraphQL
+310,Python Programming
+229,DevOps
+733,Data Structures
+767,Git
+972,Kubernetes
+493,GraphQL
+635,Python Programming
+421,Web Security
+45,Node.js
+81,REST APIs
+656,Angular
+556,Angular
+395,Testing
+301,Java
+166,SQL Database
+731,Python Programming
+574,Azure
+199,GraphQL
+564,Web Security
+174,Angular
+890,Web Security
+842,SQL Database
+264,Angular
+752,REST APIs
+214,TypeScript
+591,Kubernetes
+454,System Design
+35,Web Security
+144,TypeScript
+550,Azure
+932,Docker
+917,Algorithms
+886,Django
+983,Vue.js
+352,.NET
+834,MongoDB
+813,C#
+482,REST APIs
+580,HTML/CSS
+585,Web Security
+443,Docker
+185,AWS
+135,Node.js
+990,AWS
+13,CI/CD
+608,DevOps
+343,MongoDB
+193,CI/CD
+286,TypeScript
+980,Kubernetes
+883,Python Programming
+509,System Design
+576,Django
+604,DevOps
+140,Django
+529,Web Security
+626,GraphQL
+578,Azure
+805,CI/CD
+924,AWS
+522,TypeScript
+773,TypeScript
+145,Angular
+660,Git
+805,REST APIs
+429,Testing
+112,Data Structures
+368,Angular
+361,Java
+691,MongoDB
+886,MongoDB
+569,HTML/CSS
+97,Docker
+369,System Design
+586,Kubernetes
+260,REST APIs
+306,Flask
+287,TypeScript
+548,REST APIs
+526,Algorithms
+716,System Design
+34,C#
+825,SQL Database
+230,SQL Database
+388,AWS
+146,React
+73,GraphQL
+345,TypeScript
+267,JavaScript
+162,JavaScript
+236,TypeScript
+222,Java
+231,Node.js
+607,Linux
+86,C#
+77,Web Security
+582,System Design
+283,Docker
+696,React
+224,Angular
+752,Testing
+154,Vue.js
+822,TypeScript
+974,Azure
+150,Python Programming
+89,HTML/CSS
+205,DevOps
+834,Vue.js
+723,System Design
+28,Testing
+955,Data Structures
+491,TypeScript
+684,Django
+611,Node.js
+700,Django
+486,System Design
+856,HTML/CSS
+998,Node.js
+270,Vue.js
+195,Data Structures
+948,Flask
+312,DevOps
+674,System Design
+378,Git
+172,SQL Database
+941,MongoDB
+710,Git
+655,HTML/CSS
+670,CI/CD
+429,Azure
+190,Algorithms
+201,Git
+869,TypeScript
+260,Node.js
+623,GraphQL
+839,Web Security
+571,Vue.js
+927,Azure
+220,JavaScript
+766,React
+493,HTML/CSS
+621,C#
+424,MongoDB
+480,React
+647,React
+616,Flask
+300,JavaScript
+596,Web Security
+867,MongoDB
+451,Java
+743,Django
+866,C#
+844,Docker
+580,Azure
+124,Flask
+160,Algorithms
+47,.NET
+308,Web Security
+819,DevOps
+897,Django
+137,React
+924,.NET
+87,Data Structures
+759,CI/CD
+231,C#
+666,System Design
+920,Django
+581,JavaScript
+285,HTML/CSS
+887,Algorithms
+646,GraphQL
+553,SQL Database
+84,Python Programming
+977,Docker
+4,TypeScript
+808,Algorithms
+237,Data Structures
+632,Testing
+427,Docker
+889,Algorithms
+364,Vue.js
+212,C#
+316,Django
+879,Flask
+547,Flask
+498,SQL Database
+27,Python Programming
+469,Linux
+899,C#
+384,Web Security
+729,Data Structures
+47,JavaScript
+298,.NET
+362,TypeScript
+645,System Design
+729,REST APIs
+788,DevOps
+919,MongoDB
+356,Linux
+725,Git
+545,Docker
+870,MongoDB
+522,Algorithms
+197,GraphQL
+999,Data Structures
+359,Azure
+864,.NET
+72,SQL Database
+531,Python Programming
+256,HTML/CSS
+237,HTML/CSS
+112,TypeScript
+486,Linux
+72,Data Structures
+860,JavaScript
+607,Data Structures
+658,Flask
+666,Angular
+244,DevOps
+752,Java
+127,.NET
+497,Django
+62,Git
+747,REST APIs
+970,Docker
+622,.NET
+345,Java
+426,Java
+258,JavaScript
+206,Azure
+898,Python Programming
+358,Java
+198,Linux
+892,REST APIs
+71,HTML/CSS
+936,Flask
+260,React
+980,CI/CD
+747,Linux
+859,Linux
+226,C#
+903,Angular
+97,REST APIs
+343,Angular
+195,.NET
+809,CI/CD
+376,Angular
+780,TypeScript
+33,Python Programming
+614,Node.js
+9,JavaScript
+783,Angular
+947,System Design
+270,Node.js
+706,Docker
+286,Kubernetes
+445,Vue.js
+924,Docker
+505,System Design
+239,HTML/CSS
+623,System Design
+576,Web Security
+991,JavaScript
+776,GraphQL
+297,AWS
+904,Git
+812,Python Programming
+47,C#
+362,Testing
+406,Kubernetes
+1000,Algorithms
+879,GraphQL
+790,System Design
+916,GraphQL
+322,.NET
+780,Git
+109,Web Security
+364,Docker
+473,Git
+319,CI/CD
+506,JavaScript
+981,Python Programming
+962,MongoDB
+431,Vue.js
+382,Algorithms
+246,MongoDB
+386,Linux
+532,Testing
+409,AWS
+239,JavaScript
+923,GraphQL
+480,Java
+151,System Design
+413,CI/CD
+497,DevOps
+479,Algorithms
+37,REST APIs
+620,.NET
+16,CI/CD
+172,AWS
+578,CI/CD
+943,Testing
+156,React
+193,Azure
+870,Flask
+186,.NET
+808,REST APIs
+718,REST APIs
+158,React
+319,REST APIs
+473,Testing
+889,Java
+185,Testing
+947,Flask
+958,Python Programming
+889,Python Programming
+465,Vue.js
+643,Python Programming
+131,Azure
+997,Django
+272,Python Programming
+109,CI/CD
+192,Kubernetes
+118,Algorithms
+436,JavaScript
+943,GraphQL
+741,Java
+553,Django
+60,TypeScript
+905,Algorithms
+16,HTML/CSS
+929,Angular
+680,HTML/CSS
+85,Algorithms
+428,C#
+831,CI/CD
+708,Python Programming
+61,DevOps
+889,Kubernetes
+545,Angular
+750,System Design
+17,Flask
+52,Data Structures
+513,Web Security
+870,.NET
+160,Angular
+189,DevOps
+988,AWS
+312,HTML/CSS
+76,Django
+937,C#
+580,SQL Database
+372,Django
+224,Node.js
+702,HTML/CSS
+520,MongoDB
+23,Git
+835,SQL Database
+303,Node.js
+778,TypeScript
+249,React
+456,JavaScript
+420,GraphQL
+705,Python Programming
+531,React
+948,Vue.js
+262,Testing
+50,JavaScript
+290,Angular
+835,Testing
+104,TypeScript
+959,Python Programming
+877,Azure
+131,JavaScript
+143,MongoDB
+712,Data Structures
+573,DevOps
+210,Docker
+449,Data Structures
+802,SQL Database
+818,Vue.js
+269,Docker
+978,Linux
+98,Data Structures
+853,AWS
+147,JavaScript
+81,AWS
+943,Azure
+202,TypeScript
+823,MongoDB
+972,Linux
+186,Algorithms
+481,.NET
+707,Django
+391,HTML/CSS
+961,Angular
+702,AWS
+322,DevOps
+199,Algorithms
+198,SQL Database
+367,MongoDB
+828,JavaScript
+17,CI/CD
+887,System Design
+663,Azure
+883,Node.js
+502,AWS
+441,SQL Database
+133,C#
+763,MongoDB
+329,HTML/CSS
+100,Algorithms
+23,System Design
+45,.NET
+695,REST APIs
+583,Angular
+435,Data Structures
+471,Flask
+706,Web Security
+328,Testing
+786,Flask
+466,HTML/CSS
+82,DevOps
+505,Java
+441,System Design
+866,React
+402,AWS
+78,Algorithms
+362,DevOps
+98,Django
+163,Java
+538,Flask
+400,Linux
+914,HTML/CSS
+197,System Design
+447,Java
+22,Flask
+879,Angular
+820,Data Structures
+675,Angular
+904,System Design
+151,Data Structures
+175,MongoDB
+851,Vue.js
+721,DevOps
+630,Django
+693,Node.js
+827,MongoDB
+470,Testing
+294,C#
+234,Python Programming
+580,AWS
+881,JavaScript
+999,Docker
+704,GraphQL
+865,Azure
+504,CI/CD
+754,REST APIs
+974,Linux
+850,React
+901,Java
+259,Linux
+925,TypeScript
+743,REST APIs
+255,SQL Database
+458,Algorithms
+935,Git
+821,DevOps
+534,Azure
+311,SQL Database
+385,JavaScript
+641,.NET
+362,Node.js
+93,HTML/CSS
+547,Django
+960,Flask
+736,SQL Database
+55,DevOps
+658,MongoDB
+52,Python Programming
+289,HTML/CSS
+360,Azure
+806,AWS
+617,MongoDB
+999,Python Programming
+778,Django
+591,Data Structures
+943,C#
+816,Flask
+491,Web Security
+153,Docker
+717,Java
+293,Node.js
+494,GraphQL
+223,Linux
+893,AWS
+509,Testing
+460,REST APIs
+632,System Design
+479,AWS
+825,Python Programming
+734,React
+267,CI/CD
+574,REST APIs
+959,MongoDB
+735,SQL Database
+109,TypeScript
+158,Data Structures
+542,JavaScript
+458,Django
+876,MongoDB
+758,SQL Database
+952,React
+522,AWS
+945,TypeScript
+435,Algorithms
+882,React
+244,HTML/CSS
+996,Node.js
+376,AWS
+399,Flask
+86,Vue.js
+118,REST APIs
+868,Docker
+786,Web Security
+735,HTML/CSS
+37,.NET
+908,Azure
+466,Python Programming
+179,GraphQL
+504,Vue.js
+335,Vue.js
+852,REST APIs
+167,GraphQL
+379,Web Security
+303,System Design
+367,Vue.js
+124,TypeScript
+668,System Design
+109,REST APIs
+702,SQL Database
+194,System Design
+393,Kubernetes
+463,Flask
+331,System Design
+545,Azure
+902,Java
+510,MongoDB
+953,DevOps
+791,Linux
+760,React
+734,System Design
+69,AWS
+773,Java
+1001,Python Programming
+583,Vue.js
+852,.NET
+804,DevOps
+842,DevOps
+923,Azure
+107,SQL Database
+632,MongoDB
+422,DevOps
+991,Node.js
+783,System Design
+242,Linux
+309,Java
+433,Git
+867,Python Programming
+924,Linux
+711,Web Security
+423,AWS
+287,Node.js
+557,Azure
+527,TypeScript
+632,Git
+681,Azure
+184,Kubernetes
+732,Linux
+977,Flask
+240,AWS
+730,React
+894,Linux
+600,MongoDB
+224,JavaScript
+259,Web Security
+486,Testing
+267,C#
+505,Docker
+468,JavaScript
+259,DevOps
+783,Algorithms
+250,CI/CD
+283,MongoDB
+121,Node.js
+389,Python Programming
+560,Vue.js
+467,C#
+866,DevOps
+271,Java
+293,Flask
+253,React
+43,DevOps
+280,Django
+754,SQL Database
+280,Linux
+924,CI/CD
+632,Azure
+756,CI/CD
+440,HTML/CSS
+809,Angular
+852,Docker
+774,Azure
+868,Django
+831,SQL Database
+501,.NET
+897,Vue.js
+932,Kubernetes
+376,HTML/CSS
+14,Linux
+816,TypeScript
+712,.NET
+172,DevOps
+202,Node.js
+964,TypeScript
+127,C#
+149,.NET
+499,SQL Database
+455,Angular
+510,HTML/CSS
+997,JavaScript
+693,React
+381,Data Structures
+977,Azure
+146,Vue.js
+851,Python Programming
+587,Testing
+780,Java
+228,Azure
+81,System Design
+424,Python Programming
+642,DevOps
+451,Web Security
+412,DevOps
+739,Java
+998,System Design
+716,C#
+444,GraphQL
+946,CI/CD
+589,Azure
+305,Algorithms
+711,HTML/CSS
+798,HTML/CSS
+378,Python Programming
+482,DevOps
+322,Testing
+991,Web Security
+311,REST APIs
+590,Testing
+119,Docker
+105,GraphQL
+839,Testing
+172,Django
+853,Algorithms
+822,Algorithms
+990,HTML/CSS
+1000,Vue.js
+84,Algorithms
+551,SQL Database
+769,React
+620,DevOps
+855,Angular
+156,HTML/CSS
+337,Data Structures
+206,REST APIs
+762,System Design
+956,.NET
+236,DevOps
+472,Java
+354,HTML/CSS
+517,.NET
+799,Flask
+284,Azure
+444,Testing
+663,SQL Database
+241,REST APIs
+862,Vue.js
+743,Web Security
+859,AWS
+594,HTML/CSS
+974,Vue.js
+756,HTML/CSS
+693,Web Security
+560,DevOps
+178,Java
+819,SQL Database
+65,.NET
+968,TypeScript
+474,Web Security
+907,SQL Database
+144,React
+860,Node.js
+128,AWS
+462,Vue.js
+843,GraphQL
+861,Flask
+857,TypeScript
+721,AWS
+598,Vue.js
+423,Data Structures
+334,Testing
+395,System Design
+937,Vue.js
+256,React
+88,Azure
+378,TypeScript
+779,Kubernetes
+655,REST APIs
+896,System Design
+3,Azure
+646,Angular
+437,AWS
+432,Linux
+388,Vue.js
+683,Docker
+112,Azure
+89,SQL Database
+255,GraphQL
+240,HTML/CSS
+994,Angular
+53,MongoDB
+710,Data Structures
+338,Java
+650,Azure
+32,React
+920,TypeScript
+988,Angular
+357,AWS
+442,JavaScript
+758,System Design
+574,Python Programming
+498,Kubernetes
+452,Azure
+705,React
+27,GraphQL
+412,Algorithms
+73,Kubernetes
+575,Kubernetes
+218,Azure
+600,Django
+571,Linux
+947,CI/CD
+389,Angular
+176,JavaScript
+520,HTML/CSS
+421,Kubernetes
+911,SQL Database
+514,Algorithms
+554,Kubernetes
+402,MongoDB
+883,JavaScript
+995,Testing
+523,Docker
+446,Docker
+354,Data Structures
+357,Linux
+85,React
+320,Git
+726,HTML/CSS
+301,Linux
+986,Testing
+754,GraphQL
+946,Git
+235,Web Security
+780,AWS
+743,Algorithms
+278,.NET
+764,HTML/CSS
+37,HTML/CSS
+78,Data Structures
+327,Python Programming
+641,DevOps
+812,REST APIs
+343,System Design
+583,Flask
+245,Data Structures
+80,JavaScript
+926,CI/CD
+599,Algorithms
+255,REST APIs
+758,REST APIs
+214,Flask
+718,AWS
+477,Algorithms
+436,Testing
+250,.NET
+174,Linux
+305,Data Structures
+488,TypeScript
+739,Docker
+403,JavaScript
+160,Azure
+439,Vue.js
+243,Testing
+399,Linux
+110,Angular
+726,System Design
+725,Python Programming
+997,Python Programming
+937,Django
+316,MongoDB
+426,JavaScript
+763,Python Programming
+660,Web Security
+385,Kubernetes
+572,GraphQL
+557,DevOps
+341,MongoDB
+463,Angular
+987,Azure
+475,GraphQL
+628,Java
+129,Node.js
+46,Java
+364,React
+664,MongoDB
+78,DevOps
+898,Vue.js
+963,Docker
+787,Python Programming
+458,SQL Database
+362,Java
+576,Azure
+251,SQL Database
+697,C#
+98,Java
+544,Django
+640,Django
+277,Angular
+273,Data Structures
+688,TypeScript
+375,Angular
+429,React
+12,Linux
+137,Django
+673,Linux
+593,Algorithms
+421,Docker
+361,SQL Database
+536,DevOps
+795,CI/CD
+256,Data Structures
+221,System Design
+612,Django
+659,MongoDB
+573,REST APIs
+206,Django
+887,Flask
+675,Flask
+613,Azure
+965,Git
+38,Angular
+425,Git
+577,React
+906,React
+507,HTML/CSS
+116,HTML/CSS
+635,React
+942,Azure
+641,TypeScript
+725,Angular
+83,CI/CD
+279,MongoDB
+834,Testing
+250,Testing
+162,C#
+619,HTML/CSS
+152,MongoDB
+848,Python Programming
+878,Algorithms
+525,Kubernetes
+672,Kubernetes
+292,Linux
+408,GraphQL
+77,Azure
+406,.NET
+491,Git
+127,Node.js
+678,Java
+791,CI/CD
+819,Docker
+859,Testing
+177,Azure
+632,Flask
+746,Vue.js
+597,Vue.js
+403,Testing
+660,DevOps
+756,Node.js
+318,Kubernetes
+482,Linux
+769,Testing
+503,.NET
+141,AWS
+117,Web Security
+721,Algorithms
+868,SQL Database
+931,Testing
+77,Node.js
+943,Node.js
+425,JavaScript
+541,Flask
+139,TypeScript
+816,HTML/CSS
+749,System Design
+996,Vue.js
+393,REST APIs
+715,Linux
+151,Django
+950,DevOps
+735,Django
+90,Django
+946,AWS
+363,Data Structures
+917,Data Structures
+44,Vue.js
+272,MongoDB
+377,HTML/CSS
+690,Vue.js
+581,Linux
+631,Python Programming
+171,HTML/CSS
+590,Django
+563,System Design
+312,Data Structures
+502,TypeScript
+110,JavaScript
+308,Angular
+668,HTML/CSS
+701,Vue.js
+880,AWS
+57,CI/CD
+134,Data Structures
+773,Node.js
+612,Python Programming
+842,.NET
+909,C#
+292,Django
+475,TypeScript
+459,Data Structures
+53,Git
+608,Kubernetes
+718,Django
+637,Flask
+311,MongoDB
+284,Python Programming
+890,Linux
+217,AWS
+241,Kubernetes
+402,REST APIs
+67,HTML/CSS
+276,Django
+782,Angular
+304,DevOps
+399,Docker
+623,Azure
+815,Angular
+222,Docker
+170,Web Security
+449,TypeScript
+955,Testing
+774,HTML/CSS
+958,Kubernetes
+251,Kubernetes
+119,SQL Database
+752,Docker
+37,System Design
+602,Algorithms
+867,Testing
+868,Azure
+859,Docker
+622,Linux
+419,TypeScript
+767,Azure
+668,REST APIs
+9,Linux
+930,React
+852,Linux
+52,Testing
+307,Testing
+829,SQL Database
+557,Kubernetes
+98,Node.js
+620,Python Programming
+292,Testing
+534,Java
+534,Algorithms
+839,Azure
+632,Data Structures
+898,GraphQL
+310,Angular
+12,Git
+62,Azure
+405,Node.js
+492,Angular
+141,Flask
+626,CI/CD
+208,JavaScript
+117,Azure
+956,C#
+594,DevOps
+512,C#
+604,Linux
+452,System Design
+904,GraphQL
+701,Azure
+452,Vue.js
+146,C#
+365,Azure
+599,Django
+875,Flask
+990,Testing
+344,C#
+539,Testing
+939,GraphQL
+13,DevOps
+95,HTML/CSS
+280,Angular
+832,DevOps
+193,DevOps
+701,Git
+573,Python Programming
+169,TypeScript
+376,SQL Database
+578,C#
+678,AWS
+586,Vue.js
+956,REST APIs
+402,TypeScript
+561,DevOps
+565,React
+602,Python Programming
+141,Azure
+360,Docker
+752,System Design
+485,Vue.js
+493,Azure
+535,Django
+446,CI/CD
+818,JavaScript
+973,Git
+518,Python Programming
+134,Python Programming
+685,CI/CD
+539,Algorithms
+775,Angular
+363,Web Security
+945,Vue.js
+581,CI/CD
+854,Python Programming
+479,Django
+670,TypeScript
+856,REST APIs
+753,HTML/CSS
+544,MongoDB
+130,System Design
+448,Docker
+512,Azure
+785,Azure
+792,REST APIs
+280,AWS
+575,Git
+102,GraphQL
+36,Flask
+61,Azure
+190,AWS
+734,Testing
+660,HTML/CSS
+321,SQL Database
+543,DevOps
+440,Web Security
+234,Algorithms
+303,Git
+420,Vue.js
+953,Angular
+777,MongoDB
+88,Testing
+735,MongoDB
+105,Flask
+713,Git
+536,Testing
+396,HTML/CSS
+124,DevOps
+417,Azure
+304,Flask
+682,SQL Database
+712,Flask
+260,.NET
+163,GraphQL
+436,SQL Database
+923,Testing
+446,Linux
+825,Web Security
+656,Testing
+559,Java
+397,Git
+99,Node.js
+534,Python Programming
+1002,Java
+68,GraphQL
+588,REST APIs
+915,Vue.js
+940,HTML/CSS
+614,TypeScript
+763,DevOps
+724,Node.js
+745,Node.js
+18,AWS
+703,SQL Database
+801,Web Security
+206,MongoDB
+417,TypeScript
+445,Node.js
+77,HTML/CSS
+518,Angular
+255,HTML/CSS
+84,Docker
+226,Node.js
+703,TypeScript
+802,Angular
+220,Vue.js
+689,Algorithms
+216,Vue.js
+215,Angular
+653,MongoDB
+700,Linux
+801,Node.js
+938,DevOps
+844,Angular
+537,REST APIs
+27,Flask
+757,Kubernetes
+276,CI/CD
+774,Node.js
+520,Algorithms
+468,Git
+791,Data Structures
+25,Algorithms
+739,REST APIs
+459,Flask
+660,Node.js
+226,Python Programming
+938,TypeScript
+959,REST APIs
+609,Node.js
+613,HTML/CSS
+447,Node.js
+711,Java
+801,SQL Database
+774,.NET
+372,Node.js
+650,AWS
+519,Azure
+599,Angular
+393,SQL Database
+685,DevOps
+340,Azure
+500,Python Programming
+881,Linux
+502,Testing
+351,Node.js
+246,GraphQL
+589,Flask
+284,REST APIs
+94,Azure
+744,Testing
+915,Git
+27,CI/CD
+291,Testing
+242,Docker
+422,Git
+260,HTML/CSS
+550,React
+259,Docker
+96,Data Structures
+867,CI/CD
+647,GraphQL
+442,Django
+217,Kubernetes
+139,C#
+346,Python Programming
+75,CI/CD
+434,MongoDB
+200,DevOps
+133,Vue.js
+870,Angular
+819,MongoDB
+382,Node.js
+305,Docker
+958,Angular
+904,Java
+192,Azure
+943,Angular
+650,Linux
+505,Algorithms
+599,React
+783,Testing
+904,REST APIs
+685,Angular
+657,MongoDB
+269,DevOps
+938,Docker
+682,Docker
+103,REST APIs
+885,Node.js
+912,CI/CD
+231,MongoDB
+421,Vue.js
+734,SQL Database
+408,MongoDB
+658,AWS
+535,React
+634,Flask
+579,Data Structures
+587,Linux
+147,Angular
+755,CI/CD
+909,Testing
+365,Git
+391,SQL Database
+343,DevOps
+865,Docker
+575,JavaScript
+827,GraphQL
+652,Kubernetes
+968,React
+1001,MongoDB
+229,Django
+477,Flask
+291,Linux
+54,.NET
+777,REST APIs
+719,Vue.js
+579,Docker
+739,SQL Database
+5,Java
+837,Azure
+727,Node.js
+665,Algorithms
+971,React
+115,Node.js
+737,Data Structures
+407,MongoDB
+319,Data Structures
+590,React
+129,Flask
+535,Kubernetes
+822,AWS
+704,MongoDB
+958,Docker
+730,System Design
+669,C#
+434,GraphQL
+748,Kubernetes
+865,Kubernetes
+710,Vue.js
+603,REST APIs
+601,Kubernetes
+725,React
+985,Node.js
+101,Testing
+755,System Design
+815,System Design
+848,Git
+101,System Design
+378,REST APIs
+589,Java
+543,REST APIs
+535,Data Structures
+696,Node.js
+523,JavaScript
+574,Java
+689,Python Programming
+653,TypeScript
+188,Django
+699,Azure
+130,DevOps
+78,Node.js
+85,Angular
+877,System Design
+854,Django
+961,MongoDB
+901,Git
+663,DevOps
+397,Linux
+169,.NET
+332,React
+195,Web Security
+237,Git
+254,Java
+818,MongoDB
+307,Azure
+946,JavaScript
+846,System Design
+259,Node.js
+590,Azure
+881,Azure
+838,Web Security
+360,Python Programming
+653,GraphQL
+495,HTML/CSS
+973,Linux
+534,Kubernetes
+451,SQL Database
+156,AWS
+551,C#
+741,GraphQL
+192,CI/CD
+326,Docker
+543,Python Programming
+660,Kubernetes
+118,Docker
+249,Java
+393,C#
+344,Node.js
+123,Data Structures
+925,Docker
+62,Flask
+48,REST APIs
+837,HTML/CSS
+833,Java
+924,C#
+924,Java
+71,GraphQL
+622,Kubernetes
+605,Kubernetes
+826,Python Programming
+693,SQL Database
+298,AWS
+99,AWS
+145,Flask
+453,Azure
+279,Linux
+587,Java
+94,Angular
+637,SQL Database
+250,JavaScript
+450,C#
+318,SQL Database
+857,REST APIs
+67,AWS
+948,.NET
+922,CI/CD
+554,GraphQL
+166,.NET
+94,HTML/CSS
+890,Algorithms
+745,TypeScript
+850,Data Structures
+259,SQL Database
+415,.NET
+822,React
+191,REST APIs
+380,Azure
+84,SQL Database
+842,Azure
+368,Git
+823,System Design
+79,Algorithms
+571,TypeScript
+410,System Design
+701,Django
+5,Web Security
+831,GraphQL
+298,Django
+731,Docker
+861,MongoDB
+51,C#
+458,MongoDB
+737,MongoDB
+737,Azure
+263,System Design
+162,Web Security
+358,CI/CD
+131,Testing
+399,React
+971,Docker
+261,Django
+77,AWS
+822,Python Programming
+266,Angular
+223,HTML/CSS
+488,Web Security
+48,Node.js
+437,JavaScript
+344,Python Programming
+362,Vue.js
+863,Algorithms
+256,Node.js
+415,Data Structures
+873,HTML/CSS
+544,Azure
+646,.NET
+877,Git
+422,SQL Database
+163,Vue.js
+377,Vue.js
+417,Data Structures
+220,Docker
+379,Azure
+897,Node.js
+352,Python Programming
+476,Azure
+969,JavaScript
+740,React
+810,Python Programming
+541,Python Programming
+226,Data Structures
+463,Kubernetes
+465,Web Security
+480,AWS
+683,Data Structures
+537,Docker
+861,Web Security
+636,Algorithms
+588,Java
+649,MongoDB
+796,Kubernetes
+25,Node.js
+379,AWS
+288,GraphQL
+738,HTML/CSS
+369,Java
+562,TypeScript
+17,Java
+899,MongoDB
+74,DevOps
+942,System Design
+943,React
+658,Algorithms
+499,AWS
+515,Docker
+312,Node.js
+127,Data Structures
+429,Git
+670,DevOps
+681,REST APIs
+299,AWS
+873,Java
+445,CI/CD
+160,Node.js
+627,MongoDB
+467,Django
+241,Web Security
+131,Flask
+13,MongoDB
+584,Testing
+417,AWS
+49,AWS
+959,Azure
+122,DevOps
+589,TypeScript
+420,Java
+247,Node.js
+996,MongoDB
+710,Azure
+849,Django
+360,Algorithms
+759,AWS
+565,Git
+487,Java
+278,Angular
+192,TypeScript
+817,AWS
+80,Python Programming
+1002,Algorithms
+514,Python Programming
+23,GraphQL
+926,TypeScript
+660,System Design
+577,SQL Database
+457,System Design
+48,GraphQL
+705,Flask
+160,MongoDB
+520,Web Security
+135,Linux
+803,Django
+417,CI/CD
+150,JavaScript
+142,Web Security
+277,React
+34,REST APIs
+529,Node.js
+786,GraphQL
+415,Vue.js
+316,Algorithms
+754,Testing
+64,Data Structures
+269,Java
+843,MongoDB
+54,Git
+1000,SQL Database
+69,Flask
+965,Web Security
+925,Web Security
+527,Kubernetes
+727,SQL Database
+287,Flask
+617,Docker
+801,Flask
+433,System Design
+784,C#
+220,DevOps
+324,Django
+541,HTML/CSS
+486,.NET
+64,HTML/CSS
+44,REST APIs
+586,Azure
+331,Azure
+353,Testing
+502,Kubernetes
+633,Django
+720,SQL Database
+522,Angular
+538,MongoDB
+98,Linux
+475,Python Programming
+900,System Design
+920,System Design
+5,Docker
+370,Flask
+832,SQL Database
+144,System Design
+846,CI/CD
+751,REST APIs
+917,Git
+533,CI/CD
+801,Data Structures
+613,Vue.js
+616,Vue.js
+724,DevOps
+403,.NET
+740,DevOps
+403,Flask
+261,Linux
+834,Data Structures
+830,Node.js
+965,Data Structures
+803,Linux
+579,Git
+136,HTML/CSS
+601,Java
+719,Django
+709,Node.js
+49,REST APIs
+615,React
+890,DevOps
+530,Algorithms
+663,Angular
+276,C#
+509,DevOps
+111,Flask
+528,Algorithms
+420,JavaScript
+156,Vue.js
+721,REST APIs
+88,Web Security
+626,Python Programming
+282,.NET
+283,AWS
+755,TypeScript
+319,Angular
+778,Azure
+16,Angular
+255,System Design
+552,Docker
+425,DevOps
+895,DevOps
+64,Flask
+471,SQL Database
+122,Flask
+903,Django
+277,Algorithms
+284,Vue.js
+139,Linux
+751,React
+608,Algorithms
+119,Web Security
+262,CI/CD
+961,AWS
+686,React
+130,GraphQL
+620,MongoDB
+159,React
+45,Java
+865,Angular
+532,Java
+857,MongoDB
+66,Python Programming
+494,Docker
+572,Kubernetes
+419,Python Programming
+528,Node.js
+591,C#
+73,C#
+615,Docker
+876,Python Programming
+5,React
+674,Flask
+934,Node.js
+468,Testing
+812,React
+660,Docker
+733,Kubernetes
+387,REST APIs
+801,Git
+604,Kubernetes
+656,.NET
+485,GraphQL
+272,React
+721,Java
+565,Vue.js
+481,Algorithms
+344,SQL Database
+871,Algorithms
+407,JavaScript
+768,React
+722,Docker
+474,React
+255,.NET
+863,Java
+529,.NET
+605,MongoDB
+619,Data Structures
+616,AWS
+993,Node.js
+139,DevOps
+856,Python Programming
+993,System Design
+349,Testing
+839,System Design
+260,Testing
+883,.NET
+154,Testing
+701,DevOps
+987,Git
+226,AWS
+719,C#
+130,CI/CD
+16,React
+380,Docker
+886,Data Structures
+351,Web Security
+371,Linux
+197,MongoDB
+601,Angular
+939,TypeScript
+582,SQL Database
+582,Django
+365,C#
+996,React
+647,Vue.js
+415,Testing
+208,HTML/CSS
+959,Java
+267,TypeScript
+347,Angular
+991,Algorithms
+398,.NET
+724,AWS
+445,Kubernetes
+323,HTML/CSS
+318,Docker
+807,Node.js
+946,GraphQL
+213,Flask
+524,SQL Database
+17,Python Programming
+430,C#
+247,Docker
+149,GraphQL
+348,AWS
+735,Docker
+705,DevOps
+353,Angular
+797,HTML/CSS
+137,SQL Database
+635,Azure
+616,Python Programming
+557,System Design
+110,Kubernetes
+292,TypeScript
+526,DevOps
+239,TypeScript
+984,Docker
+419,System Design
+950,Algorithms
+525,Linux
+736,Django
+202,Docker
+924,Python Programming
+888,Vue.js
+614,DevOps
+800,Angular
+171,Testing
+472,.NET
+934,Vue.js
+520,SQL Database
+730,AWS
+600,AWS
+822,Data Structures
+198,HTML/CSS
+449,GraphQL
+123,DevOps
+751,Django
+913,Vue.js
+953,Django
+370,CI/CD
+342,React
+393,Docker
+84,Azure
+961,Linux
+169,MongoDB
+219,Flask
+588,Python Programming
+719,TypeScript
+96,React
+821,Web Security
+259,GraphQL
+91,C#
+872,HTML/CSS
+608,MongoDB
+760,Vue.js
+544,Algorithms
+335,Django
+92,Web Security
+15,C#
+406,React
+87,Java
+133,Git
+340,DevOps
+249,HTML/CSS
+759,MongoDB
+69,Web Security
+67,Angular
+682,C#
+662,Testing
+212,AWS
+185,Node.js
+302,Algorithms
+932,Angular
+726,Python Programming
+624,Azure
+931,Kubernetes
+841,GraphQL
+924,Vue.js
+606,Linux
+485,Azure
+680,.NET
+648,Algorithms
+258,Python Programming
+74,Linux
+872,REST APIs
+937,React
+827,C#
+92,React
+868,GraphQL
+463,.NET
+471,GraphQL
+693,Flask
+597,Kubernetes
+946,Java
+642,TypeScript
+160,Flask
+931,MongoDB
+643,Java
+19,C#
+211,MongoDB
+978,AWS
+243,HTML/CSS
+724,HTML/CSS
+644,Django
+662,Node.js
+694,GraphQL
+340,AWS
+895,GraphQL
+616,Git
+816,Algorithms
+983,GraphQL
+577,Linux
+287,System Design
+210,MongoDB
+353,DevOps
+182,Python Programming
+102,React
+282,Algorithms
+970,Web Security
+291,Azure
+14,DevOps
+53,SQL Database
+447,MongoDB
+454,Flask
+886,Flask
+732,.NET
+202,Java
+966,Kubernetes
+11,Azure
+57,Django
+179,Data Structures
+380,TypeScript
+575,Testing
+786,Git
+834,AWS
+708,HTML/CSS
+919,CI/CD
+881,System Design
+411,C#
+601,MongoDB
+293,DevOps
+279,Web Security
+938,Java
+464,SQL Database
+812,Django
+596,JavaScript
+847,Flask
+971,HTML/CSS
+556,GraphQL
+88,SQL Database
+898,Git
+872,Flask
+637,REST APIs
+579,Flask
+526,Testing
+153,Vue.js
+407,Testing
+595,Data Structures
+971,Vue.js
+179,CI/CD
+432,Data Structures
+377,MongoDB
+465,Django
+305,CI/CD
+746,DevOps
+495,Python Programming
+931,Python Programming
+302,Data Structures
+457,Web Security
+870,Linux
+771,Kubernetes
+914,Algorithms
+707,REST APIs
+172,Flask
+674,Linux
+940,System Design
+273,CI/CD
+642,Testing
+453,Vue.js
+450,Node.js
+630,TypeScript
+579,React
+872,Testing
+40,Linux
+149,SQL Database
+572,CI/CD
+428,Vue.js
+54,Data Structures
+224,Testing
+171,JavaScript
+884,Vue.js
+767,C#
+676,REST APIs
+654,TypeScript
+609,Kubernetes
+607,Docker
+154,Node.js
+876,Node.js
+625,Testing
+450,Azure
+147,Web Security
+478,AWS
+519,DevOps
+823,React
+177,Angular
+959,Testing
+962,Django
+809,DevOps
+793,AWS
+424,TypeScript
+314,Docker
+559,AWS
+641,Git
+170,Kubernetes
+573,Angular
+202,Django
+151,Angular
+536,TypeScript
+672,Vue.js
+945,Docker
+177,SQL Database
+661,Algorithms
+638,Angular
+983,System Design
+488,SQL Database
+688,DevOps
+155,Data Structures
+946,C#
+332,C#
+340,System Design

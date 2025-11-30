@@ -1,0 +1,2001 @@
+course_id,skill_name
+41,TypeScript
+23,SQL Database
+6,Linux
+46,Git
+26,JavaScript
+28,Algorithms
+11,Web Security
+41,CI/CD
+50,REST APIs
+31,HTML/CSS
+49,AWS
+17,Git
+11,Data Structures
+36,React
+23,Python Programming
+43,AWS
+6,C#
+15,Data Structures
+29,.NET
+37,GraphQL
+21,AWS
+27,Testing
+18,Vue.js
+38,DevOps
+24,Java
+22,MongoDB
+46,REST APIs
+42,MongoDB
+28,Git
+25,JavaScript
+25,Flask
+39,System Design
+3,Node.js
+5,Angular
+47,JavaScript
+26,Testing
+8,Python Programming
+10,Python Programming
+20,Git
+27,MongoDB
+28,HTML/CSS
+25,SQL Database
+11,Algorithms
+39,MongoDB
+12,MongoDB
+33,AWS
+23,Data Structures
+7,TypeScript
+51,Linux
+43,System Design
+50,GraphQL
+20,React
+26,Node.js
+31,Django
+4,.NET
+25,Testing
+4,Git
+47,Angular
+26,HTML/CSS
+28,GraphQL
+23,Testing
+26,Git
+46,DevOps
+48,SQL Database
+37,Node.js
+23,Linux
+13,GraphQL
+21,Java
+23,Flask
+31,System Design
+43,Vue.js
+24,MongoDB
+31,GraphQL
+24,Git
+21,Algorithms
+4,Docker
+26,Java
+35,Testing
+16,CI/CD
+40,C#
+33,Node.js
+37,Azure
+50,Java
+9,DevOps
+45,.NET
+26,GraphQL
+43,React
+16,DevOps
+12,Web Security
+45,Django
+26,Python Programming
+49,Algorithms
+27,Java
+36,JavaScript
+16,SQL Database
+21,JavaScript
+19,Flask
+8,React
+5,Java
+29,Git
+42,Flask
+37,React
+37,Flask
+15,TypeScript
+47,Flask
+11,.NET
+22,C#
+48,AWS
+33,React
+10,SQL Database
+44,React
+19,SQL Database
+30,AWS
+25,React
+27,Angular
+13,Flask
+29,Node.js
+31,REST APIs
+38,AWS
+2,React
+11,REST APIs
+2,Angular
+39,REST APIs
+22,Web Security
+28,SQL Database
+20,Data Structures
+50,Docker
+51,Node.js
+14,Git
+10,TypeScript
+5,Data Structures
+7,Node.js
+48,DevOps
+5,DevOps
+12,REST APIs
+38,Node.js
+8,C#
+5,REST APIs
+9,.NET
+8,TypeScript
+6,HTML/CSS
+16,TypeScript
+38,Angular
+27,TypeScript
+19,Node.js
+36,DevOps
+31,Testing
+31,Python Programming
+13,Testing
+38,Web Security
+49,.NET
+15,Git
+51,AWS
+7,Kubernetes
+50,CI/CD
+17,REST APIs
+9,SQL Database
+49,Web Security
+23,JavaScript
+28,.NET
+44,Java
+14,TypeScript
+8,DevOps
+30,SQL Database
+19,Data Structures
+44,SQL Database
+30,DevOps
+17,System Design
+6,Algorithms
+7,MongoDB
+27,CI/CD
+17,JavaScript
+17,C#
+22,AWS
+28,Kubernetes
+11,Node.js
+48,GraphQL
+34,MongoDB
+37,SQL Database
+10,React
+18,Kubernetes
+50,Kubernetes
+47,CI/CD
+49,TypeScript
+24,Testing
+44,Testing
+38,Git
+46,C#
+8,Kubernetes
+42,Web Security
+10,GraphQL
+19,Algorithms
+42,SQL Database
+34,Java
+23,GraphQL
+16,Web Security
+18,Git
+38,Django
+43,Azure
+29,MongoDB
+27,Git
+30,Vue.js
+8,Web Security
+19,DevOps
+31,Docker
+23,TypeScript
+37,Algorithms
+16,C#
+4,Angular
+9,JavaScript
+18,AWS
+14,Node.js
+21,CI/CD
+40,SQL Database
+28,Data Structures
+29,Testing
+3,AWS
+44,Node.js
+7,SQL Database
+13,Data Structures
+12,Java
+30,Azure
+16,Git
+11,Django
+27,React
+34,Angular
+27,Azure
+45,Kubernetes
+11,Git
+5,Vue.js
+19,C#
+9,System Design
+3,Flask
+6,Vue.js
+38,CI/CD
+9,Kubernetes
+42,Node.js
+46,CI/CD
+42,Django
+29,JavaScript
+37,TypeScript
+8,MongoDB
+18,React
+14,.NET
+11,MongoDB
+20,Algorithms
+16,Kubernetes
+45,HTML/CSS
+28,Azure
+38,Linux
+29,Vue.js
+25,Web Security
+50,Azure
+32,Kubernetes
+23,.NET
+13,Vue.js
+44,REST APIs
+29,REST APIs
+19,Vue.js
+23,Azure
+36,MongoDB
+4,DevOps
+14,Kubernetes
+3,Web Security
+38,Docker
+51,GraphQL
+48,TypeScript
+4,TypeScript
+38,Data Structures
+41,React
+41,Azure
+6,Node.js
+44,Django
+11,Python Programming
+48,Angular
+36,Java
+43,GraphQL
+23,Kubernetes
+47,Python Programming
+3,Java
+48,Algorithms
+21,Docker
+47,AWS
+4,React
+33,Flask
+45,REST APIs
+18,DevOps
+32,Testing
+20,.NET
+34,Algorithms
+39,Docker
+41,Java
+16,Python Programming
+6,React
+7,Algorithms
+9,Algorithms
+21,Web Security
+29,React
+13,Python Programming
+16,Docker
+12,Data Structures
+44,GraphQL
+6,Angular
+4,Flask
+35,Django
+33,System Design
+41,AWS
+45,JavaScript
+51,Docker
+34,Data Structures
+32,TypeScript
+38,Algorithms
+4,CI/CD
+24,Data Structures
+24,Flask
+6,Flask
+43,Flask
+32,Vue.js
+30,CI/CD
+37,HTML/CSS
+10,CI/CD
+21,Linux
+9,GraphQL
+9,Django
+50,Linux
+15,Node.js
+47,Docker
+41,C#
+25,Linux
+17,TypeScript
+13,AWS
+17,Algorithms
+21,Azure
+51,Vue.js
+27,GraphQL
+42,Data Structures
+14,Vue.js
+48,Flask
+41,DevOps
+21,MongoDB
+3,C#
+20,C#
+36,Testing
+50,AWS
+30,JavaScript
+50,React
+17,Azure
+24,Python Programming
+3,Linux
+48,REST APIs
+4,REST APIs
+17,React
+44,C#
+22,Data Structures
+5,Docker
+33,DevOps
+28,DevOps
+20,MongoDB
+24,React
+12,JavaScript
+18,Django
+49,Python Programming
+47,Data Structures
+43,DevOps
+42,React
+22,REST APIs
+39,React
+44,Linux
+18,JavaScript
+7,React
+5,React
+33,Data Structures
+28,MongoDB
+44,Git
+41,Flask
+26,C#
+38,Flask
+37,Vue.js
+30,HTML/CSS
+23,CI/CD
+20,SQL Database
+43,Data Structures
+47,HTML/CSS
+7,Angular
+10,Django
+2,Docker
+9,TypeScript
+50,HTML/CSS
+46,TypeScript
+43,Python Programming
+46,Data Structures
+11,SQL Database
+14,DevOps
+18,SQL Database
+5,Node.js
+5,TypeScript
+34,SQL Database
+11,HTML/CSS
+6,Python Programming
+39,JavaScript
+45,DevOps
+13,Django
+36,Angular
+14,MongoDB
+35,GraphQL
+42,Python Programming
+10,Angular
+43,JavaScript
+37,DevOps
+31,SQL Database
+35,C#
+47,Git
+3,Testing
+45,System Design
+11,Java
+18,HTML/CSS
+24,TypeScript
+49,GraphQL
+27,Web Security
+11,Kubernetes
+22,DevOps
+24,DevOps
+11,AWS
+19,GraphQL
+42,Kubernetes
+24,Docker
+26,AWS
+31,MongoDB
+22,GraphQL
+30,System Design
+50,Algorithms
+11,DevOps
+13,Node.js
+39,Kubernetes
+40,GraphQL
+45,Azure
+37,C#
+20,GraphQL
+43,HTML/CSS
+12,System Design
+27,Vue.js
+26,Kubernetes
+48,Azure
+2,SQL Database
+5,CI/CD
+15,Azure
+25,Angular
+27,Docker
+6,REST APIs
+19,AWS
+51,Git
+17,AWS
+25,Docker
+10,MongoDB
+11,Linux
+20,Angular
+50,Flask
+7,AWS
+12,TypeScript
+50,Web Security
+15,MongoDB
+29,AWS
+50,Vue.js
+45,AWS
+32,React
+44,DevOps
+4,Kubernetes
+45,MongoDB
+33,Docker
+43,Algorithms
+8,System Design
+34,System Design
+45,Node.js
+49,React
+40,JavaScript
+35,System Design
+27,System Design
+38,Azure
+25,REST APIs
+30,Web Security
+7,Azure
+35,Flask
+18,System Design
+18,Java
+23,REST APIs
+36,Vue.js
+22,Python Programming
+4,Testing
+33,TypeScript
+34,React
+35,.NET
+5,C#
+41,Docker
+30,GraphQL
+31,JavaScript
+6,TypeScript
+15,Algorithms
+14,Flask
+36,System Design
+14,Azure
+4,HTML/CSS
+36,Data Structures
+43,Git
+31,Node.js
+19,HTML/CSS
+3,Algorithms
+36,Docker
+16,REST APIs
+27,Node.js
+50,TypeScript
+12,Kubernetes
+18,GraphQL
+6,System Design
+24,.NET
+22,Java
+51,CI/CD
+7,Flask
+16,Testing
+18,MongoDB
+33,GraphQL
+35,Data Structures
+23,Git
+32,Linux
+28,Web Security
+27,AWS
+18,Algorithms
+45,Data Structures
+20,Vue.js
+22,HTML/CSS
+17,Flask
+10,Java
+28,Testing
+15,Kubernetes
+15,AWS
+40,REST APIs
+31,React
+51,Azure
+19,Kubernetes
+12,Vue.js
+18,Docker
+33,Algorithms
+24,C#
+21,Kubernetes
+39,AWS
+32,JavaScript
+25,CI/CD
+49,Flask
+18,Web Security
+36,Kubernetes
+14,Python Programming
+27,Django
+44,CI/CD
+4,JavaScript
+18,Angular
+33,Git
+47,Linux
+50,MongoDB
+13,Angular
+34,CI/CD
+44,Data Structures
+9,Azure
+46,Django
+24,Azure
+10,DevOps
+30,MongoDB
+48,Docker
+28,Python Programming
+35,DevOps
+15,Linux
+8,Linux
+26,Docker
+20,TypeScript
+2,Azure
+47,.NET
+7,.NET
+33,Azure
+44,Vue.js
+42,Azure
+3,JavaScript
+41,MongoDB
+29,Django
+23,Docker
+47,Java
+45,Linux
+27,HTML/CSS
+16,React
+35,Angular
+17,GraphQL
+3,Azure
+37,Java
+2,AWS
+37,Kubernetes
+22,Kubernetes
+50,SQL Database
+11,React
+32,Docker
+14,CI/CD
+27,Linux
+26,Data Structures
+18,TypeScript
+10,Algorithms
+48,Kubernetes
+3,Docker
+24,Web Security
+44,System Design
+38,C#
+30,Data Structures
+38,Vue.js
+49,System Design
+17,Django
+38,HTML/CSS
+29,Data Structures
+25,Algorithms
+20,Testing
+38,SQL Database
+50,JavaScript
+9,HTML/CSS
+38,Python Programming
+5,HTML/CSS
+16,Linux
+45,Vue.js
+28,JavaScript
+23,System Design
+15,SQL Database
+15,Testing
+39,Java
+8,Vue.js
+8,Data Structures
+4,AWS
+37,MongoDB
+48,Linux
+12,DevOps
+44,Flask
+21,Node.js
+32,Node.js
+29,Python Programming
+49,REST APIs
+46,Python Programming
+21,TypeScript
+27,JavaScript
+9,Node.js
+7,JavaScript
+33,HTML/CSS
+7,CI/CD
+46,SQL Database
+15,System Design
+6,Django
+27,Algorithms
+23,HTML/CSS
+37,AWS
+16,System Design
+49,DevOps
+46,Azure
+40,System Design
+26,System Design
+25,C#
+36,Git
+24,Algorithms
+47,Kubernetes
+35,AWS
+45,Testing
+41,JavaScript
+42,Git
+47,SQL Database
+31,Angular
+11,Docker
+17,Testing
+7,Data Structures
+32,SQL Database
+20,CI/CD
+45,Web Security
+29,C#
+36,C#
+31,AWS
+47,Node.js
+6,.NET
+16,GraphQL
+24,Angular
+44,Web Security
+19,Java
+45,Java
+9,Linux
+24,SQL Database
+27,Data Structures
+6,JavaScript
+11,JavaScript
+45,GraphQL
+42,DevOps
+43,.NET
+50,Python Programming
+18,Testing
+6,Git
+25,AWS
+34,GraphQL
+23,DevOps
+50,Django
+11,TypeScript
+41,Web Security
+7,C#
+3,CI/CD
+17,Java
+35,Vue.js
+3,React
+36,CI/CD
+21,Data Structures
+10,Testing
+21,C#
+32,CI/CD
+12,C#
+5,Flask
+21,HTML/CSS
+30,.NET
+50,Git
+38,GraphQL
+10,Kubernetes
+35,CI/CD
+42,AWS
+19,.NET
+25,DevOps
+13,.NET
+16,HTML/CSS
+18,Azure
+40,Data Structures
+11,Flask
+5,Algorithms
+2,Python Programming
+29,Azure
+42,JavaScript
+32,Azure
+14,REST APIs
+10,JavaScript
+15,JavaScript
+5,MongoDB
+4,Azure
+17,Node.js
+45,React
+3,MongoDB
+41,Django
+51,Algorithms
+7,Linux
+27,Python Programming
+27,SQL Database
+41,Testing
+14,AWS
+46,.NET
+41,Algorithms
+10,AWS
+28,React
+37,Django
+12,Node.js
+39,HTML/CSS
+22,CI/CD
+26,MongoDB
+23,Django
+40,AWS
+3,Django
+36,Flask
+44,Docker
+13,React
+20,JavaScript
+18,Flask
+34,Git
+43,Web Security
+45,Flask
+16,Django
+50,C#
+33,Python Programming
+30,Linux
+44,HTML/CSS
+22,Git
+27,REST APIs
+6,MongoDB
+43,CI/CD
+39,Linux
+18,CI/CD
+41,Linux
+32,HTML/CSS
+9,Data Structures
+27,Kubernetes
+45,Algorithms
+31,Azure
+2,.NET
+6,Data Structures
+2,TypeScript
+5,SQL Database
+36,Linux
+48,React
+20,Java
+41,REST APIs
+13,Docker
+20,Django
+36,Web Security
+15,Angular
+37,Docker
+48,Node.js
+12,.NET
+26,Angular
+27,.NET
+21,SQL Database
+7,GraphQL
+15,.NET
+27,DevOps
+25,Java
+21,Git
+11,CI/CD
+38,Testing
+22,Docker
+23,Angular
+2,Linux
+37,System Design
+47,MongoDB
+34,Web Security
+4,Data Structures
+15,Vue.js
+48,Django
+25,Vue.js
+40,Kubernetes
+32,.NET
+18,C#
+34,AWS
+34,Vue.js
+19,System Design
+28,Node.js
+18,REST APIs
+28,C#
+35,Algorithms
+44,Angular
+38,MongoDB
+28,TypeScript
+17,.NET
+22,Azure
+41,GraphQL
+47,Django
+18,Python Programming
+12,Python Programming
+37,REST APIs
+37,Angular
+35,Docker
+51,Web Security
+5,.NET
+4,Linux
+32,C#
+50,DevOps
+47,Azure
+18,Data Structures
+42,Algorithms
+42,Linux
+41,SQL Database
+21,Flask
+17,Docker
+21,Python Programming
+4,Web Security
+13,DevOps
+49,Vue.js
+8,GraphQL
+28,Vue.js
+41,Kubernetes
+5,Django
+37,Git
+12,Angular
+50,.NET
+8,Azure
+5,JavaScript
+12,Algorithms
+21,GraphQL
+51,Angular
+16,Java
+34,Linux
+27,Flask
+6,AWS
+18,Node.js
+25,Python Programming
+50,System Design
+13,MongoDB
+51,.NET
+47,DevOps
+39,Testing
+16,MongoDB
+21,DevOps
+23,Web Security
+8,Django
+30,Git
+12,HTML/CSS
+20,Node.js
+9,Docker
+36,Algorithms
+33,Vue.js
+29,Algorithms
+32,GraphQL
+13,Java
+42,C#
+37,Web Security
+23,Node.js
+6,Kubernetes
+47,C#
+23,Vue.js
+12,Linux
+5,AWS
+38,TypeScript
+34,Node.js
+45,Docker
+34,REST APIs
+8,AWS
+48,System Design
+47,Testing
+22,Node.js
+14,System Design
+22,Testing
+29,SQL Database
+4,MongoDB
+7,Django
+19,React
+8,Git
+21,React
+38,System Design
+2,Vue.js
+16,AWS
+50,Angular
+44,.NET
+43,C#
+45,Git
+35,REST APIs
+41,Python Programming
+18,Linux
+22,System Design
+47,System Design
+45,Angular
+5,Git
+21,Angular
+39,Django
+24,GraphQL
+20,Linux
+46,Web Security
+30,React
+43,TypeScript
+35,Azure
+37,.NET
+48,Data Structures
+15,HTML/CSS
+20,Flask
+4,GraphQL
+50,Data Structures
+51,Kubernetes
+50,Node.js
+3,Data Structures
+34,DevOps
+5,Linux
+37,CI/CD
+46,Vue.js
+29,Linux
+11,Azure
+10,Azure
+13,Linux
+33,Linux
+8,REST APIs
+10,Flask
+45,Python Programming
+15,GraphQL
+27,C#
+34,Docker
+26,Azure
+37,Testing
+26,SQL Database
+48,Web Security
+29,Flask
+2,REST APIs
+12,Azure
+24,REST APIs
+9,Angular
+3,Angular
+20,DevOps
+9,Flask
+13,JavaScript
+50,Testing
+22,Algorithms
+19,Linux
+10,Node.js
+48,Java
+31,CI/CD
+8,Flask
+10,Git
+51,React
+46,Testing
+16,Azure
+11,GraphQL
+24,Linux
+15,Python Programming
+21,System Design
+29,Web Security
+8,Testing
+42,Java
+35,SQL Database
+38,JavaScript
+38,Java
+15,CI/CD
+38,Kubernetes
+45,TypeScript
+10,System Design
+39,Azure
+17,Angular
+36,.NET
+38,REST APIs
+42,REST APIs
+35,React
+47,React
+41,Vue.js
+27,System Design
+10,C#
+20,Docker
+12,Testing
+30,Angular
+38,React
+5,Web Security
+48,Testing
+31,Web Security
+22,Django
+15,Web Security
+37,Linux
+26,Algorithms
+10,REST APIs
+46,Algorithms
+51,REST APIs
+3,.NET
+7,DevOps
+30,Flask
+38,.NET
+44,Azure
+9,MongoDB
+27,MongoDB
+24,Kubernetes
+30,TypeScript
+6,Web Security
+17,Kubernetes
+40,React
+38,MongoDB
+11,C#
+24,CI/CD
+12,Flask
+10,Docker
+34,HTML/CSS
+5,Kubernetes
+8,JavaScript
+47,TypeScript
+7,Docker
+44,Kubernetes
+32,MongoDB
+18,.NET
+43,Angular
+25,TypeScript
+9,AWS
+42,Vue.js
+8,Angular
+18,DevOps
+30,C#
+27,Testing
+46,Angular
+41,Node.js
+31,Data Structures
+50,Django
+43,REST APIs
+32,Data Structures
+43,SQL Database
+4,Java
+44,TypeScript
+50,Testing
+34,Flask
+19,Docker
+48,CI/CD
+3,System Design
+6,Docker
+26,.NET
+40,Django
+45,CI/CD
+30,REST APIs
+44,Python Programming
+3,GraphQL
+4,System Design
+41,System Design
+37,JavaScript
+14,Docker
+9,Testing
+17,Linux
+35,Node.js
+45,C#
+24,Django
+42,Docker
+26,DevOps
+10,Data Structures
+11,Angular
+24,AWS
+10,Linux
+12,SQL Database
+40,TypeScript
+49,Testing
+45,SQL Database
+46,HTML/CSS
+21,Django
+35,Linux
+30,Algorithms
+44,JavaScript
+9,Git
+14,Algorithms
+49,SQL Database
+5,System Design
+2,Git
+45,Python Programming
+48,C#
+3,Vue.js
+38,Node.js
+9,C#
+3,Git
+43,Kubernetes
+11,System Design
+30,Python Programming
+50,Azure
+37,Python Programming
+26,Flask
+28,Flask
+34,Kubernetes
+47,GraphQL
+28,Docker
+4,Python Programming
+17,Python Programming
+45,.NET
+29,GraphQL
+51,SQL Database
+21,.NET
+36,HTML/CSS
+16,Flask
+6,DevOps
+32,System Design
+49,JavaScript
+8,HTML/CSS
+50,GraphQL
+5,GraphQL
+23,C#
+17,DevOps
+11,Testing
+18,Git
+23,AWS
+43,Testing
+24,Vue.js
+40,DevOps
+9,Web Security
+17,Vue.js
+10,HTML/CSS
+46,JavaScript
+21,Vue.js
+28,Django
+16,Vue.js
+8,SQL Database
+3,Kubernetes
+33,Angular
+47,REST APIs
+7,Web Security
+24,System Design
+6,SQL Database
+8,Algorithms
+51,JavaScript
+36,Django
+28,CI/CD
+39,Python Programming
+18,HTML/CSS
+40,Vue.js
+8,Docker
+48,MongoDB
+46,Linux
+17,Data Structures
+20,AWS
+12,CI/CD
+26,Web Security
+5,Testing
+17,CI/CD
+8,Node.js
+19,Git
+28,Java
+47,Algorithms
+44,AWS
+49,HTML/CSS
+6,Java
+37,Data Structures
+45,DevOps
+32,Python Programming
+2,GraphQL
+10,Web Security
+45,GraphQL
+28,Angular
+28,System Design
+48,JavaScript
+26,Vue.js
+38,Vue.js
+20,REST APIs
+19,Angular
+27,React
+18,Angular
+20,Kubernetes
+33,C#
+14,Data Structures
+35,Java
+30,Django
+45,C#
+20,Web Security
+40,CI/CD
+22,JavaScript
+37,System Design
+49,C#
+31,Vue.js
+42,System Design
+31,.NET
+30,Testing
+5,Azure
+32,DevOps
+45,Node.js
+7,REST APIs
+43,Node.js
+41,Git
+39,Vue.js
+30,Java
+11,Vue.js
+16,.NET
+13,REST APIs
+30,Node.js
+45,AWS
+11,Web Security
+18,CI/CD
+44,MongoDB
+34,.NET
+19,TypeScript
+21,Testing
+38,Web Security
+40,Azure
+24,HTML/CSS
+18,Algorithms
+26,REST APIs
+41,HTML/CSS
+31,Java
+27,Node.js
+47,Vue.js
+23,Java
+49,Linux
+8,Java
+9,React
+14,SQL Database
+15,REST APIs
+10,.NET
+33,Testing
+32,Git
+10,Vue.js
+41,.NET
+38,Data Structures
+7,Git
+22,React
+45,Git
+22,.NET
+26,Linux
+12,Git
+26,CI/CD
+15,DevOps
+18,Web Security
+5,Python Programming
+5,Testing
+25,GraphQL
+6,CI/CD
+14,Java
+23,Algorithms
+46,GraphQL
+26,React
+31,Linux
+18,REST APIs
+9,Python Programming
+47,Web Security
+10,CI/CD
+26,TypeScript
+9,Java
+26,Django
+49,MongoDB
+13,Git
+45,Django
+19,Python Programming
+42,CI/CD
+23,MongoDB
+20,Python Programming
+35,Git
+6,Azure
+50,Kubernetes
+34,Django
+39,DevOps
+15,Java
+10,DevOps
+49,Java
+48,HTML/CSS
+39,Angular
+43,Django
+17,HTML/CSS
+32,Java
+19,CI/CD
+31,C#
+47,CI/CD
+32,Web Security
+7,System Design
+6,GraphQL
+27,Algorithms
+15,Flask
+49,Kubernetes
+29,HTML/CSS
+22,Linux
+41,Angular
+35,Web Security
+9,CI/CD
+25,Node.js
+13,Algorithms
+41,Data Structures
+32,REST APIs
+51,TypeScript
+11,REST APIs
+42,HTML/CSS
+32,Algorithms
+4,C#
+7,HTML/CSS
+3,HTML/CSS
+42,.NET
+14,HTML/CSS
+19,REST APIs
+38,TypeScript
+31,Git
+21,REST APIs
+26,Python Programming
+17,MongoDB
+15,React
+11,Angular
+10,HTML/CSS
+28,Linux
+29,System Design
+6,Testing
+6,Python Programming
+8,CI/CD
+49,Data Structures
+3,Python Programming
+46,MongoDB
+32,Django
+25,MongoDB
+8,.NET
+18,GraphQL
+8,HTML/CSS
+30,Docker
+50,Data Structures
+11,Testing
+12,Docker
+21,Angular
+7,Testing
+9,REST APIs
+25,HTML/CSS
+38,Python Programming
+39,C#
+50,JavaScript
+47,SQL Database
+28,REST APIs
+17,Web Security
+29,Docker
+27,Azure
+25,Azure
+20,System Design
+9,Vue.js
+39,Node.js
+31,DevOps
+21,Java
+51,Flask
+31,Flask
+45,Algorithms
+34,Azure
+22,SQL Database
+50,Flask
+39,TypeScript
+30,Kubernetes
+23,React
+4,Node.js
+12,Django
+5,Flask
+44,Algorithms
+33,Django
+3,SQL Database
+9,System Design
+37,Git
+21,Testing
+44,Python Programming
+39,Git
+42,TypeScript
+23,Django
+51,Testing
+23,System Design
+49,Node.js
+36,TypeScript
+42,Testing
+6,.NET
+49,Git
+26,Vue.js
+21,REST APIs
+46,Node.js
+9,REST APIs
+8,Algorithms
+40,Flask
+50,TypeScript
+21,Docker
+36,Node.js
+23,Python Programming
+40,HTML/CSS
+30,TypeScript
+48,Python Programming
+36,Azure
+28,AWS
+40,Git
+25,System Design
+5,.NET
+25,Git
+8,Angular
+23,AWS
+34,JavaScript
+44,Web Security
+31,TypeScript
+18,React
+40,Java
+45,TypeScript
+6,Algorithms
+48,.NET
+20,HTML/CSS
+15,Docker
+34,Python Programming
+6,Docker
+27,Angular
+16,JavaScript
+6,Flask
+42,GraphQL
+26,HTML/CSS
+27,.NET
+7,Python Programming
+4,Django
+42,Angular
+5,Web Security
+22,Angular
+29,Angular
+28,Testing
+16,Algorithms
+21,System Design
+41,Django
+7,Vue.js
+35,Python Programming
+41,CI/CD
+26,MongoDB
+5,Azure
+23,Angular
+27,REST APIs
+15,Django
+36,AWS
+36,SQL Database
+51,Data Structures
+8,SQL Database
+37,Data Structures
+19,MongoDB
+27,Data Structures
+38,System Design
+22,TypeScript
+46,System Design
+18,Java
+21,Flask
+29,CI/CD
+43,MongoDB
+11,System Design
+7,Java
+24,JavaScript
+16,Angular
+35,JavaScript
+12,GraphQL
+31,Kubernetes
+25,Data Structures
+6,Django
+39,Data Structures
+4,Vue.js
+39,SQL Database
+19,JavaScript
+40,Node.js
+28,Angular
+38,Testing
+3,REST APIs
+47,React
+12,React
+7,REST APIs
+9,Java
+22,Vue.js
+26,GraphQL
+51,System Design
+26,Algorithms
+48,Vue.js
+39,Web Security
+45,Kubernetes
+35,TypeScript
+4,SQL Database
+18,Vue.js
+50,System Design
+10,React
+20,Azure
+29,Java
+39,Flask
+47,HTML/CSS
+46,Kubernetes
+43,Java
+2,C#
+10,SQL Database
+10,Node.js
+38,Java
+45,Web Security
+3,DevOps
+21,CI/CD
+47,Flask
+45,Java
+36,GraphQL
+45,Data Structures
+10,Azure
+26,.NET
+24,Node.js
+48,Git
+2,Node.js
+9,AWS
+5,AWS
+14,C#
+42,AWS
+42,Data Structures
+40,Algorithms
+20,Kubernetes
+19,Azure
+23,Kubernetes
+31,Algorithms
+19,Django
+18,MongoDB
+44,REST APIs
+6,REST APIs
+9,SQL Database
+3,TypeScript
+2,Java
+22,Flask
+23,HTML/CSS
+43,Linux
+39,Algorithms
+29,DevOps
+11,Django
+42,Java
+28,Node.js
+40,MongoDB
+37,JavaScript
+41,HTML/CSS
+21,AWS
+42,Linux
+20,Vue.js
+12,AWS
+46,React
+9,Data Structures
+40,Python Programming
+19,Testing
+19,Web Security
+38,Angular
+4,Algorithms
+31,Node.js
+3,Angular
+13,SQL Database
+35,MongoDB
+42,React
+21,Azure
+34,TypeScript
+51,Java
+18,AWS
+39,GraphQL
+39,CI/CD
+20,Docker
+18,Django
+31,Django
+44,Data Structures
+40,.NET
+26,Linux
+17,SQL Database
+18,Flask
+9,Web Security
+16,Data Structures
+13,HTML/CSS
+16,Node.js
+17,System Design
+51,C#
+33,Kubernetes
+39,.NET
+21,Node.js
+45,HTML/CSS
+36,Python Programming
+47,Node.js
+11,SQL Database
+19,JavaScript
+13,C#
+43,Docker
+30,Testing
+18,Data Structures
+30,Docker
+29,TypeScript
+49,Angular
+2,Kubernetes
+34,C#
+9,.NET
+34,Testing
+30,.NET
+19,Kubernetes
+7,MongoDB
+11,CI/CD
+28,React
+39,DevOps
+15,C#
+32,AWS
+34,AWS
+10,Linux
+24,SQL Database
+19,Data Structures
+21,C#
+17,CI/CD
+50,.NET
+9,Node.js
+32,Flask
+46,Docker
+27,SQL Database
+37,AWS
+38,C#
+20,CI/CD
+3,Testing
+3,Vue.js
+24,Python Programming
+46,Flask
+22,HTML/CSS
+40,Testing
+37,Docker
+32,Angular
+2,System Design
+36,REST APIs
+31,Flask
+43,Git
+33,Web Security
+48,React
+49,Azure
+32,AWS
+20,React
+27,Java
+30,GraphQL
+22,Azure
+46,Java
+38,AWS
+51,DevOps
+11,JavaScript
+22,DevOps
+46,AWS
+46,Testing
+9,Django
+18,C#
+30,Angular
+49,CI/CD
+35,HTML/CSS
+6,HTML/CSS
+50,Angular
+41,Java
+11,AWS
+47,Git
+27,Git
+23,Web Security
+7,System Design
+33,MongoDB
+27,TypeScript
+28,Git
+9,DevOps
+45,Vue.js
+16,AWS
+33,REST APIs
+7,Data Structures
+39,Java
+10,Django
+15,Algorithms
+44,Django
+13,CI/CD
+29,Kubernetes
+9,Algorithms
+12,AWS
+23,C#
+43,Python Programming
+15,System Design
+40,Web Security
+27,C#
+35,Kubernetes
+33,JavaScript
+10,Algorithms
+12,TypeScript
+37,Web Security
+35,System Design
+11,React
+7,Angular
+29,Angular
+45,CI/CD
+33,SQL Database
+32,MongoDB
+29,Python Programming
+23,MongoDB
+20,Web Security
+35,.NET
+5,Django
+36,Django
+40,Docker
+49,Docker
+7,Azure
+20,REST APIs
+14,GraphQL
+48,REST APIs
+33,Java
+5,React
+24,CI/CD
+33,.NET
+29,GraphQL
+19,C#
+20,TypeScript
+27,JavaScript
+49,Django
+29,Docker
+22,TypeScript
+39,Data Structures
+29,C#
+32,Linux
+45,Azure
+26,Kubernetes
+26,Docker
+43,TypeScript
+14,Django
+25,.NET
+18,Testing
+4,Linux
+46,Vue.js
+26,Flask
+51,HTML/CSS
+40,Linux
+40,Angular
+41,.NET
+36,GraphQL
+4,MongoDB
+22,.NET
+44,SQL Database
+23,Azure
+19,Linux
+37,.NET
+29,Data Structures
+47,AWS
+21,Python Programming
+37,REST APIs
+49,System Design
+14,Testing
+25,Kubernetes
+15,Angular
+44,C#
+23,Algorithms
+30,React
+21,TypeScript
+25,Django
+5,Git
+35,C#
+8,.NET
+2,Algorithms
+5,Docker
+36,.NET
+44,Angular
+39,Node.js
+48,Node.js
+10,Angular
+37,Linux
+26,Django
+8,Web Security
+30,JavaScript
+27,Python Programming
+28,System Design
+16,Flask
+36,AWS
+16,System Design
+46,React
+17,Java
+36,Azure
+11,Node.js
+49,Node.js
+4,Data Structures
+50,Node.js
+11,Vue.js
+19,GraphQL
+8,Vue.js
+38,Flask
+27,GraphQL
+24,Angular
+17,Azure
+32,Angular
+3,Azure
+19,Vue.js
+37,TypeScript
+33,CI/CD
+33,.NET
+17,Docker
+33,HTML/CSS
+44,Node.js
+23,Data Structures
+18,Kubernetes
+32,GraphQL
+14,Web Security
+45,Testing
+16,MongoDB
+7,Flask
+26,C#
+29,CI/CD
+29,Java
+14,Angular
+39,CI/CD
+34,SQL Database
+6,React
+9,React
+18,Node.js
+20,C#
+47,Linux
+43,Azure
+27,Vue.js
+28,JavaScript
+24,HTML/CSS
+45,System Design
+17,Kubernetes
+37,Azure
+43,System Design
+24,GraphQL
+19,Web Security
+23,.NET
+30,DevOps
+24,Flask
+48,JavaScript
+6,Data Structures
+4,Vue.js
+24,Vue.js
+48,TypeScript
+21,Kubernetes
+23,GraphQL
+34,Java
+22,Kubernetes
+25,SQL Database
+48,Kubernetes
+12,Vue.js
+23,Node.js
+23,REST APIs
+20,Angular
+47,Vue.js
+29,MongoDB
+31,TypeScript
+8,Linux
+14,JavaScript
+43,REST APIs
+37,Algorithms
+12,React
+45,Flask
+17,Python Programming
+19,Docker
+36,Testing
+19,Java
+48,Vue.js
+25,Java
+4,GraphQL
+44,MongoDB
+33,Python Programming
+33,Web Security
+50,Git
+35,TypeScript
+27,AWS
+9,Vue.js
+29,Vue.js
+15,Azure
+47,DevOps
+11,Python Programming
+45,Linux
+36,Git
+32,TypeScript
+27,Web Security
+50,DevOps
+32,JavaScript
+28,Vue.js
+6,Web Security
+50,Algorithms
+37,React
+18,.NET
+38,SQL Database
+32,DevOps
+40,.NET
+42,CI/CD
+6,CI/CD
+26,System Design
+6,Azure
+49,REST APIs
+47,.NET
+45,REST APIs
+34,Azure
+25,Linux
+36,Docker
+50,CI/CD
+49,React
+41,REST APIs
+27,CI/CD
+10,Git
+19,Node.js
+48,CI/CD
+31,Testing
+27,Django
+18,SQL Database
+10,Web Security
+28,SQL Database
+11,Linux
+4,React
+27,Linux
+37,Angular
+12,System Design
+50,SQL Database
+28,Java
+18,Python Programming
+6,TypeScript
+43,Algorithms
+37,Testing
+46,AWS
+39,Algorithms
+9,Python Programming
+36,REST APIs
+9,TypeScript
+19,DevOps
+32,Django
+22,Java
+18,System Design
+4,Kubernetes
+2,JavaScript
+49,TypeScript
+4,DevOps
+18,Azure
+49,.NET
+15,SQL Database
+42,Python Programming
+7,Django
+15,Linux
+32,Azure
+51,MongoDB
+8,Java
+35,Node.js
+32,Docker
+11,.NET
+19,.NET
+26,Angular
+18,Docker
+51,Django
+47,REST APIs
+39,REST APIs
+5,Python Programming
+49,CI/CD
+5,SQL Database
+30,Kubernetes
+20,Azure
+6,Java
+51,Python Programming
+35,Vue.js
+24,Django
+32,.NET
+6,Angular
+5,JavaScript
+46,JavaScript
+15,Django
+3,DevOps
+13,Web Security
+25,GraphQL
+46,MongoDB
+18,TypeScript
+50,C#
+27,HTML/CSS
+29,Testing
+9,JavaScript
+22,CI/CD
+13,TypeScript
+2,Django
+2,Data Structures
+8,MongoDB
+44,Linux
+5,System Design
+13,Kubernetes
+11,Kubernetes
+47,Kubernetes
+43,DevOps
+31,Linux
+47,Docker
+12,JavaScript
+33,Azure
+8,Node.js
+22,JavaScript
+13,System Design
+8,System Design
+47,Angular
+20,Node.js
+44,Testing
+35,Java
+28,Python Programming
+43,.NET

@@ -135,7 +135,13 @@
       "Bash(cmd /c \"taskkill /PID 39688 /F\")",
       "Bash(cmd /c \"wmic process where ProcessId=39688 delete 2>&1\")",
       "Bash(cmd /c \"del /f \"\"D:\\stage\\Back\\LearningApp\\bin\\Debug\\net8.0\\LearningApp.exe\"\" 2>&1\")",
-      "Bash(cmd /c:*)"
+      "Bash(cmd /c:*)",
+      "Bash(python:*)",
+      "Bash(node:*)",
+      "Bash(echo:*)",
+      "Bash(where:*)",
+      "Bash(C:UsersadminAppDataLocalMicrosoftWindowsAppspython.exe simple_analysis.py)",
+      "Bash(chcp:*)"
     ],
     "deny": [],
     "ask": []
