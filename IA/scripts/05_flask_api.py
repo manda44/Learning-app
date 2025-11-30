@@ -65,6 +65,25 @@ def create_features(student_id, course_id):
         course_avg_progress.get(course_id, 50)
     ])
 
+def create_features_custom(student_skills, completion_rate, experience, course_id):
+    """Create features for recommendations without student_id"""
+    s_skills = set(student_skills)
+    c_skills = course_skills_dict.get(course_id, set())
+    matching = len(s_skills.intersection(c_skills))
+    course_count = len(c_skills)
+    return np.array([
+        course_avg_progress.get(course_id, 50),
+        matching / course_count if course_count > 0 else 0.0,
+        len(s_skills),
+        course_count,
+        matching,
+        completion_rate,
+        course_difficulty.get(course_id, 0.5),
+        experience,
+        course_popularity.get(course_id, 0),
+        course_avg_progress.get(course_id, 50)
+    ])
+
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({
@@ -74,6 +93,7 @@ def home():
             'GET /health',
             'POST /predict (student_id, course_id)',
             'POST /recommend (student_id, top_n)',
+            'POST /recommend-custom (skills, completion_rate, experience, top_n)',
             'GET /stats'
         ]
     })
@@ -130,6 +150,48 @@ def recommend():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/recommend-custom', methods=['POST'])
+def recommend_custom():
+    try:
+        data = request.json
+        skills = data.get('skills')
+        completion_rate = data.get('completion_rate')
+        experience = data.get('experience')
+        top_n = data.get('top_n', 5)
+
+        if not skills or completion_rate is None or experience is None:
+            return jsonify({'error': 'Missing skills, completion_rate, or experience'}), 400
+
+        if not isinstance(skills, list):
+            return jsonify({'error': 'skills must be a list'}), 400
+
+        if not isinstance(completion_rate, (int, float)) or not 0 <= completion_rate <= 1:
+            return jsonify({'error': 'completion_rate must be between 0 and 1'}), 400
+
+        if not isinstance(experience, int) or experience < 0:
+            return jsonify({'error': 'experience must be a non-negative integer'}), 400
+
+        predictions = []
+        all_courses = sorted(set(int(cid) for cid in enrollments['course_id'].unique()))
+
+        for course_id in all_courses:
+            features = create_features_custom(skills, completion_rate, experience, course_id)
+            features_scaled = scaler.transform([features])[0]
+            prob = model.predict(np.array([features_scaled]), verbose=0)[0][0]
+            predictions.append({'course_id': int(course_id), 'success_probability': float(prob)})
+
+        recs = sorted(predictions, key=lambda x: x['success_probability'], reverse=True)[:top_n]
+        return jsonify({
+            'input': {
+                'skills': skills,
+                'completion_rate': completion_rate,
+                'experience': experience
+            },
+            'recommendations': [{'course_id': int(r['course_id']), 'success_probability': float(r['success_probability'])} for r in recs]
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/stats', methods=['GET'])
 def stats():
     try:
@@ -151,6 +213,7 @@ if __name__ == '__main__':
     print("📍 URL: http://localhost:5000\n")
     print("Endpoints:")
     print("  POST /predict - Predict success probability")
-    print("  POST /recommend - Get top courses recommendations")
+    print("  POST /recommend - Get top courses recommendations (with student_id)")
+    print("  POST /recommend-custom - Get recommendations without student_id")
     print("  GET  /stats - Global statistics\n")
     app.run(host='localhost', port=5000, debug=False)

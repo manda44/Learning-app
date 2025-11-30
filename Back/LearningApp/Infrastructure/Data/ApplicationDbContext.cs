@@ -69,6 +69,11 @@ public partial class ApplicationDbContext : DbContext
     // Notification-related tables
     public virtual DbSet<Notification> Notifications { get; set; }
 
+    // Skill-related tables
+    public virtual DbSet<Skill> Skills { get; set; }
+
+    public virtual DbSet<CourseSkill> CourseSkill { get; set; }
+
     public virtual DbSet<NotificationPreference> NotificationPreferences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -736,6 +741,49 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.NotificationPreferences)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure Skill entity
+        modelBuilder.Entity<Skill>(entity =>
+        {
+            entity.HasKey(e => e.SkillId);
+
+            entity.ToTable("Skill");
+
+            entity.Property(e => e.SkillName)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(e => e.Description).IsUnicode(false);
+        });
+
+        // Configure CourseSkill entity (junction table for Course-Skill many-to-many)
+        modelBuilder.Entity<CourseSkill>(entity =>
+        {
+            entity.HasKey(e => e.CourseSkillId);
+
+            entity.ToTable("CourseSkill");
+
+            entity.HasIndex(e => e.CourseId, "IX_CourseSkill_CourseId");
+            entity.HasIndex(e => e.SkillId, "IX_CourseSkill_SkillId");
+
+            entity.Property(e => e.IsRequired).HasDefaultValue(false);
+
+            entity.Property(e => e.ProficiencyLevel)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(d => d.Course).WithMany()
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__CourseSkill__CourseId");
+
+            entity.HasOne(d => d.Skill).WithMany()
+                .HasForeignKey(d => d.SkillId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__CourseSkill__SkillId");
         });
 
         OnModelCreatingPartial(modelBuilder);

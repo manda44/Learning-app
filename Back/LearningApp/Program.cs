@@ -109,6 +109,9 @@ builder.Services.AddScoped<IChatService, ChatService>();
 // Notification service
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
+// AI Recommendation service
+builder.Services.AddScoped<IStudentAIRecommendationService, StudentAIRecommendationService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
